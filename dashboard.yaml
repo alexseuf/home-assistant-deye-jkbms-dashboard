@@ -1,6 +1,10 @@
 # Home Assistant Deye + JK-BMS Dashboard
-# Initial scaffold. Entity mapping: docs/ENTITY_MAPPING.md
-# Design target: SolarAssistant-inspired, native HA where practical.
+# Design target: docs/images/mockups/
+# Entity mapping: docs/ENTITY_MAPPING.md
+#
+# Phase 1: the first view is implemented in detail using only verified
+# SolarModbus V2 entity IDs. Later views remain conservative until their
+# entity/register mapping is complete.
 
 title: Deye & Batteries
 views:
@@ -9,82 +13,183 @@ views:
     icon: mdi:solar-power
     type: sections
     max_columns: 4
+    dense_section_placement: true
     sections:
+      # Main energy-flow block. The grid arrangement deliberately mirrors
+      # the visual hierarchy of the reference mock-up without requiring
+      # custom cards.
       - type: grid
+        column_span: 4
         cards:
           - type: heading
-            heading: Aktuelle Werte
-            icon: mdi:flash
-          - type: tile
-            entity: sensor.solarmodbus_device_total_power
-            name: Wechselrichter
-            icon: mdi:solar-power-variant
-          - type: tile
-            entity: sensor.solarmodbus_device_battery_soc
-            name: Batterie SOC
-            icon: mdi:battery
-          - type: tile
-            entity: sensor.solarmodbus_device_battery_power
-            name: Batterieleistung
-            icon: mdi:battery-charging
-          - type: tile
-            entity: sensor.solarmodbus_device_total_grid_power
-            name: Netzleistung
+            heading: Energiefluss (aktuell)
             icon: mdi:transmission-tower
-      - type: grid
-        cards:
-          - type: heading
-            heading: PV
-            icon: mdi:solar-panel-large
+
           - type: tile
             entity: sensor.solarmodbus_device_pv1_power
             name: PV 1
+            icon: mdi:solar-panel-large
+            vertical: true
           - type: tile
             entity: sensor.solarmodbus_device_pv2_power
             name: PV 2
+            icon: mdi:solar-panel-large
+            vertical: true
           - type: tile
-            entity: sensor.solarmodbus_device_daily_production
-            name: PV heute
-      - type: grid
-        cards:
-          - type: heading
-            heading: Verbrauch & Netz
-            icon: mdi:home-lightning-bolt
+            entity: sensor.solarmodbus_device_total_power
+            name: Deye Hybrid
+            icon: mdi:solar-power-variant
+            vertical: true
+          - type: tile
+            entity: sensor.solarmodbus_device_battery_soc
+            name: Batterie SOC
+            icon: mdi:battery-high
+            vertical: true
+          - type: tile
+            entity: sensor.solarmodbus_device_battery_power
+            name: Batterie
+            icon: mdi:battery-charging
+            vertical: true
+          - type: tile
+            entity: sensor.solarmodbus_device_total_grid_power
+            name: Netz
+            icon: mdi:transmission-tower
+            vertical: true
           - type: tile
             entity: sensor.solarmodbus_device_load_l1_power
-            name: Last L1
+            name: Verbrauch L1
+            icon: mdi:home-lightning-bolt
+            vertical: true
+          - type: tile
+            entity: sensor.solarmodbus_device_running_status
+            name: Wechselrichterstatus
+            icon: mdi:check-circle-outline
+            vertical: true
+
+          - type: heading
+            heading: Energie heute
+            icon: mdi:calendar-today
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_production
+            name: PV-Ertrag
+            icon: mdi:white-balance-sunny
           - type: tile
             entity: sensor.solarmodbus_device_daily_load_consumption
-            name: Verbrauch heute
+            name: Verbrauch
+            icon: mdi:home-lightning-bolt-outline
           - type: tile
             entity: sensor.solarmodbus_device_daily_energy_bought
-            name: Netzbezug heute
+            name: Netzbezug
+            icon: mdi:transmission-tower-import
           - type: tile
             entity: sensor.solarmodbus_device_daily_energy_sold
-            name: Einspeisung heute
+            name: Einspeisung
+            icon: mdi:transmission-tower-export
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_battery_charge
+            name: Batterie geladen
+            icon: mdi:battery-plus
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_battery_discharge
+            name: Batterie entladen
+            icon: mdi:battery-minus
+
+      - type: grid
+        column_span: 4
+        cards:
+          - type: heading
+            heading: Elektrische Werte
+            icon: mdi:meter-electric-outline
+          - type: tile
+            entity: sensor.solarmodbus_device_pv1_voltage
+            name: PV Spannung 1
+            icon: mdi:sine-wave
+          - type: tile
+            entity: sensor.solarmodbus_device_pv2_voltage
+            name: PV Spannung 2
+            icon: mdi:sine-wave
+          - type: tile
+            entity: sensor.solarmodbus_device_battery_voltage
+            name: Batteriespannung
+            icon: mdi:flash-outline
+          - type: tile
+            entity: sensor.solarmodbus_device_battery_current
+            name: Batteriestrom
+            icon: mdi:current-dc
+          - type: tile
+            entity: sensor.solarmodbus_device_load_voltage
+            name: Netz / Last Spannung
+            icon: mdi:current-ac
+          - type: tile
+            entity: sensor.solarmodbus_device_load_frequency
+            name: Frequenz
+            icon: mdi:sine-wave
+          - type: tile
+            entity: sensor.solarmodbus_device_pv1_current
+            name: PV Strom 1
+            icon: mdi:current-dc
+          - type: tile
+            entity: sensor.solarmodbus_device_pv2_current
+            name: PV Strom 2
+            icon: mdi:current-dc
+
+      - type: grid
+        column_span: 4
+        cards:
+          - type: heading
+            heading: Leistungsverlauf (heute)
+            icon: mdi:chart-areaspline
+          - type: history-graph
+            title: PV / Wechselrichter / Batterie / Netz
+            hours_to_show: 24
+            entities:
+              - entity: sensor.solarmodbus_device_pv1_power
+                name: PV 1
+              - entity: sensor.solarmodbus_device_pv2_power
+                name: PV 2
+              - entity: sensor.solarmodbus_device_total_power
+                name: Wechselrichter
+              - entity: sensor.solarmodbus_device_battery_power
+                name: Batterie
+              - entity: sensor.solarmodbus_device_total_grid_power
+                name: Netz
 
   - title: Historische Werte
     path: historische-werte
     icon: mdi:chart-line
     type: sections
+    max_columns: 4
     sections:
       - type: grid
+        column_span: 4
         cards:
           - type: heading
-            heading: Leistungsverlauf
+            heading: Historische Werte
             icon: mdi:chart-areaspline
           - type: history-graph
-            title: Leistung
+            title: Leistung – letzte 24 Stunden
             hours_to_show: 24
             entities:
               - sensor.solarmodbus_device_total_power
               - sensor.solarmodbus_device_battery_power
               - sensor.solarmodbus_device_total_grid_power
           - type: history-graph
-            title: Batterie SOC
+            title: Batterie SOC – letzte 24 Stunden
             hours_to_show: 24
             entities:
               - sensor.solarmodbus_device_battery_soc
+          - type: history-graph
+            title: Batteriespannung & Strom – letzte 24 Stunden
+            hours_to_show: 24
+            entities:
+              - sensor.solarmodbus_device_battery_voltage
+              - sensor.solarmodbus_device_battery_current
+          - type: history-graph
+            title: PV Eingänge – letzte 24 Stunden
+            hours_to_show: 24
+            entities:
+              - sensor.solarmodbus_device_pv1_power
+              - sensor.solarmodbus_device_pv2_power
 
   - title: Summierte Werte
     path: summierte-werte
