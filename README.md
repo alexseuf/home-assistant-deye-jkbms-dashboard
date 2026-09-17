@@ -6,6 +6,18 @@ The dashboard is designed for **SolarModbus V2** on the Deye side and the **Gobe
 
 ## Installation
 
+### Planned: one-click installation through HACS
+
+A future project milestone is to package this repository as a **HACS-installable Home Assistant dashboard**. The GitHub start page should then provide a prominent **Add to HACS / Install in Home Assistant** button so users do not have to copy `dashboard.yaml` manually.
+
+Planned installation flow:
+
+**GitHub → Add to HACS → install/update dashboard package → Home Assistant dashboard setup**
+
+The goal is also to provide direct installation links/buttons for the required **SolarModbus V2** and **Gobel Power JK-BMS** integrations where supported. HACS packaging will be implemented after the first dashboard views and their dependencies have stabilized, so the installation package reflects the actual cards and resources used by the finished dashboard.
+
+Until that packaging is available, use the manual installation procedure below.
+
 ### 1. Install the required integrations
 
 #### Deye inverter – SolarModbus V2
@@ -32,7 +44,7 @@ Before installing the dashboard, open **Developer Tools → States** in Home Ass
 
 The final dashboard mapping must use the entity IDs actually generated on your Home Assistant installation. See [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) for the verified mapping used by this project.
 
-### 3. Install the dashboard
+### 3. Install the dashboard manually
 
 1. Open **Settings → Dashboards** in Home Assistant and create a new dashboard.
 2. Open the new dashboard and choose **Edit dashboard**.
@@ -87,6 +99,7 @@ Aggregate battery-bank data, master/slave packs, cell voltages, temperatures, SO
 - JK-BMS controls only where Gobel Power exposes a corresponding writable Home Assistant entity/service.
 - Multi-pack installations show both aggregate battery-bank values and each discovered pack.
 - The layout should remain usable on desktop, tablet and mobile devices.
+- Target distribution is a HACS-installable dashboard package with an easy GitHub-to-Home-Assistant installation path.
 
 ## Project files
 
@@ -97,4 +110,4 @@ Aggregate battery-bank data, master/slave packs, cell voltages, temperatures, SO
 
 ## Status
 
-Entity mapping and dashboard implementation are in progress. Current priorities are completing the Deye System Timer / TOU mapping, matching the Lovelace layout to these mock-ups and mapping the dynamically generated Gobel Power pack entities.
+Entity mapping and dashboard implementation are in progress. Current priorities are completing the first dashboard views to match the mock-ups, completing the Deye System Timer / TOU mapping and mapping the dynamically generated Gobel Power pack entities. HACS packaging and one-click installation are planned once the dashboard structure and required frontend dependencies have stabilized.
