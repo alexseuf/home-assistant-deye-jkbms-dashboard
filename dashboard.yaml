@@ -1,0 +1,159 @@
+# Home Assistant Deye + JK-BMS Dashboard
+# Initial scaffold. Entity mapping: docs/ENTITY_MAPPING.md
+# Design target: SolarAssistant-inspired, native HA where practical.
+
+title: Deye & Batteries
+views:
+  - title: Aktuelle Werte
+    path: aktuelle-werte
+    icon: mdi:solar-power
+    type: sections
+    max_columns: 4
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Aktuelle Werte
+            icon: mdi:flash
+          - type: tile
+            entity: sensor.solarmodbus_device_total_power
+            name: Wechselrichter
+            icon: mdi:solar-power-variant
+          - type: tile
+            entity: sensor.solarmodbus_device_battery_soc
+            name: Batterie SOC
+            icon: mdi:battery
+          - type: tile
+            entity: sensor.solarmodbus_device_battery_power
+            name: Batterieleistung
+            icon: mdi:battery-charging
+          - type: tile
+            entity: sensor.solarmodbus_device_total_grid_power
+            name: Netzleistung
+            icon: mdi:transmission-tower
+      - type: grid
+        cards:
+          - type: heading
+            heading: PV
+            icon: mdi:solar-panel-large
+          - type: tile
+            entity: sensor.solarmodbus_device_pv1_power
+            name: PV 1
+          - type: tile
+            entity: sensor.solarmodbus_device_pv2_power
+            name: PV 2
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_production
+            name: PV heute
+      - type: grid
+        cards:
+          - type: heading
+            heading: Verbrauch & Netz
+            icon: mdi:home-lightning-bolt
+          - type: tile
+            entity: sensor.solarmodbus_device_load_l1_power
+            name: Last L1
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_load_consumption
+            name: Verbrauch heute
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_energy_bought
+            name: Netzbezug heute
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_energy_sold
+            name: Einspeisung heute
+
+  - title: Historische Werte
+    path: historische-werte
+    icon: mdi:chart-line
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Leistungsverlauf
+            icon: mdi:chart-areaspline
+          - type: history-graph
+            title: Leistung
+            hours_to_show: 24
+            entities:
+              - sensor.solarmodbus_device_total_power
+              - sensor.solarmodbus_device_battery_power
+              - sensor.solarmodbus_device_total_grid_power
+          - type: history-graph
+            title: Batterie SOC
+            hours_to_show: 24
+            entities:
+              - sensor.solarmodbus_device_battery_soc
+
+  - title: Summierte Werte
+    path: summierte-werte
+    icon: mdi:sigma
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Heute
+            icon: mdi:calendar-today
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_production
+            name: PV-Erzeugung
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_load_consumption
+            name: Verbrauch
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_energy_bought
+            name: Netzbezug
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_energy_sold
+            name: Einspeisung
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_battery_charge
+            name: Batterie geladen
+          - type: tile
+            entity: sensor.solarmodbus_device_daily_battery_discharge
+            name: Batterie entladen
+
+  - title: Einstellungen Deye
+    path: einstellungen-deye
+    icon: mdi:tune-variant
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Deye Status & Betriebsart
+            icon: mdi:inverter
+          - type: tile
+            entity: sensor.solarmodbus_device_running_status
+            name: Status
+          - type: tile
+            entity: sensor.solarmodbus_device_system_work_mode
+            name: Work Mode
+          - type: tile
+            entity: sensor.solarmodbus_device_solar_sell
+            name: Solar Sell
+          - type: tile
+            entity: sensor.solarmodbus_device_grid_charge
+            name: Grid Charge
+          - type: markdown
+            content: >-
+              **Schreibfunktionen werden hier schrittweise ergänzt.**  
+              SolarModbus V2 unterstützt `solarmodbus.write_register`, aber Register und gültige Werte werden vor Freigabe für das konkrete Deye-Modell verifiziert.
+
+  - title: Einstellungen JK BMS
+    path: einstellungen-jk-bms
+    icon: mdi:battery-cog
+    type: sections
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: JK BMS / Gobel Power
+            icon: mdi:battery-heart-variant
+          - type: markdown
+            content: >-
+              Die Gobel-Power-Integration erzeugt die Entity-IDs abhängig vom konfigurierten Gerätenamen und erkennt Master/Slave-Packs dynamisch.
+
+              Die aktuelle Integration stellt `sensor` und `binary_sensor` bereit. Deshalb werden hier keine erfundenen Schreibregler angelegt. Nach dem Mapping deiner realen Gobel-Entities kommen Gesamtwerte, einzelne Packs, Zellspannungen, Temperaturen, Balancing und Warnungen hier hinein.
