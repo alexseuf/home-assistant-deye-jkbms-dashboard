@@ -165,6 +165,55 @@ Equivalent time entities are documented for additional TOU slots. Newer integrat
 
 Only use controls that actually exist for the configured Solis model and poll profile. Do not reuse Deye register numbers or SolarModbus services for Solis.
 
+## 5a. Verified target installation — Solis S5-EH1P + Gobel JK-BMS
+
+The following entity IDs were verified against a real Home Assistant entity export on **2026-09-27**. This is the concrete profile used by the bundled dashboard in version **0.1.1**.
+
+### Solis S5-EH1P
+
+| Function | Verified entity |
+|---|---|
+| Total PV power | `sensor.solis_s5_eh1p_total_pv_power` |
+| Household load | `sensor.solis_s5_eh1p_household_load_power` |
+| Grid port power | `sensor.solis_s5_eh1p_ac_grid_port_power` |
+| Status text | `sensor.solis_s5_eh1p_status_string` |
+| Battery power | `sensor.solis_s5_eh1p_battery_power` |
+| Battery SOC | `sensor.solis_s5_eh1p_battery_soc` |
+| Battery voltage | `sensor.solis_s5_eh1p_battery_voltage` |
+| Battery current | `sensor.solis_s5_eh1p_battery_current` |
+| PV1 power | `sensor.solis_s5_eh1p_pv_power_1` |
+| PV2 power | `sensor.solis_s5_eh1p_pv_power_2` |
+| PV1 voltage/current | `sensor.solis_s5_eh1p_pv_voltage_1` / `sensor.solis_s5_eh1p_pv_current_1` |
+| PV2 voltage/current | `sensor.solis_s5_eh1p_pv_voltage_2` / `sensor.solis_s5_eh1p_pv_current_2` |
+| Daily PV generation | `sensor.solis_s5_eh1p_pv_today_energy_generation` |
+| Daily load consumption | `sensor.solis_s5_eh1p_today_energy_consumption` |
+| Daily grid import/export | `sensor.solis_s5_eh1p_today_energy_imported_from_grid` / `sensor.solis_s5_eh1p_today_energy_fed_into_grid` |
+| Daily battery charge/discharge | `sensor.solis_s5_eh1p_today_battery_charge_energy` / `sensor.solis_s5_eh1p_today_battery_discharge_energy` |
+| Total PV energy | `sensor.solis_s5_eh1p_pv_total_energy_generation` |
+| Total consumption | `sensor.solis_s5_eh1p_total_energy_consumption` |
+| Total grid import/export | `sensor.solis_s5_eh1p_total_energy_imported_from_grid` / `sensor.solis_s5_eh1p_total_energy_fed_into_grid` |
+| Total battery charge/discharge | `sensor.solis_s5_eh1p_total_battery_charge_energy` / `sensor.solis_s5_eh1p_total_battery_discharge_energy` |
+| Current month PV | `sensor.solis_s5_eh1p_pv_current_month_energy_generation` |
+| Current year PV | `sensor.solis_s5_eh1p_pv_this_year_energy_generation` |
+| Modbus enable switch | `switch.solis_s5_eh1p_solis_modbus_enabled` |
+
+The verified export did **not** contain the previously documented TOU `number` or `time` entities for this configured model/profile, so the bundled dashboard no longer exposes those controls.
+
+### Gobel Battery / JK-BMS
+
+Verified aggregate entities:
+
+- `sensor.jk_bms_total_jk_bms_packs_count`
+- `sensor.jk_bms_total_jk_bms_total_soc`
+- `sensor.jk_bms_total_jk_bms_total_voltage`
+- `sensor.jk_bms_total_jk_bms_total_current`
+- `sensor.jk_bms_total_jk_bms_total_power`
+- `sensor.jk_bms_total_jk_bms_max_cell_voltage`
+- `sensor.jk_bms_total_jk_bms_min_cell_voltage`
+- `sensor.jk_bms_total_jk_bms_cell_voltage_delta`
+
+Three packs were present in the verified export: `pack_00`, `pack_01` and `pack_02`. For each pack the dashboard now uses verified SOC, SOH, voltage, current, power, cycle count, temperature, balance current and key charge/discharge/protection binary sensors.
+
 ## 6. Hoymiles profile
 
 Hoymiles is supported by the dashboard architecture. Depending on the installation, values may come from OpenDTU, AhoyDTU, SolarAssistant MQTT or another integration.
