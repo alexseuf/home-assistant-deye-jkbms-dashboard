@@ -1,10 +1,59 @@
 # Entity mapping
 
-This document records entities verified from the upstream integrations. Do not replace these with guessed IDs.
+This document defines the manufacturer-neutral entity model for the dashboard and records verified integration-specific mappings.
 
-## Deye — SolarModbus V2
+## 1. Logical inverter slots
 
-Source: `comdif/ha-solarmodbus`, branch `V2`, including its supplied demo dashboard.
+The dashboard supports up to three inverters:
+
+| Logical slot | Required | Example |
+|---|---:|---|
+| Wechselrichter 1 | yes | Deye hybrid |
+| Wechselrichter 2 | no | Solis string inverter |
+| Wechselrichter 3 | no | Hoymiles / OpenDTU |
+
+Manufacturers may be mixed freely. The slot number is a dashboard concept, not a manufacturer identifier.
+
+## 2. Per-inverter functions
+
+For every configured inverter, map the functions that actually exist:
+
+| Function | Required? | Notes |
+|---|---:|---|
+| AC / inverter power | recommended | current inverter output |
+| status | optional | running/online/error state |
+| daily yield | optional | daily PV production |
+| PV1 power | optional | MPPT/string input |
+| PV1 voltage | optional | MPPT/string input |
+| PV1 current | optional | MPPT/string input |
+| PV2 power | optional | MPPT/string input |
+| PV2 voltage | optional | MPPT/string input |
+| PV2 current | optional | MPPT/string input |
+| additional MPPTs | optional | add only when available |
+
+Do not invent missing values. For example, a microinverter may only provide AC power and energy while the hybrid inverter provides battery/grid values.
+
+## 3. System-level functions
+
+These values normally have one authoritative source in the installation and are therefore mapped separately from inverter slots:
+
+- total grid power
+- grid import/export energy
+- load/house power
+- battery SOC
+- battery power
+- battery voltage
+- battery current
+- battery charge/discharge energy
+- total PV production
+
+If multiple inverters contribute to PV production, a later template/helper may sum their individual power/yield entities.
+
+## 4. Deye reference profile — SolarModbus V2
+
+Source: `comdif/ha-solarmodbus`, branch `V2`.
+
+This is the currently verified reference profile and is used by the existing `dashboard.yaml` for Wechselrichter 1.
 
 ### Verified live entities
 
@@ -56,36 +105,62 @@ Source: `comdif/ha-solarmodbus`, branch `V2`, including its supplied demo dashbo
 | Grid charge state | `sensor.solarmodbus_device_grid_charge` |
 | Smart Load enable status | `sensor.solarmodbus_device_smartload_enable_status` |
 
-SolarModbus V2 exposes the `solarmodbus.write_register` action. The upstream documentation demonstrates Solar Sell on register 247 and the upstream demo dashboard demonstrates System Work Mode on register 244. Register writes are model-sensitive and must not be enabled blindly for an unverified Deye model.
+SolarModbus V2 exposes `solarmodbus.write_register`. Register writes are model-sensitive and apply only to a verified Deye profile.
 
-For the production dashboard, potentially destructive writes will be isolated in the Deye settings view and documented individually.
+## 5. Solis profile
 
-## JK BMS — Gobel Power Home Assistant Integration
+Solis is supported by the dashboard architecture, but the concrete entity IDs depend on the Home Assistant integration used.
 
-Source: `fancyui/Gobel-Battery-HA-Integration`, current `main`.
+Before adding Solis entities to production YAML:
 
-The current integration forwards only the `sensor` and `binary_sensor` platforms. Therefore the project must currently treat Gobel's JK-BMS integration as **read-only from Home Assistant**. The JK settings view will show configuration/status values but will not present fake writable controls unless upstream adds native writable platforms/actions.
+1. identify the exact Solis integration,
+2. copy the real entity IDs from **Developer Tools → States**,
+3. map them to the logical functions above,
+4. verify units and sign conventions,
+5. verify any writable controls separately.
 
-### Aggregate bank sensors exposed by Gobel
+Do not reuse Deye register numbers or services.
 
-The integration creates aggregate sensors with these functions:
+## 6. Hoymiles profile
+
+Hoymiles is supported by the dashboard architecture. Depending on the installation, values may come from OpenDTU, AhoyDTU, SolarAssistant MQTT or another integration.
+
+Map only the functions actually exposed by the selected source. A Hoymiles system commonly acts as an additional PV producer, so battery/grid values may continue to come from another inverter or meter.
+
+## 7. Mixed installations
+
+Example:
+
+| Function | Source |
+|---|---|
+| Wechselrichter 1 power/status/battery/grid | Deye hybrid |
+| Wechselrichter 2 power/yield | Solis |
+| Wechselrichter 3 power/yield | Hoymiles |
+| total house/grid | Deye or dedicated meter |
+| battery | Deye + JK-BMS / Gobel |
+
+The dashboard should later calculate total PV power as the sum of all configured inverter/PV sources when appropriate.
+
+## 8. JK BMS — Gobel Power Home Assistant Integration
+
+Source: `fancyui/Gobel-Battery-HA-Integration`.
+
+The integration currently exposes `sensor` and `binary_sensor` platforms. Entity IDs depend on the configured device name.
+
+Aggregate functions include:
 
 - Packs Count
-- Total Full Capacity (Ah)
-- Total Remaining Capacity (Ah)
-- Total Current (A)
-- Total SOC (%)
-- Total Voltage (V)
-- Total Power (kW)
-- Max Cell Voltage (mV)
-- Min Cell Voltage (mV)
-- Cell Voltage Delta (mV)
+- Total Full Capacity
+- Total Remaining Capacity
+- Total Current
+- Total SOC
+- Total Voltage
+- Total Power
+- Max Cell Voltage
+- Min Cell Voltage
+- Cell Voltage Delta
 
-Actual Home Assistant entity IDs depend on the configured `device_name`; the dashboard therefore cannot safely hard-code a universal `sensor.gobel_...` ID for these entities.
-
-### Per-pack sensors
-
-For every discovered master/slave pack Gobel exposes:
+Per-pack functions include:
 
 - Voltage
 - Current
@@ -95,19 +170,14 @@ For every discovered master/slave pack Gobel exposes:
 - Remaining Capacity
 - Full Capacity
 - Cycle Count
-- Balance Current (JK only)
-- Cell 01 ... Cell N Voltage
-- Temperature 01 ... Temperature N
-
-The integration dynamically creates child devices for detected packs, which is suitable for the planned master + slave presentation.
-
-### Dashboard consequence
-
-Deye entities can initially use the verified SolarModbus default IDs. Gobel entity IDs require an installation-specific mapping because Home Assistant derives them from the configured device name. A future setup section will explain how to copy the Gobel entity IDs from Home Assistant into a small mapping block.
+- Balance Current
+- Cell voltages
+- Temperatures
 
 ## Next mapping work
 
-1. Extract the remaining Deye V2 settings/TOU entities and verified register addresses from the upstream demo dashboard.
-2. Extract Gobel binary sensors (MOSFET/protection/alarm states).
-3. Define a user-editable Gobel mapping file/template.
-4. Build `dashboard.yaml` with five views and safe fallbacks for unavailable optional entities.
+1. Record the actual Solis integration and entity IDs used on the target Home Assistant instance.
+2. Record the actual Hoymiles/OpenDTU/SolarAssistant entity IDs.
+3. Add live cards for inverter 2 and inverter 3 once their entities are verified.
+4. Add template/helper sums for total PV power and energy where required.
+5. Keep writable controls isolated per manufacturer and inverter model.

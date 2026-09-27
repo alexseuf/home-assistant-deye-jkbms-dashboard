@@ -1,12 +1,13 @@
-# Home Assistant Deye + JK-BMS Dashboard
+# Home Assistant Multi-Inverter + JK-BMS Dashboard
 # Design target: docs/images/mockups/
 # Entity mapping: docs/ENTITY_MAPPING.md
 #
-# Phase 1: the first view is implemented in detail using only verified
-# SolarModbus V2 entity IDs. Later views remain conservative until their
-# entity/register mapping is complete.
+# Phase 1: the first view uses the verified Deye/SolarModbus reference profile.
+# The UI itself is manufacturer-neutral. Inverter 1..3 can be mapped to Deye,
+# Solis, Hoymiles or another Home Assistant integration as documented in
+# docs/ENTITY_MAPPING.md.
 
-title: Deye & Batteries
+title: PV & Batteries
 views:
   - title: Aktuelle Werte
     path: aktuelle-werte
@@ -37,7 +38,7 @@ views:
             vertical: true
           - type: tile
             entity: sensor.solarmodbus_device_total_power
-            name: Deye Hybrid
+            name: Wechselrichter 1
             icon: mdi:solar-power-variant
             vertical: true
           - type: tile
@@ -220,15 +221,15 @@ views:
             entity: sensor.solarmodbus_device_daily_battery_discharge
             name: Batterie entladen
 
-  - title: Einstellungen Deye
-    path: einstellungen-deye
+  - title: Einstellungen Wechselrichter
+    path: einstellungen-wechselrichter
     icon: mdi:tune-variant
     type: sections
     sections:
       - type: grid
         cards:
           - type: heading
-            heading: Deye Status & Betriebsart
+            heading: Wechselrichter 1 – Status & Betriebsart
             icon: mdi:inverter
           - type: tile
             entity: sensor.solarmodbus_device_running_status
@@ -244,8 +245,22 @@ views:
             name: Grid Charge
           - type: markdown
             content: >-
-              **Schreibfunktionen werden hier schrittweise ergänzt.**  
-              SolarModbus V2 unterstützt `solarmodbus.write_register`, aber Register und gültige Werte werden vor Freigabe für das konkrete Deye-Modell verifiziert.
+              **Referenzprofil Wechselrichter 1:** Deye über SolarModbus V2.  
+              Das Dashboard ist herstellerneutral ausgelegt. Wechselrichter 1 bis 3 können über die in `docs/ENTITY_MAPPING.md` beschriebene Zuordnung auf Deye, Solis, Hoymiles oder andere Home-Assistant-Entities gemappt werden.
+
+              **Schreibfunktionen sind integrations- und modellspezifisch.** Register/Services und gültige Werte müssen deshalb für das jeweils konfigurierte Wechselrichtermodell verifiziert werden.
+
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Wechselrichter 2 & 3
+            icon: mdi:solar-power-variant
+          - type: markdown
+            content: >-
+              Wechselrichter 2 und 3 sind optional. Sie werden über dieselben logischen Funktionen wie Wechselrichter 1 eingebunden (Leistung, Status, PV/MPPT, Tagesertrag und – falls vorhanden – Batterie/Netzwerte).
+
+              Für gemischte Anlagen sind z. B. **Deye + Solis**, **Solis + Hoymiles** oder drei unterschiedliche Geräte möglich. Die konkreten Entity-IDs werden installationsabhängig in der Mapping-Dokumentation zugeordnet; es werden bewusst keine nicht verifizierten Hersteller-Entity-IDs fest verdrahtet.
 
   - title: Einstellungen JK BMS
     path: einstellungen-jk-bms
