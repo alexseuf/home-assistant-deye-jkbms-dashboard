@@ -6,188 +6,247 @@ views:
     icon: mdi:solar-power
     type: masonry
     cards:
-      - type: custom:mushroom-title-card
-        title: Energiefluss (aktuell)
-        subtitle: Solis S5-EH1P · JK-BMS
-
-      - type: custom:power-flow-card-plus
-        title: Aktueller Energiefluss
-        clickable_entities: true
-        min_flow_rate: 0.75
-        max_flow_rate: 6
-        kilo_threshold: 1000
-        entities:
-          solar:
-            entity: sensor.solis_s5_eh1p_total_pv_power
-            name: PV
-            color_icon: true
-          grid:
-            entity: sensor.solis_s5_eh1p_ac_grid_port_power
-            name: Netz
-            display_state: one_way
-            color_circle: color_dynamically
-          battery:
-            entity: sensor.jk_bms_total_jk_bms_total_power
-            state_of_charge: sensor.jk_bms_total_jk_bms_total_soc
-            name: Batterie
-            display_state: one_way
-            color_circle: color_dynamically
-            invert_state: true
-          home:
-            entity: sensor.solis_s5_eh1p_household_load_power
-            name: Verbrauch
-            override_state: true
-            color_icon: true
-
-      - type: grid
-        columns: 4
-        square: false
+      - type: vertical-stack
         cards:
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_total_pv_power
-            name: PV
-            icon: mdi:solar-power
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_household_load_power
-            name: Verbrauch
-            icon: mdi:home-lightning-bolt
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_total_power
-            name: Batterie
-            icon: mdi:battery-charging
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_ac_grid_port_power
-            name: Netz
-            icon: mdi:transmission-tower
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_total_soc
-            name: Batterie SOC
-            icon: mdi:battery-high
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_total_voltage
-            name: Batteriespannung
-            icon: mdi:flash
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_total_current
-            name: Batteriestrom
-            icon: mdi:current-dc
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_status_string
-            name: Wechselrichterstatus
-            icon: mdi:check-circle-outline
+          - type: custom:mushroom-title-card
+            title: Energiefluss (aktuell)
 
-      - type: custom:mushroom-title-card
-        title: Energie heute
+          - type: picture-elements
+            image: /pv-battery-dashboard-static/energy_flow_bg.svg
+            elements:
+              # PV
+              - type: icon
+                icon: mdi:white-balance-sunny
+                style:
+                  left: 7%
+                  top: 15%
+                  color: "#ffb300"
+                  --mdc-icon-size: 42px
+              - type: state-label
+                entity: sensor.solis_s5_eh1p_total_pv_power
+                prefix: "PV  "
+                style:
+                  left: 17%
+                  top: 18%
+                  color: "#1f2937"
+                  font-size: 17px
+                  font-weight: 600
+              - type: state-label
+                entity: sensor.solis_s5_eh1p_total_pv_power
+                style:
+                  left: 17%
+                  top: 28%
+                  color: "#111827"
+                  font-size: 29px
+                  font-weight: 700
+              - type: state-label
+                entity: sensor.solis_s5_eh1p_pv_today_energy_generation
+                prefix: "Tagesertrag  "
+                style:
+                  left: 17%
+                  top: 39%
+                  color: "#374151"
+                  font-size: 13px
 
-      - type: grid
-        columns: 3
-        square: false
-        cards:
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_pv_today_energy_generation
-            name: PV-Ertrag
-            icon: mdi:white-balance-sunny
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_today_energy_consumption
-            name: Verbrauch
-            icon: mdi:home-lightning-bolt-outline
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_today_energy_imported_from_grid
-            name: Netzbezug
-            icon: mdi:transmission-tower-import
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_today_energy_fed_into_grid
-            name: Einspeisung
-            icon: mdi:transmission-tower-export
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_today_battery_charge_energy
-            name: Batterie geladen
-            icon: mdi:battery-plus
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_today_battery_discharge_energy
-            name: Batterie entladen
-            icon: mdi:battery-minus
+              # Verbrauch
+              - type: icon
+                icon: mdi:home
+                style:
+                  left: 72%
+                  top: 15%
+                  color: "#ff7a32"
+                  --mdc-icon-size: 42px
+              - type: state-label
+                entity: sensor.solis_s5_eh1p_household_load_power
+                prefix: "Verbrauch  "
+                style:
+                  left: 79%
+                  top: 18%
+                  color: "#1f2937"
+                  font-size: 17px
+                  font-weight: 600
+              - type: state-label
+                entity: sensor.solis_s5_eh1p_household_load_power
+                style:
+                  left: 79%
+                  top: 28%
+                  color: "#111827"
+                  font-size: 29px
+                  font-weight: 700
+              - type: state-label
+                entity: sensor.solis_s5_eh1p_today_energy_consumption
+                prefix: "Tagesverbrauch  "
+                style:
+                  left: 79%
+                  top: 39%
+                  color: "#374151"
+                  font-size: 13px
 
-      - type: custom:mushroom-title-card
-        title: Elektrische Werte
+              # Wechselrichter
+              - type: state-label
+                entity: sensor.solis_s5_eh1p_status_string
+                prefix: "Wechselrichter · "
+                style:
+                  left: 50%
+                  top: 49%
+                  color: "#1f2937"
+                  font-size: 14px
+                  font-weight: 600
 
-      - type: grid
-        columns: 4
-        square: false
-        cards:
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_pv_voltage_1
-            name: PV Spannung 1
-            icon: mdi:sine-wave
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_pv_voltage_2
-            name: PV Spannung 2
-            icon: mdi:sine-wave
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_pv_current_1
-            name: PV Strom 1
-            icon: mdi:current-dc
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_pv_current_2
-            name: PV Strom 2
-            icon: mdi:current-dc
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_a_phase_voltage
-            name: AC Spannung
-            icon: mdi:current-ac
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_grid_frequency
-            name: Frequenz
-            icon: mdi:sine-wave
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_pv_power_1
-            name: PV 1 Leistung
-            icon: mdi:solar-panel-large
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_pv_power_2
-            name: PV 2 Leistung
-            icon: mdi:solar-panel-large
+              # Batterie
+              - type: icon
+                icon: mdi:battery-outline
+                style:
+                  left: 7%
+                  top: 63%
+                  color: "#20ae55"
+                  --mdc-icon-size: 42px
+              - type: state-label
+                entity: sensor.jk_bms_total_jk_bms_total_power
+                prefix: "Batterie  "
+                style:
+                  left: 17%
+                  top: 66%
+                  color: "#1f2937"
+                  font-size: 17px
+                  font-weight: 600
+              - type: state-label
+                entity: sensor.jk_bms_total_jk_bms_total_power
+                style:
+                  left: 17%
+                  top: 76%
+                  color: "#111827"
+                  font-size: 29px
+                  font-weight: 700
+              - type: state-label
+                entity: sensor.jk_bms_total_jk_bms_total_soc
+                prefix: "SOC  "
+                style:
+                  left: 17%
+                  top: 87%
+                  color: "#374151"
+                  font-size: 13px
 
-      - type: custom:apexcharts-card
-        header:
-          show: true
-          title: Leistungsverlauf heute
-          show_states: true
-        graph_span: 24h
-        span:
-          start: day
-        apex_config:
-          chart:
-            height: 300
-          stroke:
-            width: 2
-          legend:
-            show: true
-        series:
-          - entity: sensor.solis_s5_eh1p_total_pv_power
-            name: PV
-            type: area
-            group_by:
-              func: avg
-              duration: 5min
-          - entity: sensor.solis_s5_eh1p_household_load_power
-            name: Verbrauch
-            type: line
-            group_by:
-              func: avg
-              duration: 5min
-          - entity: sensor.jk_bms_total_jk_bms_total_power
-            name: Batterie
-            type: line
-            group_by:
-              func: avg
-              duration: 5min
-          - entity: sensor.solis_s5_eh1p_ac_grid_port_power
-            name: Netz
-            type: line
-            group_by:
-              func: avg
-              duration: 5min
+              # Netz
+              - type: icon
+                icon: mdi:transmission-tower
+                style:
+                  left: 69%
+                  top: 63%
+                  color: "#37475a"
+                  --mdc-icon-size: 42px
+              - type: state-label
+                entity: sensor.solis_s5_eh1p_ac_grid_port_power
+                prefix: "Netz  "
+                style:
+                  left: 79%
+                  top: 66%
+                  color: "#1f2937"
+                  font-size: 17px
+                  font-weight: 600
+              - type: state-label
+                entity: sensor.solis_s5_eh1p_ac_grid_port_power
+                style:
+                  left: 79%
+                  top: 76%
+                  color: "#111827"
+                  font-size: 29px
+                  font-weight: 700
+              - type: state-label
+                entity: sensor.solis_s5_eh1p_today_energy_fed_into_grid
+                prefix: "Einspeisung heute  "
+                style:
+                  left: 79%
+                  top: 87%
+                  color: "#374151"
+                  font-size: 13px
+
+          - type: grid
+            columns: 5
+            square: false
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.solis_s5_eh1p_pv_voltage_1
+                name: PV Spannung 1
+                icon: mdi:sine-wave
+              - type: custom:mushroom-entity-card
+                entity: sensor.solis_s5_eh1p_pv_voltage_2
+                name: PV Spannung 2
+                icon: mdi:sine-wave
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_total_jk_bms_total_voltage
+                name: Batteriespannung
+                icon: mdi:flash
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_total_jk_bms_total_current
+                name: Batteriestrom
+                icon: mdi:current-dc
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_pack_00_temperature_01
+                name: Batterie Temperatur
+                icon: mdi:thermometer
+
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: Leistungsverlauf (heute)
+              show_states: false
+            graph_span: 24h
+            span:
+              start: day
+            apex_config:
+              chart:
+                height: 315
+                toolbar:
+                  show: true
+              legend:
+                show: true
+                position: bottom
+              stroke:
+                width: 2
+              grid:
+                borderColor: "#dce5ea"
+              yaxis:
+                labels:
+                  formatter: |
+                    EVAL:function(value) { return value.toFixed(1) + " kW"; }
+            series:
+              - entity: sensor.solis_s5_eh1p_total_pv_power
+                name: PV
+                color: "#ffb000"
+                type: line
+                unit: kW
+                transform: "return x / 1000;"
+                group_by:
+                  func: avg
+                  duration: 5min
+              - entity: sensor.solis_s5_eh1p_household_load_power
+                name: Verbrauch
+                color: "#2196f3"
+                type: line
+                unit: kW
+                transform: "return x / 1000;"
+                group_by:
+                  func: avg
+                  duration: 5min
+              - entity: sensor.jk_bms_total_jk_bms_total_power
+                name: Batterie
+                color: "#20ae55"
+                type: area
+                unit: kW
+                opacity: 0.22
+                group_by:
+                  func: avg
+                  duration: 5min
+              - entity: sensor.solis_s5_eh1p_ac_grid_port_power
+                name: Netz
+                color: "#ef5545"
+                type: line
+                unit: kW
+                transform: "return x / 1000;"
+                group_by:
+                  func: avg
+                  duration: 5min
 
   - title: Historische Werte
     path: historische-werte
