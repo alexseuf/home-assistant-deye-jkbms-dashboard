@@ -1,0 +1,20 @@
+{
+  "title": "PV & Battery Dashboard",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Set up PV & Battery Dashboard",
+        "description": "Installs a managed Lovelace dashboard. After HACS updates, the bundled dashboard can be refreshed automatically on the next Home Assistant start.",
+        "data": {
+          "auto_update_dashboard": "Automatically update dashboard at startup"
+        },
+        "data_description": {
+          "auto_update_dashboard": "When enabled, the dashboard is refreshed from the integration after a HACS update and restart."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "PV & Battery Dashboard is already configured."
+    }
+  }
+}
