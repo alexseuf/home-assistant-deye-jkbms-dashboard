@@ -30,7 +30,7 @@ Use the integration that matches each inverter. Examples:
 - **Solis:** **Solis Modbus** von **Pho3niX90** – https://github.com/Pho3niX90/solis_modbus
 - **Hoymiles:** a compatible Home Assistant Hoymiles / OpenDTU / SolarAssistant integration
 
-The dashboard does not depend on the manufacturer name. What matters is that the logical functions listed in [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) are mapped to the entities created by your integration.
+The dashboard UI does not depend on the manufacturer name. The current `dashboard.yaml` is now a concrete **Solis Modbus reference implementation** using documented entities from Pho3niX90; other inverter integrations can be substituted through the logical mapping in [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md).
 
 Verified reference integrations used by this project:
 
@@ -65,8 +65,9 @@ Use [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) as the mapping checklist.
 2. Open the dashboard and choose **Edit dashboard**.
 3. Open the three-dot menu and select **Raw configuration editor**.
 4. Copy [`dashboard.yaml`](dashboard.yaml) into the raw editor.
-5. Replace or extend the inverter entity references according to your mapping.
-6. Save.
+5. If you use Solis Modbus by Pho3niX90, first test the supplied entity IDs as-is. Home Assistant may alter final entity IDs based on device/location naming.
+6. For another inverter integration, replace the Solis entity references according to [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md).
+7. Save.
 
 The dashboard contains five views:
 
@@ -142,4 +143,4 @@ The following five mock-ups are the original visual reference used before today'
 
 ## Status
 
-The dashboard is manufacturer-neutral, supports up to three inverter slots, and now includes verified reference mappings for Deye/SolarModbus V2 and Solis Modbus by Pho3niX90. Hoymiles remains integration-dependent until a specific source is selected.
+The dashboard is manufacturer-neutral and supports up to three inverter slots. The current `dashboard.yaml` implements all five dashboard views using **Solis Modbus by Pho3niX90 as the concrete example profile**. Deye/SolarModbus V2 remains documented as an alternative verified mapping; Hoymiles remains integration-dependent until a specific source is selected.
