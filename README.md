@@ -240,3 +240,17 @@ Version **0.1.9** refines the first page against the reference mock-up:
   - Batterie Temperatur
 - metric values are shown as a second, larger line
 - rolling 24-hour power chart remains unchanged
+
+
+## Dashboard 0.1.10
+
+Version **0.1.10** further aligns the first page with the supplied visual reference:
+
+- outer-card values are left-aligned to the same text edge as the mock-up
+- PV / Verbrauch / Batterie / Netz use a clearer title → large power → small secondary-value hierarchy
+- main power values are larger and more dominant
+- daily energy / SOC lines are smaller and aligned below the main value
+- inverter title and live status typography are reduced to the reference proportions
+- the five electrical metric cards use smaller labels and larger second-line values
+- new versioned SVG assets avoid stale Home Assistant/browser cache
+- rolling 24-hour power chart is retained
