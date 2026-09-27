@@ -1,0 +1,122 @@
+name: Build HACS beta release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, e.g. 0.1.0-beta.1"
+        required: true
+        default: "0.1.0-beta.1"
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Resolve tag
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=v${{ inputs.version }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Verify manifest version
+        shell: bash
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          VERSION="${TAG#v}"
+          python - <<'PY'
+          import json
+          import os
+
+          version = json.load(
+              open("custom_components/pv_battery_dashboard/manifest.json", encoding="utf-8")
+          )["version"]
+          expected = os.environ["EXPECTED"].removeprefix("v")
+          if version != expected:
+              raise SystemExit(
+                  f"manifest version {version} != release version {expected}"
+              )
+          PY
+        env:
+          EXPECTED: ${{ steps.version.outputs.tag }}
+
+      - name: Validate Python syntax
+        shell: bash
+        run: |
+          python -m compileall -q -f custom_components/pv_battery_dashboard
+
+      - name: Reject accidental literal newline escapes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import tokenize
+
+          root = Path("custom_components/pv_battery_dashboard")
+          problems = []
+
+          for path in root.rglob("*.py"):
+              source = path.read_text(encoding="utf-8")
+              masked = list(source)
+              lines = source.splitlines(True)
+
+              try:
+                  tokens = tokenize.generate_tokens(iter(lines).__next__)
+                  for token in tokens:
+                      if token.type in (tokenize.STRING, tokenize.COMMENT):
+                          start_line, start_col = token.start
+                          end_line, end_col = token.end
+                          start = sum(map(len, lines[:start_line - 1])) + start_col
+                          end = sum(map(len, lines[:end_line - 1])) + end_col
+                          for i in range(start, min(end, len(masked))):
+                              if masked[i] != "\n":
+                                  masked[i] = " "
+              except (tokenize.TokenError, IndentationError) as err:
+                  raise SystemExit(f"{path}: tokenization failed: {err}")
+
+              code_only = "".join(masked)
+              if "\\n" in code_only:
+                  for lineno, line in enumerate(code_only.splitlines(), 1):
+                      if "\\n" in line:
+                          problems.append(
+                              f"{path}:{lineno}: literal \\n outside string/comment"
+                          )
+
+          if problems:
+              raise SystemExit("\n".join(problems))
+          PY
+
+      - name: Create tag for manual release
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          TAG="${{ steps.version.outputs.tag }}"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag "$TAG"
+          git push origin "$TAG"
+
+      - name: Build HACS zip
+        run: |
+          cd custom_components/pv_battery_dashboard
+          zip -r ../../pv_battery_dashboard.zip .
+          cd ../..
+
+      - name: Create GitHub prerelease
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          prerelease: true
+          files: pv_battery_dashboard.zip
+          generate_release_notes: true
