@@ -28,7 +28,6 @@ views:
                   font-weight: 700
               - type: state-label
                 entity: sensor.solis_s5_eh1p_pv_today_energy_generation
-                prefix: "Tagesertrag  "
                 style:
                   left: 11%
                   top: 39%
@@ -53,7 +52,6 @@ views:
                   font-weight: 700
               - type: state-label
                 entity: sensor.solis_s5_eh1p_today_energy_consumption
-                prefix: "Tagesverbrauch  "
                 style:
                   left: 81%
                   top: 39%
@@ -88,7 +86,6 @@ views:
                   font-weight: 700
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_soc
-                prefix: "SOC  "
                 style:
                   left: 11%
                   top: 87%
@@ -113,7 +110,6 @@ views:
                   font-weight: 700
               - type: state-label
                 entity: sensor.solis_s5_eh1p_today_energy_fed_into_grid
-                prefix: "Einspeisung heute  "
                 style:
                   left: 81%
                   top: 87%
