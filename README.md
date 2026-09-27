@@ -270,3 +270,22 @@ Version **0.1.11** performs another mock-up focused refinement of the first page
 - the 24-hour chart is slightly taller
 - battery history is now a normal line rather than a filled area, matching the reference chart more closely
 - versioned SVG assets are used again to avoid stale browser/Home Assistant caching
+
+
+## Dashboard 0.1.12
+
+Version **0.1.12** combines the next mock-up refinements:
+
+- the four outer energy-flow cards now use a four-line hierarchy:
+  - heading
+  - large live power
+  - small descriptor
+  - small live secondary value
+- PV shows Tagesertrag on a separate line from its kWh value
+- Verbrauch shows Tagesverbrauch on a separate line from its kWh value
+- Batterie shows SOC on a separate line from the percentage
+- Netz shows Einspeisung heute on a separate line from its kWh value
+- the five electrical metric headings are larger
+- the last metric heading is written as **Batterietemperatur** and still fits inside the card
+- the integration adds a small helper sensor that mirrors the JK-BMS total battery voltage with one decimal place
+- the first-page Batteriespannung metric uses that helper so values such as **52,1 V** are displayed consistently
