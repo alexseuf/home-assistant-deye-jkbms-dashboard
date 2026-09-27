@@ -1,0 +1,384 @@
+# Home Assistant Multi-Inverter + JK-BMS Dashboard
+# Reference implementation: Solis Modbus by Pho3niX90
+# https://github.com/Pho3niX90/solis_modbus
+#
+# UI labels stay manufacturer-neutral. The concrete entity mapping below uses
+# the documented Solis entity IDs as an example profile for Wechselrichter 1.
+# Verify final entity IDs in Home Assistant because device/location naming can
+# alter entity IDs.
+
+title: PV & Batteries
+
+views:
+  - title: Aktuelle Werte
+    path: aktuelle-werte
+    icon: mdi:solar-power
+    type: sections
+    max_columns: 4
+    dense_section_placement: true
+    sections:
+      - type: grid
+        column_span: 4
+        cards:
+          - type: heading
+            heading: Energiefluss (aktuell)
+            icon: mdi:transmission-tower
+
+          - type: tile
+            entity: sensor.solis_total_dc_output
+            name: PV
+            icon: mdi:solar-power
+            vertical: true
+          - type: tile
+            entity: sensor.solis_backup_load_power
+            name: Verbrauch
+            icon: mdi:home-lightning-bolt
+            vertical: true
+          - type: tile
+            entity: sensor.solis_battery_power
+            name: Batterie
+            icon: mdi:battery-charging
+            vertical: true
+          - type: tile
+            entity: sensor.solis_battery_soc
+            name: Batterie SOC
+            icon: mdi:battery-high
+            vertical: true
+          - type: tile
+            entity: sensor.solis_ac_grid_port_power
+            name: Netz
+            icon: mdi:transmission-tower
+            vertical: true
+          - type: tile
+            entity: sensor.solis_current_status
+            name: Wechselrichterstatus
+            icon: mdi:check-circle-outline
+            vertical: true
+
+          - type: heading
+            heading: Energie heute
+            icon: mdi:calendar-today
+          - type: tile
+            entity: sensor.solis_pv_today_energy_generation
+            name: PV-Ertrag
+            icon: mdi:white-balance-sunny
+          - type: tile
+            entity: sensor.solis_today_energy_consumption
+            name: Verbrauch
+            icon: mdi:home-lightning-bolt-outline
+          - type: tile
+            entity: sensor.solis_today_energy_imported_from_grid
+            name: Netzbezug
+            icon: mdi:transmission-tower-import
+          - type: tile
+            entity: sensor.solis_today_energy_fed_into_grid
+            name: Einspeisung
+            icon: mdi:transmission-tower-export
+          - type: tile
+            entity: sensor.solis_today_battery_charge_energy
+            name: Batterie geladen
+            icon: mdi:battery-plus
+          - type: tile
+            entity: sensor.solis_today_battery_discharge_energy
+            name: Batterie entladen
+            icon: mdi:battery-minus
+
+      - type: grid
+        column_span: 4
+        cards:
+          - type: heading
+            heading: Elektrische Werte
+            icon: mdi:meter-electric-outline
+          - type: tile
+            entity: sensor.solis_dc_voltage_1
+            name: PV Spannung 1
+            icon: mdi:sine-wave
+          - type: tile
+            entity: sensor.solis_dc_voltage_2
+            name: PV Spannung 2
+            icon: mdi:sine-wave
+          - type: tile
+            entity: sensor.solis_dc_current_1
+            name: PV Strom 1
+            icon: mdi:current-dc
+          - type: tile
+            entity: sensor.solis_dc_current_2
+            name: PV Strom 2
+            icon: mdi:current-dc
+          - type: tile
+            entity: sensor.solis_battery_voltage
+            name: Batteriespannung
+            icon: mdi:flash-outline
+          - type: tile
+            entity: sensor.solis_battery_current
+            name: Batteriestrom
+            icon: mdi:current-dc
+          - type: tile
+            entity: sensor.solis_a_phase_voltage
+            name: AC Spannung
+            icon: mdi:current-ac
+          - type: tile
+            entity: sensor.solis_grid_frequency
+            name: Frequenz
+            icon: mdi:sine-wave
+
+      - type: grid
+        column_span: 4
+        cards:
+          - type: heading
+            heading: Leistungsverlauf (heute)
+            icon: mdi:chart-areaspline
+          - type: history-graph
+            title: PV / Verbrauch / Batterie / Netz
+            hours_to_show: 24
+            entities:
+              - entity: sensor.solis_total_dc_output
+                name: PV
+              - entity: sensor.solis_backup_load_power
+                name: Verbrauch
+              - entity: sensor.solis_battery_power
+                name: Batterie
+              - entity: sensor.solis_ac_grid_port_power
+                name: Netz
+
+  - title: Historische Werte
+    path: historische-werte
+    icon: mdi:chart-line
+    type: sections
+    max_columns: 4
+    sections:
+      - type: grid
+        column_span: 4
+        cards:
+          - type: heading
+            heading: Historische Werte
+            icon: mdi:chart-areaspline
+
+          - type: history-graph
+            title: Leistung – letzte 24 Stunden
+            hours_to_show: 24
+            entities:
+              - entity: sensor.solis_total_dc_output
+                name: PV
+              - entity: sensor.solis_backup_load_power
+                name: Verbrauch
+              - entity: sensor.solis_battery_power
+                name: Batterie
+              - entity: sensor.solis_ac_grid_port_power
+                name: Netz
+
+          - type: history-graph
+            title: Batterie SOC – letzte 24 Stunden
+            hours_to_show: 24
+            entities:
+              - entity: sensor.solis_battery_soc
+                name: SOC
+
+          - type: history-graph
+            title: Batteriespannung & Strom – letzte 24 Stunden
+            hours_to_show: 24
+            entities:
+              - entity: sensor.solis_battery_voltage
+                name: Spannung
+              - entity: sensor.solis_battery_current
+                name: Strom
+
+          - type: history-graph
+            title: PV Eingänge (MPPT) – letzte 24 Stunden
+            hours_to_show: 24
+            entities:
+              - entity: sensor.solis_dc_power_1
+                name: PV 1 Leistung
+              - entity: sensor.solis_dc_power_2
+                name: PV 2 Leistung
+              - entity: sensor.solis_dc_voltage_1
+                name: PV 1 Spannung
+              - entity: sensor.solis_dc_voltage_2
+                name: PV 2 Spannung
+
+  - title: Summierte Werte
+    path: summierte-werte
+    icon: mdi:sigma
+    type: sections
+    max_columns: 4
+    sections:
+      - type: grid
+        column_span: 4
+        cards:
+          - type: heading
+            heading: Summierte Werte
+            icon: mdi:chart-box-outline
+          - type: tile
+            entity: sensor.solis_pv_today_energy_generation
+            name: PV Ertrag
+            icon: mdi:white-balance-sunny
+          - type: tile
+            entity: sensor.solis_today_energy_consumption
+            name: Verbrauch
+            icon: mdi:home-lightning-bolt
+          - type: tile
+            entity: sensor.solis_today_energy_imported_from_grid
+            name: Netzbezug
+            icon: mdi:transmission-tower-import
+          - type: tile
+            entity: sensor.solis_today_energy_fed_into_grid
+            name: Einspeisung
+            icon: mdi:transmission-tower-export
+          - type: tile
+            entity: sensor.solis_today_battery_charge_energy
+            name: Batterie Laden
+            icon: mdi:battery-plus
+          - type: tile
+            entity: sensor.solis_today_battery_discharge_energy
+            name: Batterie Entladen
+            icon: mdi:battery-minus
+
+          - type: heading
+            heading: Tageswerte · 14 Tage
+            icon: mdi:chart-bar
+          - type: statistics-graph
+            title: PV / Verbrauch / Netz – 14 Tage
+            chart_type: bar
+            period: day
+            days_to_show: 14
+            stat_types:
+              - change
+            entities:
+              - entity: sensor.solis_pv_total_energy_generation
+                name: PV
+              - entity: sensor.solis_total_energy_consumption
+                name: Verbrauch
+              - entity: sensor.solis_total_energy_imported_from_grid
+                name: Netzbezug
+              - entity: sensor.solis_total_energy_fed_into_grid
+                name: Einspeisung
+
+          - type: statistics-graph
+            title: Batterie – 14 Tage
+            chart_type: bar
+            period: day
+            days_to_show: 14
+            stat_types:
+              - change
+            entities:
+              - entity: sensor.solis_total_battery_charge_energy
+                name: Laden
+              - entity: sensor.solis_total_battery_discharge_energy
+                name: Entladen
+
+          - type: heading
+            heading: Monatsübersicht
+            icon: mdi:calendar-month
+          - type: statistics-graph
+            title: Energie pro Monat
+            chart_type: bar
+            period: month
+            days_to_show: 365
+            stat_types:
+              - change
+            entities:
+              - entity: sensor.solis_pv_total_energy_generation
+                name: PV
+              - entity: sensor.solis_total_energy_consumption
+                name: Verbrauch
+              - entity: sensor.solis_total_energy_imported_from_grid
+                name: Netzbezug
+              - entity: sensor.solis_total_energy_fed_into_grid
+                name: Einspeisung
+
+  - title: Einstellungen Wechselrichter
+    path: einstellungen-wechselrichter
+    icon: mdi:tune-variant
+    type: sections
+    max_columns: 4
+    sections:
+      - type: grid
+        column_span: 4
+        cards:
+          - type: heading
+            heading: Einstellungen Wechselrichter
+            icon: mdi:inverter
+
+          - type: tile
+            entity: sensor.solis_current_status
+            name: Status
+            icon: mdi:check-circle-outline
+
+          - type: entities
+            title: Batterie
+            entities:
+              - entity: number.solis_time_charging_charge_current
+                name: Ladestrom
+              - entity: number.solis_time_charging_discharge_current
+                name: Entladestrom
+              - entity: switch.solis_time_of_use_mode
+                name: Time of Use
+
+          - type: entities
+            title: System Timer (TOU) – Slot 1
+            entities:
+              - entity: time.solis_time_charging_charge_start_slot_1
+                name: Laden Start
+              - entity: time.solis_time_charging_charge_end_slot_1
+                name: Laden Ende
+              - entity: time.solis_time_charging_discharge_start_slot_1
+                name: Entladen Start
+              - entity: time.solis_time_charging_discharge_end_slot_1
+                name: Entladen Ende
+
+          - type: entities
+            title: System Timer (TOU) – Slot 2
+            entities:
+              - entity: time.solis_time_charging_charge_start_slot_2
+                name: Laden Start
+              - entity: time.solis_time_charging_charge_end_slot_2
+                name: Laden Ende
+              - entity: time.solis_time_charging_discharge_start_slot_2
+                name: Entladen Start
+              - entity: time.solis_time_charging_discharge_end_slot_2
+                name: Entladen Ende
+
+          - type: entities
+            title: System Timer (TOU) – Slot 3
+            entities:
+              - entity: time.solis_time_charging_charge_start_slot_3
+                name: Laden Start
+              - entity: time.solis_time_charging_charge_end_slot_3
+                name: Laden Ende
+              - entity: time.solis_time_charging_discharge_start_slot_3
+                name: Entladen Start
+              - entity: time.solis_time_charging_discharge_end_slot_3
+                name: Entladen Ende
+
+          - type: markdown
+            content: >-
+              **Beispielprofil:** Solis Modbus von Pho3niX90.
+
+              Die oben verwendeten `number`-, `switch`- und `time`-Entities
+              werden von der Integration für unterstützte Hybridwechselrichter
+              bereitgestellt. Welche Bedienelemente tatsächlich vorhanden sind,
+              hängt von Modell, Firmware und Poll-Profil ab.
+
+  - title: Einstellungen JK BMS
+    path: einstellungen-jk-bms
+    icon: mdi:battery-cog
+    type: sections
+    max_columns: 4
+    sections:
+      - type: grid
+        column_span: 4
+        cards:
+          - type: heading
+            heading: Einstellungen JK BMS
+            icon: mdi:battery-heart-variant
+          - type: markdown
+            content: >-
+              Diese Ansicht ist entsprechend dem fünften Mock-up vorbereitet.
+
+              Die konkrete JK-BMS/Gobel-Belegung bleibt getrennt vom Solis-Profil,
+              weil die Gobel-Entity-IDs vom Gerätenamen und der Anzahl der
+              Master/Slave-Packs abhängen.
+
+              Nach Eintragen der realen Gobel-Entities gehören hier hinein:
+              Gesamt-SOC, Spannung, Strom, einzelne Packs, Zellspannungen,
+              Temperaturen, SOH, Zyklen, Balancerstatus und Alarme.
