@@ -49,9 +49,13 @@ For the current example profile install **Solis Modbus by Pho3niX90**:
 
 https://github.com/Pho3niX90/solis_modbus
 
-The managed dashboard uses the documented Solis entities. When Home Assistant has added a location/device prefix to an entity ID, the integration tries to resolve a unique matching entity automatically.
+The bundled dashboard in version **0.1.1** is mapped to the verified Solis S5-EH1P entity IDs from the target Home Assistant installation and to the verified Gobel/JK-BMS aggregate plus pack 00–02 entities. The generic mapping model remains documented for other installations.
 
 Other inverter profiles remain possible through the mapping model in [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md).
+
+### Verified 0.1.1 target profile
+
+Version **0.1.1** uses the actual entity IDs exported from the target Home Assistant instance on 2026-09-27. It removes non-existent Solis TOU controls from the dashboard and adds the real three-pack Gobel/JK-BMS data.
 
 ### Updating
 
