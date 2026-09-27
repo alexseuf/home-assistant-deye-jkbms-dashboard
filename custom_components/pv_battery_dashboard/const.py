@@ -2,7 +2,7 @@
 
 DOMAIN = "pv_battery_dashboard"
 NAME = "PV & Battery Dashboard"
-VERSION = "0.1.9"
+VERSION = "0.1.10"
 
 CONF_AUTO_UPDATE = "auto_update_dashboard"
 
