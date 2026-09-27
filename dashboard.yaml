@@ -217,11 +217,9 @@ views:
           - type: custom:apexcharts-card
             header:
               show: true
-              title: Leistungsverlauf (heute)
+              title: Leistungsverlauf – letzte 24 Stunden
               show_states: false
             graph_span: 24h
-            span:
-              start: day
             apex_config:
               chart:
                 height: 315
