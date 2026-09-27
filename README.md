@@ -210,3 +210,15 @@ Changes:
 - expanded the daily ApexCharts graph to a single wide chart with PV/load/battery/grid colours matching the mock-up
 
 The existing Mushroom and ApexCharts dependencies remain required. Power Flow Card Plus may remain installed but is no longer used on the first page in 0.1.4.
+
+
+## Dashboard 0.1.5
+
+Version **0.1.5** makes the first dashboard page responsive and uses the available width more effectively.
+
+- first view changed from masonry to full-width panel layout
+- energy-flow text and icons use responsive CSS `clamp()` sizing
+- the five electrical summary values use a responsive picture-elements strip instead of a fixed five-column Mushroom grid
+- desktop uses almost the full Lovelace content width
+- mobile remains single-column and the key labels shrink instead of overflowing
+- the other four dashboard pages remain unchanged
