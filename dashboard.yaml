@@ -15,23 +15,6 @@ views:
             image: /pv-battery-dashboard-static/energy_flow_bg.svg
             elements:
               # PV
-              - type: icon
-                icon: mdi:white-balance-sunny
-                style:
-                  left: 7%
-                  top: 15%
-                  color: "#ffb300"
-                  --mdc-icon-size: "clamp(22px, 2.5vw, 42px)"
-              - type: custom:hui-element
-                card_type: markdown
-                content: "**PV**"
-                style:
-                  left: 16%
-                  top: 18%
-                  width: 15%
-                  color: "#1f2937"
-                  font-size: "clamp(10px, 1vw, 14px)"
-                  font-weight: 600
               - type: state-label
                 entity: sensor.solis_s5_eh1p_total_pv_power
                 style:
@@ -50,23 +33,6 @@ views:
                   font-size: "clamp(9px, 0.78vw, 12px)"
 
               # Verbrauch
-              - type: icon
-                icon: mdi:home
-                style:
-                  left: 72%
-                  top: 15%
-                  color: "#ff7a32"
-                  --mdc-icon-size: "clamp(22px, 2.5vw, 42px)"
-              - type: custom:hui-element
-                card_type: markdown
-                content: "**Verbrauch**"
-                style:
-                  left: 79%
-                  top: 18%
-                  width: 18%
-                  color: "#1f2937"
-                  font-size: "clamp(10px, 1vw, 14px)"
-                  font-weight: 600
               - type: state-label
                 entity: sensor.solis_s5_eh1p_household_load_power
                 style:
@@ -96,23 +62,6 @@ views:
                   font-weight: 600
 
               # Batterie
-              - type: icon
-                icon: mdi:battery-outline
-                style:
-                  left: 7%
-                  top: 63%
-                  color: "#20ae55"
-                  --mdc-icon-size: "clamp(22px, 2.5vw, 42px)"
-              - type: custom:hui-element
-                card_type: markdown
-                content: "**Batterie**"
-                style:
-                  left: 16%
-                  top: 66%
-                  width: 18%
-                  color: "#1f2937"
-                  font-size: "clamp(10px, 1vw, 14px)"
-                  font-weight: 600
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_power
                 style:
@@ -131,23 +80,6 @@ views:
                   font-size: "clamp(9px, 0.78vw, 12px)"
 
               # Netz
-              - type: icon
-                icon: mdi:transmission-tower
-                style:
-                  left: 69%
-                  top: 63%
-                  color: "#37475a"
-                  --mdc-icon-size: "clamp(22px, 2.5vw, 42px)"
-              - type: custom:hui-element
-                card_type: markdown
-                content: "**Netz**"
-                style:
-                  left: 79%
-                  top: 66%
-                  width: 15%
-                  color: "#1f2937"
-                  font-size: "clamp(10px, 1vw, 14px)"
-                  font-weight: 600
               - type: state-label
                 entity: sensor.solis_s5_eh1p_ac_grid_port_power
                 style:
