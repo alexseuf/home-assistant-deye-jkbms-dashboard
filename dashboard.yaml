@@ -12,43 +12,55 @@ views:
             title: Energiefluss (aktuell)
 
           - type: picture-elements
-            image: /pv-battery-dashboard-static/energy_flow_bg_v019.svg
+            image: /pv-battery-dashboard-static/energy_flow_bg_v0110.svg
             elements:
               # PV
               - type: state-label
                 entity: sensor.solis_s5_eh1p_total_pv_power
                 style:
-                  left: 16%
-                  top: 28%
+                  left: 11%
+                  top: 29%
+                  width: 18%
+                  transform: translate(0, -50%)
+                  text-align: left
                   color: "#111827"
-                  font-size: "clamp(16px, 1.75vw, 25px)"
+                  font-size: "clamp(20px, 2.15vw, 32px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.solis_s5_eh1p_pv_today_energy_generation
                 prefix: "Tagesertrag  "
                 style:
-                  left: 16%
-                  top: 40%
+                  left: 11%
+                  top: 41%
+                  width: 20%
+                  transform: translate(0, -50%)
+                  text-align: left
                   color: "#374151"
-                  font-size: "clamp(9px, 0.78vw, 12px)"
+                  font-size: "clamp(8px, 0.75vw, 11px)"
 
               # Verbrauch
               - type: state-label
                 entity: sensor.solis_s5_eh1p_household_load_power
                 style:
-                  left: 84%
-                  top: 28%
+                  left: 81%
+                  top: 29%
+                  width: 16%
+                  transform: translate(0, -50%)
+                  text-align: left
                   color: "#111827"
-                  font-size: "clamp(16px, 1.75vw, 25px)"
+                  font-size: "clamp(20px, 2.15vw, 32px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.solis_s5_eh1p_today_energy_consumption
                 prefix: "Tagesverbrauch  "
                 style:
-                  left: 84%
-                  top: 40%
+                  left: 81%
+                  top: 41%
+                  width: 17%
+                  transform: translate(0, -50%)
+                  text-align: left
                   color: "#374151"
-                  font-size: "clamp(9px, 0.78vw, 12px)"
+                  font-size: "clamp(8px, 0.75vw, 11px)"
 
               # Wechselrichter
               - type: state-label
@@ -57,47 +69,59 @@ views:
                   left: 50%
                   top: 60%
                   color: "#20ae55"
-                  font-size: "clamp(9px, 0.8vw, 12px)"
+                  font-size: "clamp(9px, 0.75vw, 11px)"
                   font-weight: 600
 
               # Batterie
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_power
                 style:
-                  left: 16%
-                  top: 76%
+                  left: 11%
+                  top: 77%
+                  width: 18%
+                  transform: translate(0, -50%)
+                  text-align: left
                   color: "#111827"
-                  font-size: "clamp(16px, 1.75vw, 25px)"
+                  font-size: "clamp(20px, 2.15vw, 32px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_soc
                 prefix: "SOC  "
                 style:
-                  left: 16%
-                  top: 88%
+                  left: 11%
+                  top: 89%
+                  width: 18%
+                  transform: translate(0, -50%)
+                  text-align: left
                   color: "#374151"
-                  font-size: "clamp(9px, 0.78vw, 12px)"
+                  font-size: "clamp(8px, 0.75vw, 11px)"
 
               # Netz
               - type: state-label
                 entity: sensor.solis_s5_eh1p_ac_grid_port_power
                 style:
-                  left: 84%
-                  top: 76%
+                  left: 81%
+                  top: 77%
+                  width: 16%
+                  transform: translate(0, -50%)
+                  text-align: left
                   color: "#111827"
-                  font-size: "clamp(16px, 1.75vw, 25px)"
+                  font-size: "clamp(20px, 2.15vw, 32px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.solis_s5_eh1p_today_energy_fed_into_grid
                 prefix: "Einspeisung heute  "
                 style:
-                  left: 84%
-                  top: 88%
+                  left: 81%
+                  top: 89%
+                  width: 17%
+                  transform: translate(0, -50%)
+                  text-align: left
                   color: "#374151"
-                  font-size: "clamp(9px, 0.78vw, 12px)"
+                  font-size: "clamp(8px, 0.75vw, 11px)"
 
           - type: picture-elements
-            image: /pv-battery-dashboard-static/metric_strip_v019.svg
+            image: /pv-battery-dashboard-static/metric_strip_v0110.svg
             elements:
               - type: state-label
                 entity: sensor.solis_s5_eh1p_pv_voltage_1
@@ -105,7 +129,7 @@ views:
                   left: 10%
                   top: 67%
                   color: "#111827"
-                  font-size: "clamp(11px, 1.25vw, 18px)"
+                  font-size: "clamp(14px, 1.45vw, 22px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.solis_s5_eh1p_pv_voltage_2
@@ -113,7 +137,7 @@ views:
                   left: 30%
                   top: 67%
                   color: "#111827"
-                  font-size: "clamp(11px, 1.25vw, 18px)"
+                  font-size: "clamp(14px, 1.45vw, 22px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_voltage
@@ -121,7 +145,7 @@ views:
                   left: 50%
                   top: 67%
                   color: "#111827"
-                  font-size: "clamp(11px, 1.25vw, 18px)"
+                  font-size: "clamp(14px, 1.45vw, 22px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_current
@@ -129,7 +153,7 @@ views:
                   left: 70%
                   top: 67%
                   color: "#111827"
-                  font-size: "clamp(11px, 1.25vw, 18px)"
+                  font-size: "clamp(14px, 1.45vw, 22px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.jk_bms_pack_00_temperature_01
@@ -137,7 +161,7 @@ views:
                   left: 90%
                   top: 67%
                   color: "#111827"
-                  font-size: "clamp(11px, 1.25vw, 18px)"
+                  font-size: "clamp(14px, 1.45vw, 22px)"
                   font-weight: 700
 
           - type: custom:apexcharts-card
