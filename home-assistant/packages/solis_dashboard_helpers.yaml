@@ -1,0 +1,91 @@
+# Home Assistant package for the Solis reference dashboard
+# Copy this file to /config/packages/solis_dashboard_helpers.yaml
+#
+# Sources are total-increasing energy counters exposed by
+# Pho3niX90/solis_modbus. Verify the exact entity IDs in
+# Developer Tools -> States before restarting Home Assistant.
+
+utility_meter:
+  solis_dashboard_pv_daily:
+    name: PV Ertrag Tag
+    unique_id: solis_dashboard_pv_daily
+    source: sensor.solis_pv_total_energy_generation
+    cycle: daily
+    periodically_resetting: false
+
+  solis_dashboard_consumption_daily:
+    name: Verbrauch Tag
+    unique_id: solis_dashboard_consumption_daily
+    source: sensor.solis_total_energy_consumption
+    cycle: daily
+    periodically_resetting: false
+
+  solis_dashboard_grid_import_daily:
+    name: Netzbezug Tag
+    unique_id: solis_dashboard_grid_import_daily
+    source: sensor.solis_total_energy_imported_from_grid
+    cycle: daily
+    periodically_resetting: false
+
+  solis_dashboard_grid_export_daily:
+    name: Einspeisung Tag
+    unique_id: solis_dashboard_grid_export_daily
+    source: sensor.solis_total_energy_fed_into_grid
+    cycle: daily
+    periodically_resetting: false
+
+  solis_dashboard_battery_charge_daily:
+    name: Batterie Laden Tag
+    unique_id: solis_dashboard_battery_charge_daily
+    source: sensor.solis_total_battery_charge_energy
+    cycle: daily
+    periodically_resetting: false
+
+  solis_dashboard_battery_discharge_daily:
+    name: Batterie Entladen Tag
+    unique_id: solis_dashboard_battery_discharge_daily
+    source: sensor.solis_total_battery_discharge_energy
+    cycle: daily
+    periodically_resetting: false
+
+  solis_dashboard_pv_monthly:
+    name: PV Ertrag Monat
+    unique_id: solis_dashboard_pv_monthly
+    source: sensor.solis_pv_total_energy_generation
+    cycle: monthly
+    periodically_resetting: false
+
+  solis_dashboard_consumption_monthly:
+    name: Verbrauch Monat
+    unique_id: solis_dashboard_consumption_monthly
+    source: sensor.solis_total_energy_consumption
+    cycle: monthly
+    periodically_resetting: false
+
+  solis_dashboard_grid_import_monthly:
+    name: Netzbezug Monat
+    unique_id: solis_dashboard_grid_import_monthly
+    source: sensor.solis_total_energy_imported_from_grid
+    cycle: monthly
+    periodically_resetting: false
+
+  solis_dashboard_grid_export_monthly:
+    name: Einspeisung Monat
+    unique_id: solis_dashboard_grid_export_monthly
+    source: sensor.solis_total_energy_fed_into_grid
+    cycle: monthly
+    periodically_resetting: false
+
+  solis_dashboard_battery_charge_monthly:
+    name: Batterie Laden Monat
+    unique_id: solis_dashboard_battery_charge_monthly
+    source: sensor.solis_total_battery_charge_energy
+    cycle: monthly
+    periodically_resetting: false
+
+  solis_dashboard_battery_discharge_monthly:
+    name: Batterie Entladen Monat
+    unique_id: solis_dashboard_battery_discharge_monthly
+    source: sensor.solis_total_battery_discharge_energy
+    cycle: monthly
+    periodically_resetting: false

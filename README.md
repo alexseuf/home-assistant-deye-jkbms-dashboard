@@ -18,9 +18,17 @@ The existing Deye/SolarModbus V2 mapping remains the verified reference profile 
 
 ## Installation
 
-### Planned: HACS installation
+### Recommended installation
 
-A future milestone is to package this repository as a HACS-installable dashboard. Until then, use the manual installation procedure below.
+The repository now includes a ready-to-copy Home Assistant setup:
+
+- [Home Assistant installation guide](docs/INSTALLATION_HOME_ASSISTANT.md)
+- [configuration.yaml snippet](home-assistant/configuration-snippet.yaml)
+- [Solis daily/monthly Utility Meter package](home-assistant/packages/solis_dashboard_helpers.yaml)
+
+This loads `dashboard.yaml` directly as a YAML dashboard from Home Assistant's `/config` directory, so you do not have to paste the complete dashboard into the Raw configuration editor.
+
+A standalone HACS package for this dashboard is still a future milestone. The **Solis Modbus** integration itself can already be installed through HACS.
 
 ### 1. Install inverter integration(s)
 
@@ -59,7 +67,11 @@ Only slot 1 is required. Slots 2 and 3 are optional.
 
 Use [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) as the mapping checklist. The dashboard must use entity IDs actually present in your Home Assistant instance.
 
-### 4. Install the dashboard manually
+### 4. Install the dashboard
+
+For the recommended file-based installation, follow [`docs/INSTALLATION_HOME_ASSISTANT.md`](docs/INSTALLATION_HOME_ASSISTANT.md).
+
+For a quick manual import through the UI:
 
 1. Open **Settings → Dashboards** and create a new dashboard.
 2. Open the dashboard and choose **Edit dashboard**.
@@ -140,7 +152,10 @@ The following five mock-ups are the original visual reference used before today'
 - [`docs/DASHBOARD_SPEC.md`](docs/DASHBOARD_SPEC.md) – functional specification
 - [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) – inverter/BMS mapping model and verified reference entities
 - [`docs/images/mockups/`](docs/images/mockups/) – visual references
+- [`docs/INSTALLATION_HOME_ASSISTANT.md`](docs/INSTALLATION_HOME_ASSISTANT.md) – installation in Home Assistant
+- [`home-assistant/configuration-snippet.yaml`](home-assistant/configuration-snippet.yaml) – YAML dashboard registration
+- [`home-assistant/packages/solis_dashboard_helpers.yaml`](home-assistant/packages/solis_dashboard_helpers.yaml) – daily/monthly Utility Meter helpers
 
 ## Status
 
-The dashboard is manufacturer-neutral and supports up to three inverter slots. The current `dashboard.yaml` implements all five dashboard views using **Solis Modbus by Pho3niX90 as the concrete example profile**. Deye/SolarModbus V2 remains documented as an alternative verified mapping; Hoymiles remains integration-dependent until a specific source is selected.
+The dashboard is manufacturer-neutral and supports up to three inverter slots. The current `dashboard.yaml` implements all five dashboard views using **Solis Modbus by Pho3niX90 as the concrete example profile**, including 14-day daily-energy charts and monthly summaries based on long-term statistics plus Utility Meter helpers. Deye/SolarModbus V2 remains documented as an alternative verified mapping; Hoymiles remains integration-dependent until a specific source is selected.

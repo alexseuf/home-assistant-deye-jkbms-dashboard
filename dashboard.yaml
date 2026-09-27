@@ -234,22 +234,73 @@ views:
             icon: mdi:battery-minus
 
           - type: heading
-            heading: Tageswerte / Monatsübersicht
-            icon: mdi:calendar-month
-          - type: markdown
-            content: >-
-              Für die Mock-up-Ansicht **Tageswerte · 14 Tage** und die
-              **Monatsübersicht** empfiehlt die Solis-Integration Home-Assistant-
-              Utility-Meter-Helfer, weil die Tageszähler des Wechselrichters
-              zeitlich anders zurückgesetzt werden können als Home Assistant.
+            heading: Tageswerte · 14 Tage
+            icon: mdi:chart-bar
+          - type: statistics-graph
+            title: PV / Verbrauch / Netz – 14 Tage
+            chart_type: bar
+            period: day
+            days_to_show: 14
+            stat_types:
+              - change
+            entities:
+              - entity: sensor.solis_pv_total_energy_generation
+                name: PV
+              - entity: sensor.solis_total_energy_consumption
+                name: Verbrauch
+              - entity: sensor.solis_total_energy_imported_from_grid
+                name: Netzbezug
+              - entity: sensor.solis_total_energy_fed_into_grid
+                name: Einspeisung
 
-              Geeignete Quellen sind:
-              - `sensor.solis_pv_today_energy_generation`
-              - `sensor.solis_today_energy_consumption`
-              - `sensor.solis_today_energy_imported_from_grid`
-              - `sensor.solis_today_energy_fed_into_grid`
-              - `sensor.solis_today_battery_charge_energy`
-              - `sensor.solis_today_battery_discharge_energy`
+          - type: statistics-graph
+            title: Batterie – 14 Tage
+            chart_type: bar
+            period: day
+            days_to_show: 14
+            stat_types:
+              - change
+            entities:
+              - entity: sensor.solis_total_battery_charge_energy
+                name: Laden
+              - entity: sensor.solis_total_battery_discharge_energy
+                name: Entladen
+
+          - type: heading
+            heading: Monatsübersicht
+            icon: mdi:calendar-month
+          - type: tile
+            entity: sensor.solis_dashboard_pv_monthly
+            name: PV Monat
+            icon: mdi:white-balance-sunny
+          - type: tile
+            entity: sensor.solis_dashboard_consumption_monthly
+            name: Verbrauch Monat
+            icon: mdi:home-lightning-bolt
+          - type: tile
+            entity: sensor.solis_dashboard_grid_import_monthly
+            name: Netzbezug Monat
+            icon: mdi:transmission-tower-import
+          - type: tile
+            entity: sensor.solis_dashboard_grid_export_monthly
+            name: Einspeisung Monat
+            icon: mdi:transmission-tower-export
+          - type: statistics-graph
+            title: Energie pro Monat
+            chart_type: bar
+            period: month
+            days_to_show: 365
+            stat_types:
+              - change
+            entities:
+              - entity: sensor.solis_pv_total_energy_generation
+                name: PV
+              - entity: sensor.solis_total_energy_consumption
+                name: Verbrauch
+              - entity: sensor.solis_total_energy_imported_from_grid
+                name: Netzbezug
+              - entity: sensor.solis_total_energy_fed_into_grid
+                name: Einspeisung
 
   - title: Einstellungen Wechselrichter
     path: einstellungen-wechselrichter

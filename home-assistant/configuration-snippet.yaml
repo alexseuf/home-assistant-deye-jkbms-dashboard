@@ -1,0 +1,17 @@
+# Merge these blocks into /config/configuration.yaml.
+# If a homeassistant: or lovelace: block already exists, add only the
+# missing child entries; do not create a second duplicate top-level key.
+
+homeassistant:
+  packages: !include_dir_named packages
+
+lovelace:
+  mode: storage
+  dashboards:
+    pv-batteries:
+      mode: yaml
+      title: PV & Batteries
+      icon: mdi:solar-power
+      show_in_sidebar: true
+      require_admin: false
+      filename: dashboard.yaml
