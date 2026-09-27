@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 108">
+  <rect width="1000" height="108" rx="14" fill="#f8fbfd"/>
+  <g fill="#fff" stroke="#d7e0e5">
+    <rect x="8" y="12" width="184" height="84" rx="10"/>
+    <rect x="208" y="12" width="184" height="84" rx="10"/>
+    <rect x="408" y="12" width="184" height="84" rx="10"/>
+    <rect x="608" y="12" width="184" height="84" rx="10"/>
+    <rect x="808" y="12" width="184" height="84" rx="10"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="18" font-weight="500" fill="#374151">
+    <text x="28" y="40">PV Spannung 1</text>
+    <text x="228" y="40">PV Spannung 2</text>
+    <text x="428" y="40">Batteriespannung</text>
+    <text x="628" y="40">Batteriestrom</text>
+    <text x="828" y="40">Batterietemperatur</text>
+  </g>
+</svg>
