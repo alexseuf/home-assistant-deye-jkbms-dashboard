@@ -1,0 +1,76 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  hacs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: HACS validation
+        uses: hacs/action@main
+        with:
+          category: integration
+
+  hassfest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Hassfest validation
+        uses: home-assistant/actions/hassfest@master
+
+  code-sanity:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate Python syntax
+        shell: bash
+        run: |
+          python -m compileall -q -f custom_components/pv_battery_dashboard
+
+      - name: Reject accidental literal newline escapes
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import tokenize
+
+          root = Path("custom_components/pv_battery_dashboard")
+          problems = []
+
+          for path in root.rglob("*.py"):
+              source = path.read_text(encoding="utf-8")
+              masked = list(source)
+              lines = source.splitlines(True)
+
+              try:
+                  tokens = tokenize.generate_tokens(iter(lines).__next__)
+                  for token in tokens:
+                      if token.type in (tokenize.STRING, tokenize.COMMENT):
+                          start_line, start_col = token.start
+                          end_line, end_col = token.end
+                          start = sum(map(len, lines[:start_line - 1])) + start_col
+                          end = sum(map(len, lines[:end_line - 1])) + end_col
+                          for i in range(start, min(end, len(masked))):
+                              if masked[i] != "\n":
+                                  masked[i] = " "
+              except (tokenize.TokenError, IndentationError) as err:
+                  raise SystemExit(f"{path}: tokenization failed: {err}")
+
+              code_only = "".join(masked)
+              if "\\n" in code_only:
+                  for lineno, line in enumerate(code_only.splitlines(), 1):
+                      if "\\n" in line:
+                          problems.append(
+                              f"{path}:{lineno}: literal \\n outside string/comment"
+                          )
+
+          if problems:
+              raise SystemExit("\n".join(problems))
+          PY

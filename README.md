@@ -16,70 +16,56 @@ The existing Deye/SolarModbus V2 mapping remains the verified reference profile 
 - JK-BMS master/slave battery systems via Gobel Power
 - manufacturer-specific settings only when the integration exposes verified writable entities/services
 
-## Installation
+## Installation and updates via HACS
 
-### Recommended installation
+The project now contains a real Home Assistant custom integration. HACS installs the integration into `custom_components/pv_battery_dashboard` and can manage later updates.
 
-The repository now includes a ready-to-copy Home Assistant setup:
+### 1. Open this repository directly in HACS
 
-- [Home Assistant installation guide](docs/INSTALLATION_HOME_ASSISTANT.md)
-- [configuration.yaml snippet](home-assistant/configuration-snippet.yaml)
-- [Solis daily/monthly Utility Meter package](home-assistant/packages/solis_dashboard_helpers.yaml)
+[![Open your Home Assistant instance and open this repository inside HACS.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=alexseuf&repository=home-assistant-deye-jkbms-dashboard&category=integration)
 
-This loads `dashboard.yaml` directly as a YAML dashboard from Home Assistant's `/config` directory, so you do not have to paste the complete dashboard into the Raw configuration editor.
+If the button is not used, add this repository manually in **HACS → ⋮ → Custom repositories**:
 
-A standalone HACS package for this dashboard is still a future milestone. The **Solis Modbus** integration itself can already be installed through HACS.
+- Repository: `https://github.com/alexseuf/home-assistant-deye-jkbms-dashboard`
+- Type: **Integration**
 
-### 1. Install inverter integration(s)
+Then choose **Download** in HACS and restart Home Assistant.
 
-Use the integration that matches each inverter. Examples:
+### 2. Add the integration
 
-- **Deye:** SolarModbus V2
-- **Solis:** **Solis Modbus** von **Pho3niX90** – https://github.com/Pho3niX90/solis_modbus
-- **Hoymiles:** a compatible Home Assistant Hoymiles / OpenDTU / SolarAssistant integration
+After the restart, use this button:
 
-The dashboard UI does not depend on the manufacturer name. The current `dashboard.yaml` is now a concrete **Solis Modbus reference implementation** using documented entities from Pho3niX90; other inverter integrations can be substituted through the logical mapping in [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md).
+[![Add PV & Battery Dashboard to Home Assistant.](https://my.home-assistant.io/badges/config_flow_start.svg)](https://my.home-assistant.io/redirect/config_flow_start/?domain=pv_battery_dashboard)
 
-Verified reference integrations used by this project:
+Or open **Settings → Devices & services → Add integration** and search for **PV & Battery Dashboard**.
 
-- **Deye / SolarModbus V2:** https://github.com/comdif/ha-solarmodbus
-- **Solis / Solis Modbus by Pho3niX90:** https://github.com/Pho3niX90/solis_modbus
+During setup, leave **Dashboard bei Start automatisch aktualisieren** enabled if the HACS version should manage the dashboard automatically.
 
-The Solis integration supports TCP and direct serial/RS485 setup and exposes sensor, number, switch, select and time entities depending on inverter type and poll profile. The project uses only entities documented by the integration as reference mappings.
+The integration creates a Lovelace **storage dashboard** named **PV & Batteries** with URL path `pv-battery-dashboard`. No change to `configuration.yaml`, no package file and no Raw configuration editor are required.
 
-### 2. Optional JK-BMS integration
+### 3. Install the inverter integration
 
-Project: https://github.com/fancyui/Gobel-Battery-HA-Integration
+For the current example profile install **Solis Modbus by Pho3niX90**:
 
-The Gobel Power integration supports JK BMS systems and can expose aggregate values plus individual master/slave battery packs.
+https://github.com/Pho3niX90/solis_modbus
 
-### 3. Verify and map entities
+The managed dashboard uses the documented Solis entities. When Home Assistant has added a location/device prefix to an entity ID, the integration tries to resolve a unique matching entity automatically.
 
-Open **Developer Tools → States** in Home Assistant and identify the actual entities for every configured inverter.
+Other inverter profiles remain possible through the mapping model in [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md).
 
-The dashboard uses three logical inverter slots:
+### Updating
 
-- **Wechselrichter 1**
-- **Wechselrichter 2**
-- **Wechselrichter 3**
+1. Install the update shown by **HACS**.
+2. Restart Home Assistant when HACS requests it.
+3. With automatic dashboard updates enabled, the managed dashboard is replaced by the dashboard bundled with the new integration version during startup.
 
-Only slot 1 is required. Slots 2 and 3 are optional.
+You can also update it immediately from **Settings → Devices & services → PV & Battery Dashboard → Entities** by pressing **Dashboard aktualisieren**.
 
-Use [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) as the mapping checklist. The dashboard must use entity IDs actually present in your Home Assistant instance.
+> The dashboard created by this integration is managed content. Manual edits to that specific dashboard can be overwritten by the next automatic dashboard update.
 
-### 4. Install the dashboard
+### Manual / legacy installation
 
-For the recommended file-based installation, follow [`docs/INSTALLATION_HOME_ASSISTANT.md`](docs/INSTALLATION_HOME_ASSISTANT.md).
-
-For a quick manual import through the UI:
-
-1. Open **Settings → Dashboards** and create a new dashboard.
-2. Open the dashboard and choose **Edit dashboard**.
-3. Open the three-dot menu and select **Raw configuration editor**.
-4. Copy [`dashboard.yaml`](dashboard.yaml) into the raw editor.
-5. If you use Solis Modbus by Pho3niX90, first test the supplied entity IDs as-is. Home Assistant may alter final entity IDs based on device/location naming.
-6. For another inverter integration, replace the Solis entity references according to [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md).
-7. Save.
+The previous YAML/package method remains documented in [`docs/INSTALLATION_HOME_ASSISTANT.md`](docs/INSTALLATION_HOME_ASSISTANT.md) for users who do not want HACS.
 
 The dashboard contains five views:
 
@@ -144,7 +130,7 @@ The following five mock-ups are the original visual reference used before today'
 - JK-BMS controls are only added where Gobel Power exposes a corresponding writable Home Assistant entity/service.
 - Multi-pack battery installations show aggregate values plus discovered packs.
 - Layout should remain usable on desktop, tablet and mobile.
-- Target distribution remains a HACS-installable dashboard package.
+- HACS integration installs and updates the managed Lovelace dashboard without editing `configuration.yaml`.
 
 ## Project files
 
@@ -153,9 +139,29 @@ The following five mock-ups are the original visual reference used before today'
 - [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) – inverter/BMS mapping model and verified reference entities
 - [`docs/images/mockups/`](docs/images/mockups/) – visual references
 - [`docs/INSTALLATION_HOME_ASSISTANT.md`](docs/INSTALLATION_HOME_ASSISTANT.md) – installation in Home Assistant
-- [`home-assistant/configuration-snippet.yaml`](home-assistant/configuration-snippet.yaml) – YAML dashboard registration
-- [`home-assistant/packages/solis_dashboard_helpers.yaml`](home-assistant/packages/solis_dashboard_helpers.yaml) – daily/monthly Utility Meter helpers
+- [`custom_components/pv_battery_dashboard/`](custom_components/pv_battery_dashboard/) – HACS custom integration
+- [`hacs.json`](hacs.json) – HACS repository metadata
+- [`home-assistant/configuration-snippet.yaml`](home-assistant/configuration-snippet.yaml) – legacy YAML dashboard registration
+- [`home-assistant/packages/solis_dashboard_helpers.yaml`](home-assistant/packages/solis_dashboard_helpers.yaml) – optional legacy Utility Meter helpers
 
 ## Status
 
-The dashboard is manufacturer-neutral and supports up to three inverter slots. The current `dashboard.yaml` implements all five dashboard views using **Solis Modbus by Pho3niX90 as the concrete example profile**, including 14-day daily-energy charts and monthly summaries based on long-term statistics plus Utility Meter helpers. Deye/SolarModbus V2 remains documented as an alternative verified mapping; Hoymiles remains integration-dependent until a specific source is selected.
+The dashboard is manufacturer-neutral and supports up to three inverter slots. The repository is now structured as a **HACS custom integration**. Its config flow creates and manages a Lovelace storage dashboard automatically; HACS handles integration updates, and the dashboard can be refreshed automatically after restart or manually with the provided Home Assistant button. The bundled reference profile currently uses **Solis Modbus by Pho3niX90**.
+
+## Quality checks
+
+GitHub Actions automatically validates the project:
+
+- **HACS validation** for repository/integration structure
+- **hassfest** for Home Assistant manifests, config flow and translations
+- **Python compile check** with `compileall`
+- **literal \\n guard** to catch accidental escaped newlines outside strings/comments
+- **daily scheduled validation** in addition to push/pull-request checks
+
+The release workflow mirrors the protection used in `alexseuf/tigo-tap-local`:
+
+- validates that the release/tag version matches `manifest.json`
+- recompiles all integration Python files
+- repeats the literal-newline guard
+- builds `pv_battery_dashboard.zip`
+- creates a GitHub prerelease with generated release notes
