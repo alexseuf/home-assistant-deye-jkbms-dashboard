@@ -269,22 +269,6 @@ views:
           - type: heading
             heading: Monatsübersicht
             icon: mdi:calendar-month
-          - type: tile
-            entity: sensor.solis_dashboard_pv_monthly
-            name: PV Monat
-            icon: mdi:white-balance-sunny
-          - type: tile
-            entity: sensor.solis_dashboard_consumption_monthly
-            name: Verbrauch Monat
-            icon: mdi:home-lightning-bolt
-          - type: tile
-            entity: sensor.solis_dashboard_grid_import_monthly
-            name: Netzbezug Monat
-            icon: mdi:transmission-tower-import
-          - type: tile
-            entity: sensor.solis_dashboard_grid_export_monthly
-            name: Einspeisung Monat
-            icon: mdi:transmission-tower-export
           - type: statistics-graph
             title: Energie pro Monat
             chart_type: bar
