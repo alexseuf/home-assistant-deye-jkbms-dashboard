@@ -107,19 +107,63 @@ This is the currently verified reference profile and is used by the existing `da
 
 SolarModbus V2 exposes `solarmodbus.write_register`. Register writes are model-sensitive and apply only to a verified Deye profile.
 
-## 5. Solis profile
+## 5. Solis reference profile — Solis Modbus by Pho3niX90
 
-Solis is supported by the dashboard architecture, but the concrete entity IDs depend on the Home Assistant integration used.
+Source: `Pho3niX90/solis_modbus`, default branch `master`.
 
-Before adding Solis entities to production YAML:
+Project: https://github.com/Pho3niX90/solis_modbus
 
-1. identify the exact Solis integration,
-2. copy the real entity IDs from **Developer Tools → States**,
-3. map them to the logical functions above,
-4. verify units and sign conventions,
-5. verify any writable controls separately.
+The integration supports Modbus TCP and direct serial/RS485 connections. Entity IDs are created by Home Assistant and can be influenced by the configured device name/location, so always confirm the final IDs under **Developer Tools → States**. The integration's own README provides the following reference IDs.
 
-Do not reuse Deye register numbers or services.
+### Verified live/reference entities
+
+| Function | Entity |
+|---|---|
+| Inverter / backup load power | `sensor.solis_backup_load_power` |
+| Grid port power | `sensor.solis_ac_grid_port_power` |
+| Meter / CT total active power | `sensor.solis_meter_total_active_power` |
+| Battery voltage | `sensor.solis_battery_voltage` |
+| Battery SOC | `sensor.solis_battery_soc` |
+| Battery power | `sensor.solis_battery_power` |
+| Battery current | `sensor.solis_battery_current` |
+| PV1 voltage | `sensor.solis_dc_voltage_1` |
+| PV1 current | `sensor.solis_dc_current_1` |
+| PV1 power | `sensor.solis_dc_power_1` |
+| PV2 voltage | `sensor.solis_dc_voltage_2` |
+| PV2 current | `sensor.solis_dc_current_2` |
+| PV2 power | `sensor.solis_dc_power_2` |
+| Total PV/DC power | `sensor.solis_total_dc_output` |
+| Grid frequency | `sensor.solis_grid_frequency` |
+| Phase-A voltage | `sensor.solis_a_phase_voltage` |
+| Phase-A current | `sensor.solis_a_phase_current` |
+| Current inverter status | `sensor.solis_current_status` |
+
+### Verified daily-energy entities
+
+| Function | Entity |
+|---|---|
+| Daily PV generation | `sensor.solis_pv_today_energy_generation` |
+| Daily load consumption | `sensor.solis_today_energy_consumption` |
+| Daily grid import | `sensor.solis_today_energy_imported_from_grid` |
+| Daily grid export | `sensor.solis_today_energy_fed_into_grid` |
+| Daily battery charge | `sensor.solis_today_battery_charge_energy` |
+| Daily battery discharge | `sensor.solis_today_battery_discharge_energy` |
+
+### Verified writable/configuration examples
+
+The upstream integration exposes native Home Assistant controls for supported hybrid inverters, including:
+
+- `number.solis_time_charging_charge_current`
+- `number.solis_time_charging_discharge_current`
+- `switch.solis_time_of_use_mode`
+- `time.solis_time_charging_charge_start_slot_1`
+- `time.solis_time_charging_charge_end_slot_1`
+- `time.solis_time_charging_discharge_start_slot_1`
+- `time.solis_time_charging_discharge_end_slot_1`
+
+Equivalent time entities are documented for additional TOU slots. Newer integration versions also expose select/switch/number entities for storage mode and other supported settings.
+
+Only use controls that actually exist for the configured Solis model and poll profile. Do not reuse Deye register numbers or SolarModbus services for Solis.
 
 ## 6. Hoymiles profile
 
@@ -176,7 +220,7 @@ Per-pack functions include:
 
 ## Next mapping work
 
-1. Record the actual Solis integration and entity IDs used on the target Home Assistant instance.
+1. Verify the final Solis entity IDs on the target Home Assistant instance, because device naming can alter entity IDs.
 2. Record the actual Hoymiles/OpenDTU/SolarAssistant entity IDs.
 3. Add live cards for inverter 2 and inverter 3 once their entities are verified.
 4. Add template/helper sums for total PV power and energy where required.
