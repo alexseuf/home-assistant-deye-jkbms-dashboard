@@ -59,11 +59,15 @@ Version **0.1.1** uses the actual entity IDs exported from the target Home Assis
 
 ### Updating
 
-1. Install the update shown by **HACS**.
-2. Restart Home Assistant when HACS requests it.
-3. With automatic dashboard updates enabled, the managed dashboard is replaced by the dashboard bundled with the new integration version during startup.
+Releases are published with version tags, matching the update model used by `tigo-tap-local`.
 
-You can also update it immediately from **Settings → Devices & services → PV & Battery Dashboard → Entities** by pressing **Dashboard aktualisieren**.
+1. HACS detects a newer GitHub release.
+2. Home Assistant exposes the HACS repository as an available update under **Settings → Updates**.
+3. Confirm the update there; HACS downloads and installs the new integration version.
+4. If Home Assistant requests a restart, confirm the restart from the update flow.
+5. With automatic dashboard updates enabled, the managed dashboard is replaced by the bundled dashboard during startup.
+
+A manual fallback remains available under **Settings → Devices & services → PV & Battery Dashboard → Entities → Dashboard aktualisieren**.
 
 > The dashboard created by this integration is managed content. Manual edits to that specific dashboard can be overwritten by the next automatic dashboard update.
 
