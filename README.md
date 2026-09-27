@@ -147,3 +147,21 @@ The following five mock-ups are the original visual reference used before today'
 ## Status
 
 The dashboard is manufacturer-neutral and supports up to three inverter slots. The repository is now structured as a **HACS custom integration**. Its config flow creates and manages a Lovelace storage dashboard automatically; HACS handles integration updates, and the dashboard can be refreshed automatically after restart or manually with the provided Home Assistant button. The bundled reference profile currently uses **Solis Modbus by Pho3niX90**.
+
+## Quality checks
+
+GitHub Actions automatically validates the project:
+
+- **HACS validation** for repository/integration structure
+- **hassfest** for Home Assistant manifests, config flow and translations
+- **Python compile check** with `compileall`
+- **literal \\n guard** to catch accidental escaped newlines outside strings/comments
+- **daily scheduled validation** in addition to push/pull-request checks
+
+The release workflow mirrors the protection used in `alexseuf/tigo-tap-local`:
+
+- validates that the release/tag version matches `manifest.json`
+- recompiles all integration Python files
+- repeats the literal-newline guard
+- builds `pv_battery_dashboard.zip`
+- creates a GitHub prerelease with generated release notes
