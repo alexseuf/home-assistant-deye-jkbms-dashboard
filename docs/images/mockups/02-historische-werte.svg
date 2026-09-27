@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="460" viewBox="0 0 900 460"><style>
+text{font-family:Arial,sans-serif;fill:#e8eef5}.t{font-size:25px;font-weight:700}.h{font-size:18px;font-weight:700}.s{font-size:13px;fill:#aebdca}.v{font-size:20px;font-weight:700}.box{fill:#102737;stroke:#315064;stroke-width:1}.chip{fill:#16364a}.gold{fill:#f4bd20}.line{stroke:#f4bd20;stroke-width:4;fill:none}.blue{stroke:#35a9e8}.green{stroke:#36c46a}.red{stroke:#ee5757}
+</style><rect width="900" height="460" fill="#061521"/><text x="32" y="42" class="t">2 · Historische Werte</text><text x="32" y="68" class="s">Home Assistant · Multi-Inverter + JK-BMS Dashboard</text>
+<rect x="30" y="92" width="840" height="330" rx="12" class="box"/>
+<text x="55" y="125" class="h">Leistung · letzte 24 Stunden</text>
+<rect x="55" y="145" width="790" height="170" rx="8" class="chip"/>
+<path d="M80 270 C160 260 190 175 275 185 S415 270 505 220 S690 165 820 235" class="line"/>
+<path d="M80 280 C170 265 235 225 330 245 S505 210 610 250 S735 230 820 260" class="line blue"/>
+<path d="M80 290 C165 300 245 270 330 285 S505 255 610 275 S745 250 820 282" class="line green"/>
+<text x="70" y="340" class="s">Gelb: PV gesamt · Blau: Wechselrichter 1/2/3 · Grün: Batterie</text>
+<text x="55" y="378" class="h">Filter</text><text x="125" y="378" class="s">24 h · 7 Tage · 30 Tage · 12 Monate · benutzerdefiniert</text></svg>

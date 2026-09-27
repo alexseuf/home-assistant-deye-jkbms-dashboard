@@ -27,14 +27,17 @@ A future milestone is to package this repository as a HACS-installable dashboard
 Use the integration that matches each inverter. Examples:
 
 - **Deye:** SolarModbus V2
-- **Solis:** a compatible Home Assistant Solis integration / Modbus integration
+- **Solis:** **Solis Modbus** von **Pho3niX90** – https://github.com/Pho3niX90/solis_modbus
 - **Hoymiles:** a compatible Home Assistant Hoymiles / OpenDTU / SolarAssistant integration
 
 The dashboard does not depend on the manufacturer name. What matters is that the logical functions listed in [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) are mapped to the entities created by your integration.
 
-For Deye, the verified reference integration is:
+Verified reference integrations used by this project:
 
-Project: https://github.com/comdif/ha-solarmodbus
+- **Deye / SolarModbus V2:** https://github.com/comdif/ha-solarmodbus
+- **Solis / Solis Modbus by Pho3niX90:** https://github.com/Pho3niX90/solis_modbus
+
+The Solis integration supports TCP and direct serial/RS485 setup and exposes sensor, number, switch, select and time entities depending on inverter type and poll profile. The project uses only entities documented by the integration as reference mappings.
 
 ### 2. Optional JK-BMS integration
 
@@ -94,29 +97,27 @@ Not every inverter has to expose every function. A Hoymiles microinverter, for e
 
 ## Dashboard mock-ups
 
-The mock-ups still show the original Deye-based design reference. The production labels are now manufacturer-neutral.
+The mock-ups have been updated to the manufacturer-neutral multi-inverter design. They show Wechselrichter 1–3 and no longer use Deye as a tab name.
 
 ### 1. Aktuelle Werte
 
-![Aktuelle Werte](docs/images/mockups/01-aktuelle-werte.png)
+![Aktuelle Werte](docs/images/mockups/01-aktuelle-werte.svg)
 
 ### 2. Historische Werte
 
-![Historische Werte](docs/images/mockups/02-historische-werte.png)
+![Historische Werte](docs/images/mockups/02-historische-werte.svg)
 
 ### 3. Summierte Werte
 
-![Summierte Werte](docs/images/mockups/03-summierte-werte.png)
+![Summierte Werte](docs/images/mockups/03-summierte-werte.svg)
 
 ### 4. Einstellungen Wechselrichter
 
-The original image file is still named `04-einstellungen-deye.png` for compatibility with existing repository history.
-
-![Einstellungen Wechselrichter](docs/images/mockups/04-einstellungen-deye.png)
+![Einstellungen Wechselrichter](docs/images/mockups/04-einstellungen-wechselrichter.svg)
 
 ### 5. Einstellungen JK BMS
 
-![Einstellungen JK BMS](docs/images/mockups/05-einstellungen-jk-bms.png)
+![Einstellungen JK BMS](docs/images/mockups/05-einstellungen-jk-bms.svg)
 
 ## Implementation principles
 
@@ -124,7 +125,7 @@ The original image file is still named `04-einstellungen-deye.png` for compatibi
 - Up to three inverter slots are supported.
 - Different inverter manufacturers may be combined.
 - No guessed manufacturer entity IDs in production YAML.
-- Deye/SolarModbus V2 remains the verified reference profile.
+- Deye/SolarModbus V2 and Solis Modbus by Pho3niX90 are verified reference profiles.
 - Writable controls are only added for verified entities/services/registers of the exact inverter model.
 - Read-only values are never presented as writable controls.
 - JK-BMS controls are only added where Gobel Power exposes a corresponding writable Home Assistant entity/service.
@@ -141,4 +142,4 @@ The original image file is still named `04-einstellungen-deye.png` for compatibi
 
 ## Status
 
-The dashboard has been generalized from a Deye-specific design to a manufacturer-neutral multi-inverter structure. The next implementation step is to add installation-specific entity mappings for the desired Solis and Hoymiles integrations and then expose inverter 2/3 live cards using those verified entities.
+The dashboard is manufacturer-neutral, supports up to three inverter slots, and now includes verified reference mappings for Deye/SolarModbus V2 and Solis Modbus by Pho3niX90. Hoymiles remains integration-dependent until a specific source is selected.

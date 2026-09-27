@@ -70,7 +70,7 @@ Each configured inverter may expose:
 
 Writable controls must only map to entities/services/registers verified for the **exact integration and inverter model**.
 
-The existing Deye/SolarModbus V2 mapping is a reference profile, not a generic register definition.
+The Deye/SolarModbus V2 and Solis Modbus by Pho3niX90 mappings are reference profiles, not generic register definitions. Controls remain model- and integration-specific.
 
 ### 5 – Einstellungen JK BMS
 
@@ -117,6 +117,6 @@ This separation allows an additional Solis or Hoymiles inverter to contribute PV
 
 No guessed entity IDs in production YAML.
 
-Entity names must be mapped from the actual Home Assistant integrations in use. Deye/SolarModbus V2 remains the currently verified reference mapping.
+Entity names must be mapped from the actual Home Assistant integrations in use. Deye/SolarModbus V2 and Solis Modbus by Pho3niX90 are the currently documented reference mappings.
 
 A manufacturer name must not be used as a tab title or generic UI label. Use **Wechselrichter** unless a card intentionally identifies a configured device.
