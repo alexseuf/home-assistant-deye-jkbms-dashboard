@@ -1,0 +1,20 @@
+{
+  "title": "PV & Battery Dashboard",
+  "config": {
+    "step": {
+      "user": {
+        "title": "PV & Battery Dashboard einrichten",
+        "description": "Installiert ein verwaltetes Lovelace-Dashboard. Bei HACS-Updates kann das Dashboard nach dem Neustart automatisch auf den neuen Stand gebracht werden.",
+        "data": {
+          "auto_update_dashboard": "Dashboard bei Start automatisch aktualisieren"
+        },
+        "data_description": {
+          "auto_update_dashboard": "Aktiviert: Nach einem HACS-Update wird die mitgelieferte Dashboard-Version beim nächsten Start automatisch übernommen."
+        }
+      }
+    },
+    "abort": {
+      "already_configured": "PV & Battery Dashboard ist bereits eingerichtet."
+    }
+  }
+}
