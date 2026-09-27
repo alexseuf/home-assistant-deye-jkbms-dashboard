@@ -1,13 +1,14 @@
 # Home Assistant Multi-Inverter + JK-BMS Dashboard
-# Design target: docs/images/mockups/
-# Entity mapping: docs/ENTITY_MAPPING.md
+# Reference implementation: Solis Modbus by Pho3niX90
+# https://github.com/Pho3niX90/solis_modbus
 #
-# Phase 1: the first view uses the verified Deye/SolarModbus reference profile.
-# The UI itself is manufacturer-neutral. Inverter 1..3 can be mapped to Deye,
-# Solis, Hoymiles or another Home Assistant integration as documented in
-# docs/ENTITY_MAPPING.md.
+# UI labels stay manufacturer-neutral. The concrete entity mapping below uses
+# the documented Solis entity IDs as an example profile for Wechselrichter 1.
+# Verify final entity IDs in Home Assistant because device/location naming can
+# alter entity IDs.
 
 title: PV & Batteries
+
 views:
   - title: Aktuelle Werte
     path: aktuelle-werte
@@ -16,9 +17,6 @@ views:
     max_columns: 4
     dense_section_placement: true
     sections:
-      # Main energy-flow block. The grid arrangement deliberately mirrors
-      # the visual hierarchy of the reference mock-up without requiring
-      # custom cards.
       - type: grid
         column_span: 4
         cards:
@@ -27,42 +25,32 @@ views:
             icon: mdi:transmission-tower
 
           - type: tile
-            entity: sensor.solarmodbus_device_pv1_power
-            name: PV 1
-            icon: mdi:solar-panel-large
+            entity: sensor.solis_total_dc_output
+            name: PV
+            icon: mdi:solar-power
             vertical: true
           - type: tile
-            entity: sensor.solarmodbus_device_pv2_power
-            name: PV 2
-            icon: mdi:solar-panel-large
+            entity: sensor.solis_backup_load_power
+            name: Verbrauch
+            icon: mdi:home-lightning-bolt
             vertical: true
           - type: tile
-            entity: sensor.solarmodbus_device_total_power
-            name: Wechselrichter 1
-            icon: mdi:solar-power-variant
-            vertical: true
-          - type: tile
-            entity: sensor.solarmodbus_device_battery_soc
-            name: Batterie SOC
-            icon: mdi:battery-high
-            vertical: true
-          - type: tile
-            entity: sensor.solarmodbus_device_battery_power
+            entity: sensor.solis_battery_power
             name: Batterie
             icon: mdi:battery-charging
             vertical: true
           - type: tile
-            entity: sensor.solarmodbus_device_total_grid_power
+            entity: sensor.solis_battery_soc
+            name: Batterie SOC
+            icon: mdi:battery-high
+            vertical: true
+          - type: tile
+            entity: sensor.solis_ac_grid_port_power
             name: Netz
             icon: mdi:transmission-tower
             vertical: true
           - type: tile
-            entity: sensor.solarmodbus_device_load_l1_power
-            name: Verbrauch L1
-            icon: mdi:home-lightning-bolt
-            vertical: true
-          - type: tile
-            entity: sensor.solarmodbus_device_running_status
+            entity: sensor.solis_current_status
             name: Wechselrichterstatus
             icon: mdi:check-circle-outline
             vertical: true
@@ -71,27 +59,27 @@ views:
             heading: Energie heute
             icon: mdi:calendar-today
           - type: tile
-            entity: sensor.solarmodbus_device_daily_production
+            entity: sensor.solis_pv_today_energy_generation
             name: PV-Ertrag
             icon: mdi:white-balance-sunny
           - type: tile
-            entity: sensor.solarmodbus_device_daily_load_consumption
+            entity: sensor.solis_today_energy_consumption
             name: Verbrauch
             icon: mdi:home-lightning-bolt-outline
           - type: tile
-            entity: sensor.solarmodbus_device_daily_energy_bought
+            entity: sensor.solis_today_energy_imported_from_grid
             name: Netzbezug
             icon: mdi:transmission-tower-import
           - type: tile
-            entity: sensor.solarmodbus_device_daily_energy_sold
+            entity: sensor.solis_today_energy_fed_into_grid
             name: Einspeisung
             icon: mdi:transmission-tower-export
           - type: tile
-            entity: sensor.solarmodbus_device_daily_battery_charge
+            entity: sensor.solis_today_battery_charge_energy
             name: Batterie geladen
             icon: mdi:battery-plus
           - type: tile
-            entity: sensor.solarmodbus_device_daily_battery_discharge
+            entity: sensor.solis_today_battery_discharge_energy
             name: Batterie entladen
             icon: mdi:battery-minus
 
@@ -102,37 +90,37 @@ views:
             heading: Elektrische Werte
             icon: mdi:meter-electric-outline
           - type: tile
-            entity: sensor.solarmodbus_device_pv1_voltage
+            entity: sensor.solis_dc_voltage_1
             name: PV Spannung 1
             icon: mdi:sine-wave
           - type: tile
-            entity: sensor.solarmodbus_device_pv2_voltage
+            entity: sensor.solis_dc_voltage_2
             name: PV Spannung 2
             icon: mdi:sine-wave
           - type: tile
-            entity: sensor.solarmodbus_device_battery_voltage
-            name: Batteriespannung
-            icon: mdi:flash-outline
-          - type: tile
-            entity: sensor.solarmodbus_device_battery_current
-            name: Batteriestrom
-            icon: mdi:current-dc
-          - type: tile
-            entity: sensor.solarmodbus_device_load_voltage
-            name: Netz / Last Spannung
-            icon: mdi:current-ac
-          - type: tile
-            entity: sensor.solarmodbus_device_load_frequency
-            name: Frequenz
-            icon: mdi:sine-wave
-          - type: tile
-            entity: sensor.solarmodbus_device_pv1_current
+            entity: sensor.solis_dc_current_1
             name: PV Strom 1
             icon: mdi:current-dc
           - type: tile
-            entity: sensor.solarmodbus_device_pv2_current
+            entity: sensor.solis_dc_current_2
             name: PV Strom 2
             icon: mdi:current-dc
+          - type: tile
+            entity: sensor.solis_battery_voltage
+            name: Batteriespannung
+            icon: mdi:flash-outline
+          - type: tile
+            entity: sensor.solis_battery_current
+            name: Batteriestrom
+            icon: mdi:current-dc
+          - type: tile
+            entity: sensor.solis_a_phase_voltage
+            name: AC Spannung
+            icon: mdi:current-ac
+          - type: tile
+            entity: sensor.solis_grid_frequency
+            name: Frequenz
+            icon: mdi:sine-wave
 
       - type: grid
         column_span: 4
@@ -141,18 +129,16 @@ views:
             heading: Leistungsverlauf (heute)
             icon: mdi:chart-areaspline
           - type: history-graph
-            title: PV / Wechselrichter / Batterie / Netz
+            title: PV / Verbrauch / Batterie / Netz
             hours_to_show: 24
             entities:
-              - entity: sensor.solarmodbus_device_pv1_power
-                name: PV 1
-              - entity: sensor.solarmodbus_device_pv2_power
-                name: PV 2
-              - entity: sensor.solarmodbus_device_total_power
-                name: Wechselrichter
-              - entity: sensor.solarmodbus_device_battery_power
+              - entity: sensor.solis_total_dc_output
+                name: PV
+              - entity: sensor.solis_backup_load_power
+                name: Verbrauch
+              - entity: sensor.solis_battery_power
                 name: Batterie
-              - entity: sensor.solarmodbus_device_total_grid_power
+              - entity: sensor.solis_ac_grid_port_power
                 name: Netz
 
   - title: Historische Werte
@@ -167,113 +153,197 @@ views:
           - type: heading
             heading: Historische Werte
             icon: mdi:chart-areaspline
+
           - type: history-graph
             title: Leistung – letzte 24 Stunden
             hours_to_show: 24
             entities:
-              - sensor.solarmodbus_device_total_power
-              - sensor.solarmodbus_device_battery_power
-              - sensor.solarmodbus_device_total_grid_power
+              - entity: sensor.solis_total_dc_output
+                name: PV
+              - entity: sensor.solis_backup_load_power
+                name: Verbrauch
+              - entity: sensor.solis_battery_power
+                name: Batterie
+              - entity: sensor.solis_ac_grid_port_power
+                name: Netz
+
           - type: history-graph
             title: Batterie SOC – letzte 24 Stunden
             hours_to_show: 24
             entities:
-              - sensor.solarmodbus_device_battery_soc
+              - entity: sensor.solis_battery_soc
+                name: SOC
+
           - type: history-graph
             title: Batteriespannung & Strom – letzte 24 Stunden
             hours_to_show: 24
             entities:
-              - sensor.solarmodbus_device_battery_voltage
-              - sensor.solarmodbus_device_battery_current
+              - entity: sensor.solis_battery_voltage
+                name: Spannung
+              - entity: sensor.solis_battery_current
+                name: Strom
+
           - type: history-graph
-            title: PV Eingänge – letzte 24 Stunden
+            title: PV Eingänge (MPPT) – letzte 24 Stunden
             hours_to_show: 24
             entities:
-              - sensor.solarmodbus_device_pv1_power
-              - sensor.solarmodbus_device_pv2_power
+              - entity: sensor.solis_dc_power_1
+                name: PV 1 Leistung
+              - entity: sensor.solis_dc_power_2
+                name: PV 2 Leistung
+              - entity: sensor.solis_dc_voltage_1
+                name: PV 1 Spannung
+              - entity: sensor.solis_dc_voltage_2
+                name: PV 2 Spannung
 
   - title: Summierte Werte
     path: summierte-werte
     icon: mdi:sigma
     type: sections
+    max_columns: 4
     sections:
       - type: grid
+        column_span: 4
         cards:
           - type: heading
-            heading: Heute
-            icon: mdi:calendar-today
+            heading: Summierte Werte
+            icon: mdi:chart-box-outline
           - type: tile
-            entity: sensor.solarmodbus_device_daily_production
-            name: PV-Erzeugung
+            entity: sensor.solis_pv_today_energy_generation
+            name: PV Ertrag
+            icon: mdi:white-balance-sunny
           - type: tile
-            entity: sensor.solarmodbus_device_daily_load_consumption
+            entity: sensor.solis_today_energy_consumption
             name: Verbrauch
+            icon: mdi:home-lightning-bolt
           - type: tile
-            entity: sensor.solarmodbus_device_daily_energy_bought
+            entity: sensor.solis_today_energy_imported_from_grid
             name: Netzbezug
+            icon: mdi:transmission-tower-import
           - type: tile
-            entity: sensor.solarmodbus_device_daily_energy_sold
+            entity: sensor.solis_today_energy_fed_into_grid
             name: Einspeisung
+            icon: mdi:transmission-tower-export
           - type: tile
-            entity: sensor.solarmodbus_device_daily_battery_charge
-            name: Batterie geladen
+            entity: sensor.solis_today_battery_charge_energy
+            name: Batterie Laden
+            icon: mdi:battery-plus
           - type: tile
-            entity: sensor.solarmodbus_device_daily_battery_discharge
-            name: Batterie entladen
+            entity: sensor.solis_today_battery_discharge_energy
+            name: Batterie Entladen
+            icon: mdi:battery-minus
+
+          - type: heading
+            heading: Tageswerte / Monatsübersicht
+            icon: mdi:calendar-month
+          - type: markdown
+            content: >-
+              Für die Mock-up-Ansicht **Tageswerte · 14 Tage** und die
+              **Monatsübersicht** empfiehlt die Solis-Integration Home-Assistant-
+              Utility-Meter-Helfer, weil die Tageszähler des Wechselrichters
+              zeitlich anders zurückgesetzt werden können als Home Assistant.
+
+              Geeignete Quellen sind:
+              - `sensor.solis_pv_today_energy_generation`
+              - `sensor.solis_today_energy_consumption`
+              - `sensor.solis_today_energy_imported_from_grid`
+              - `sensor.solis_today_energy_fed_into_grid`
+              - `sensor.solis_today_battery_charge_energy`
+              - `sensor.solis_today_battery_discharge_energy`
 
   - title: Einstellungen Wechselrichter
     path: einstellungen-wechselrichter
     icon: mdi:tune-variant
     type: sections
+    max_columns: 4
     sections:
       - type: grid
+        column_span: 4
         cards:
           - type: heading
-            heading: Wechselrichter 1 – Status & Betriebsart
+            heading: Einstellungen Wechselrichter
             icon: mdi:inverter
+
           - type: tile
-            entity: sensor.solarmodbus_device_running_status
+            entity: sensor.solis_current_status
             name: Status
-          - type: tile
-            entity: sensor.solarmodbus_device_system_work_mode
-            name: Work Mode
-          - type: tile
-            entity: sensor.solarmodbus_device_solar_sell
-            name: Solar Sell
-          - type: tile
-            entity: sensor.solarmodbus_device_grid_charge
-            name: Grid Charge
+            icon: mdi:check-circle-outline
+
+          - type: entities
+            title: Batterie
+            entities:
+              - entity: number.solis_time_charging_charge_current
+                name: Ladestrom
+              - entity: number.solis_time_charging_discharge_current
+                name: Entladestrom
+              - entity: switch.solis_time_of_use_mode
+                name: Time of Use
+
+          - type: entities
+            title: System Timer (TOU) – Slot 1
+            entities:
+              - entity: time.solis_time_charging_charge_start_slot_1
+                name: Laden Start
+              - entity: time.solis_time_charging_charge_end_slot_1
+                name: Laden Ende
+              - entity: time.solis_time_charging_discharge_start_slot_1
+                name: Entladen Start
+              - entity: time.solis_time_charging_discharge_end_slot_1
+                name: Entladen Ende
+
+          - type: entities
+            title: System Timer (TOU) – Slot 2
+            entities:
+              - entity: time.solis_time_charging_charge_start_slot_2
+                name: Laden Start
+              - entity: time.solis_time_charging_charge_end_slot_2
+                name: Laden Ende
+              - entity: time.solis_time_charging_discharge_start_slot_2
+                name: Entladen Start
+              - entity: time.solis_time_charging_discharge_end_slot_2
+                name: Entladen Ende
+
+          - type: entities
+            title: System Timer (TOU) – Slot 3
+            entities:
+              - entity: time.solis_time_charging_charge_start_slot_3
+                name: Laden Start
+              - entity: time.solis_time_charging_charge_end_slot_3
+                name: Laden Ende
+              - entity: time.solis_time_charging_discharge_start_slot_3
+                name: Entladen Start
+              - entity: time.solis_time_charging_discharge_end_slot_3
+                name: Entladen Ende
+
           - type: markdown
             content: >-
-              **Referenzprofil Wechselrichter 1:** Deye über SolarModbus V2.  
-              Das Dashboard ist herstellerneutral ausgelegt. Wechselrichter 1 bis 3 können über die in `docs/ENTITY_MAPPING.md` beschriebene Zuordnung auf Deye, Solis, Hoymiles oder andere Home-Assistant-Entities gemappt werden.
+              **Beispielprofil:** Solis Modbus von Pho3niX90.
 
-              **Schreibfunktionen sind integrations- und modellspezifisch.** Register/Services und gültige Werte müssen deshalb für das jeweils konfigurierte Wechselrichtermodell verifiziert werden.
-
-
-      - type: grid
-        cards:
-          - type: heading
-            heading: Wechselrichter 2 & 3
-            icon: mdi:solar-power-variant
-          - type: markdown
-            content: >-
-              Wechselrichter 2 und 3 sind optional. Sie werden über dieselben logischen Funktionen wie Wechselrichter 1 eingebunden (Leistung, Status, PV/MPPT, Tagesertrag und – falls vorhanden – Batterie/Netzwerte).
-
-              Für gemischte Anlagen sind z. B. **Deye + Solis**, **Solis + Hoymiles** oder drei unterschiedliche Geräte möglich. Die konkreten Entity-IDs werden installationsabhängig in der Mapping-Dokumentation zugeordnet; es werden bewusst keine nicht verifizierten Hersteller-Entity-IDs fest verdrahtet.
+              Die oben verwendeten `number`-, `switch`- und `time`-Entities
+              werden von der Integration für unterstützte Hybridwechselrichter
+              bereitgestellt. Welche Bedienelemente tatsächlich vorhanden sind,
+              hängt von Modell, Firmware und Poll-Profil ab.
 
   - title: Einstellungen JK BMS
     path: einstellungen-jk-bms
     icon: mdi:battery-cog
     type: sections
+    max_columns: 4
     sections:
       - type: grid
+        column_span: 4
         cards:
           - type: heading
-            heading: JK BMS / Gobel Power
+            heading: Einstellungen JK BMS
             icon: mdi:battery-heart-variant
           - type: markdown
             content: >-
-              Die Gobel-Power-Integration erzeugt die Entity-IDs abhängig vom konfigurierten Gerätenamen und erkennt Master/Slave-Packs dynamisch.
+              Diese Ansicht ist entsprechend dem fünften Mock-up vorbereitet.
 
-              Die aktuelle Integration stellt `sensor` und `binary_sensor` bereit. Deshalb werden hier keine erfundenen Schreibregler angelegt. Nach dem Mapping deiner realen Gobel-Entities kommen Gesamtwerte, einzelne Packs, Zellspannungen, Temperaturen, Balancing und Warnungen hier hinein.
+              Die konkrete JK-BMS/Gobel-Belegung bleibt getrennt vom Solis-Profil,
+              weil die Gobel-Entity-IDs vom Gerätenamen und der Anzahl der
+              Master/Slave-Packs abhängen.
+
+              Nach Eintragen der realen Gobel-Entities gehören hier hinein:
+              Gesamt-SOC, Spannung, Strom, einzelne Packs, Zellspannungen,
+              Temperaturen, SOH, Zyklen, Balancerstatus und Alarme.
