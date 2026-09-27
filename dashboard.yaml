@@ -53,7 +53,7 @@ views:
               # Wechselrichter
               - type: state-label
                 entity: sensor.solis_s5_eh1p_status_string
-                                style:
+                style:
                   left: 50%
                   top: 60%
                   color: "#20ae55"
@@ -101,7 +101,6 @@ views:
             elements:
               - type: state-label
                 entity: sensor.solis_s5_eh1p_pv_voltage_1
-                prefix: "PV1  "
                 style:
                   left: 10%
                   top: 67%
@@ -110,7 +109,6 @@ views:
                   font-weight: 700
               - type: state-label
                 entity: sensor.solis_s5_eh1p_pv_voltage_2
-                prefix: "PV2  "
                 style:
                   left: 30%
                   top: 67%
@@ -119,7 +117,6 @@ views:
                   font-weight: 700
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_voltage
-                prefix: "Batt V  "
                 style:
                   left: 50%
                   top: 67%
@@ -128,7 +125,6 @@ views:
                   font-weight: 700
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_current
-                prefix: "Batt A  "
                 style:
                   left: 70%
                   top: 67%
@@ -137,7 +133,6 @@ views:
                   font-weight: 700
               - type: state-label
                 entity: sensor.jk_bms_pack_00_temperature_01
-                prefix: "Temp  "
                 style:
                   left: 90%
                   top: 67%
