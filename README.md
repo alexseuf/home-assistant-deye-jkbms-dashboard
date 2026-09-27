@@ -254,3 +254,19 @@ Version **0.1.10** further aligns the first page with the supplied visual refere
 - the five electrical metric cards use smaller labels and larger second-line values
 - new versioned SVG assets avoid stale Home Assistant/browser cache
 - rolling 24-hour power chart is retained
+
+
+## Dashboard 0.1.11
+
+Version **0.1.11** performs another mock-up focused refinement of the first page:
+
+- main PV / load / battery / grid power values are larger and more dominant
+- secondary daily-energy / SOC lines are larger and moved upward inside the cards
+- all dynamic outer-card text stays on the same left text edge as the static heading
+- inverter graphic is about 10% smaller and has more internal spacing
+- inverter live status is slightly larger and clearer
+- five electrical metric cards are left-aligned like the reference mock-up
+- metric labels remain on the first line and values are larger on the second line
+- the 24-hour chart is slightly taller
+- battery history is now a normal line rather than a filled area, matching the reference chart more closely
+- versioned SVG assets are used again to avoid stale browser/Home Assistant caching
