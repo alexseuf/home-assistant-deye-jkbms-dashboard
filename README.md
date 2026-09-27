@@ -289,3 +289,16 @@ Version **0.1.12** combines the next mock-up refinements:
 - the last metric heading is written as **Batterietemperatur** and still fits inside the card
 - the integration adds a small helper sensor that mirrors the JK-BMS total battery voltage with one decimal place
 - the first-page Batteriespannung metric uses that helper so values such as **52,1 V** are displayed consistently
+
+
+## Dashboard 0.1.13
+
+Version **0.1.13** fixes the first visual issues found after testing the four-line cards:
+
+- outer energy cards are taller so all four text lines have their own vertical space
+- main power, descriptor and secondary value no longer overlap
+- lower battery/grid cards use the same spacing as the upper PV/load cards
+- the five metric headings are slightly larger; `Batterietemperatur` still fits inside its card
+- the one-decimal battery-voltage helper is now set up before the managed dashboard is generated
+- the dashboard resolves the helper entity by suffix from Home Assistant's entity registry instead of assuming a fixed entity ID
+- this removes the unavailable/warning icon caused by the previous startup order
