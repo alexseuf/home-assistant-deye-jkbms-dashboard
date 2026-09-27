@@ -28,7 +28,7 @@ class RoundedBatteryVoltageSensor(SensorEntity):
     """Mirror the JK-BMS battery voltage with one decimal place."""
 
     _attr_has_entity_name = False
-    _attr_name = "PV Battery Batteriespannung 1 Dezimal"
+    _attr_name = "Batteriespannung 1 Dezimal"
     _attr_icon = "mdi:flash"
     _attr_device_class = SensorDeviceClass.VOLTAGE
     _attr_state_class = SensorStateClass.MEASUREMENT
