@@ -12,7 +12,7 @@ views:
             title: Energiefluss (aktuell)
 
           - type: picture-elements
-            image: /pv-battery-dashboard-static/energy_flow_bg_v0111.svg
+            image: /pv-battery-dashboard-static/energy_flow_bg_v0112.svg
             elements:
               # PV
               - type: state-label
@@ -31,12 +31,13 @@ views:
                 prefix: "Tagesertrag  "
                 style:
                   left: 11%
-                  top: 37.5%
+                  top: 40.5%
                   width: 20%
                   transform: translate(0, -50%)
                   text-align: left
-                  color: "#374151"
-                  font-size: "clamp(10px, 0.9vw, 13px)"
+                  color: "#111827"
+                  font-size: "clamp(10px, 0.95vw, 14px)"
+                  font-weight: 600
 
               # Verbrauch
               - type: state-label
@@ -55,12 +56,13 @@ views:
                 prefix: "Tagesverbrauch  "
                 style:
                   left: 81%
-                  top: 37.5%
+                  top: 40.5%
                   width: 17%
                   transform: translate(0, -50%)
                   text-align: left
-                  color: "#374151"
-                  font-size: "clamp(10px, 0.9vw, 13px)"
+                  color: "#111827"
+                  font-size: "clamp(10px, 0.95vw, 14px)"
+                  font-weight: 600
 
               # Wechselrichter
               - type: state-label
@@ -89,12 +91,13 @@ views:
                 prefix: "SOC  "
                 style:
                   left: 11%
-                  top: 85.5%
+                  top: 88%
                   width: 18%
                   transform: translate(0, -50%)
                   text-align: left
-                  color: "#374151"
-                  font-size: "clamp(10px, 0.9vw, 13px)"
+                  color: "#111827"
+                  font-size: "clamp(10px, 0.95vw, 14px)"
+                  font-weight: 600
 
               # Netz
               - type: state-label
@@ -113,15 +116,16 @@ views:
                 prefix: "Einspeisung heute  "
                 style:
                   left: 81%
-                  top: 85.5%
+                  top: 88%
                   width: 17%
                   transform: translate(0, -50%)
                   text-align: left
-                  color: "#374151"
-                  font-size: "clamp(10px, 0.9vw, 13px)"
+                  color: "#111827"
+                  font-size: "clamp(10px, 0.95vw, 14px)"
+                  font-weight: 600
 
           - type: picture-elements
-            image: /pv-battery-dashboard-static/metric_strip_v0111.svg
+            image: /pv-battery-dashboard-static/metric_strip_v0112.svg
             elements:
               - type: state-label
                 entity: sensor.solis_s5_eh1p_pv_voltage_1
@@ -146,7 +150,7 @@ views:
                   font-size: "clamp(14px, 1.55vw, 23px)"
                   font-weight: 700
               - type: state-label
-                entity: sensor.jk_bms_total_jk_bms_total_voltage
+                entity: sensor.pv_battery_batteriespannung_1_dezimal
                 style:
                   left: 42.8%
                   top: 68%
