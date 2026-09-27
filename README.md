@@ -97,27 +97,27 @@ Not every inverter has to expose every function. A Hoymiles microinverter, for e
 
 ## Dashboard mock-ups
 
-The mock-ups have been updated to the manufacturer-neutral multi-inverter design. They show Wechselrichter 1–3 and no longer use Deye as a tab name.
+The following five mock-ups are the original visual reference used before today's graphics changes.
 
 ### 1. Aktuelle Werte
 
-![Aktuelle Werte](docs/images/mockups/01-aktuelle-werte.svg)
+![Aktuelle Werte](docs/images/mockups/01-aktuelle-werte.png)
 
 ### 2. Historische Werte
 
-![Historische Werte](docs/images/mockups/02-historische-werte.svg)
+![Historische Werte](docs/images/mockups/02-historische-werte.png)
 
 ### 3. Summierte Werte
 
-![Summierte Werte](docs/images/mockups/03-summierte-werte.svg)
+![Summierte Werte](docs/images/mockups/03-summierte-werte.png)
 
 ### 4. Einstellungen Wechselrichter
 
-![Einstellungen Wechselrichter](docs/images/mockups/04-einstellungen-wechselrichter.svg)
+![Einstellungen Deye](docs/images/mockups/04-einstellungen-deye.png)
 
 ### 5. Einstellungen JK BMS
 
-![Einstellungen JK BMS](docs/images/mockups/05-einstellungen-jk-bms.svg)
+![Einstellungen JK BMS](docs/images/mockups/05-einstellungen-jk-bms.png)
 
 ## Implementation principles
 
