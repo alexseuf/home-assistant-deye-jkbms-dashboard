@@ -194,3 +194,19 @@ Install all three in HACS **before updating PV & Battery Dashboard to 0.1.3**, t
 If one of the cards was installed but Home Assistant still shows `Custom element doesn't exist`, hard-refresh the browser with `Ctrl+F5` and verify the resource under **Settings → Dashboards → Resources**.
 
 The actual Solis S5-EH1P and JK-BMS entity mapping from version 0.1.1/0.1.2 remains unchanged.
+
+
+## Dashboard 0.1.4
+
+Version **0.1.4** concentrates on the first **Aktuelle Werte** page and intentionally leaves the other four views unchanged for iterative visual testing.
+
+Changes:
+
+- replaced the generic Power Flow Card Plus block with a custom picture-elements energy-flow scene
+- added a bundled inverter/arrow SVG so no additional HACS dependency is needed
+- arranged PV, inverter, load, battery and grid like the visual mock-up
+- moved daily energy values into the four energy-flow tiles
+- reduced the electrical summary to the five mock-up values
+- expanded the daily ApexCharts graph to a single wide chart with PV/load/battery/grid colours matching the mock-up
+
+The existing Mushroom and ApexCharts dependencies remain required. Power Flow Card Plus may remain installed but is no longer used on the first page in 0.1.4.
