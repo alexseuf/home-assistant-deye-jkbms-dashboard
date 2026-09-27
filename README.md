@@ -1,113 +1,144 @@
-# Home Assistant Deye & JK-BMS Dashboard
+# Home Assistant Multi-Inverter & JK-BMS Dashboard
 
-SolarAssistant-inspired Home Assistant dashboard for a Deye Hybrid inverter and JK-BMS battery system.
+SolarAssistant-inspired Home Assistant dashboard for PV systems with **one to three inverters** and an optional **JK-BMS battery system**.
 
-The dashboard is designed for **SolarModbus V2** on the Deye side and the **Gobel Power Home Assistant integration** for JK-BMS battery packs. The target configuration includes direct USB-to-RS485 communication and support for multi-pack JK-BMS systems (master + slaves).
+The dashboard UI is deliberately manufacturer-neutral. Inverter slots 1–3 can be assigned to **Deye, Solis, Hoymiles or other inverter integrations** as long as the required Home Assistant entities are mapped. Mixed systems are supported conceptually, for example Deye + Solis or Solis + Hoymiles.
+
+The existing Deye/SolarModbus V2 mapping remains the verified reference profile for inverter 1. Other manufacturers are not assigned guessed entity IDs; their actual Home Assistant entity IDs must be mapped from the integration used on the target installation.
+
+## Supported layout
+
+- 1, 2 or 3 inverters
+- same or mixed inverter manufacturers
+- PV/MPPT values per inverter where available
+- inverter status and AC power
+- combined battery, grid and load values
+- JK-BMS master/slave battery systems via Gobel Power
+- manufacturer-specific settings only when the integration exposes verified writable entities/services
 
 ## Installation
 
-### Planned: one-click installation through HACS
+### Planned: HACS installation
 
-A future project milestone is to package this repository as a **HACS-installable Home Assistant dashboard**. The GitHub start page should then provide a prominent **Add to HACS / Install in Home Assistant** button so users do not have to copy `dashboard.yaml` manually.
+A future milestone is to package this repository as a HACS-installable dashboard. Until then, use the manual installation procedure below.
 
-Planned installation flow:
+### 1. Install inverter integration(s)
 
-**GitHub → Add to HACS → install/update dashboard package → Home Assistant dashboard setup**
+Use the integration that matches each inverter. Examples:
 
-The goal is also to provide direct installation links/buttons for the required **SolarModbus V2** and **Gobel Power JK-BMS** integrations where supported. HACS packaging will be implemented after the first dashboard views and their dependencies have stabilized, so the installation package reflects the actual cards and resources used by the finished dashboard.
+- **Deye:** SolarModbus V2
+- **Solis:** a compatible Home Assistant Solis integration / Modbus integration
+- **Hoymiles:** a compatible Home Assistant Hoymiles / OpenDTU / SolarAssistant integration
 
-Until that packaging is available, use the manual installation procedure below.
+The dashboard does not depend on the manufacturer name. What matters is that the logical functions listed in [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) are mapped to the entities created by your integration.
 
-### 1. Install the required integrations
-
-#### Deye inverter – SolarModbus V2
+For Deye, the verified reference integration is:
 
 Project: https://github.com/comdif/ha-solarmodbus
 
-SolarModbus provides local Modbus communication with Deye hybrid inverters. It supports direct Modbus RTU through a USB-to-RS485 adapter as well as Modbus TCP / RS485 gateways. The project also provides read/write functionality for supported Deye registers.
-
-Follow the installation and configuration instructions in the SolarModbus repository. After installation, add/configure the integration in Home Assistant and verify that the Deye entities are available before importing this dashboard.
-
-#### JK BMS – Gobel Power Home Assistant Integration
+### 2. Optional JK-BMS integration
 
 Project: https://github.com/fancyui/Gobel-Battery-HA-Integration
 
-The native Gobel Power integration supports JK BMS (55AA protocol) and can communicate through RS485-USB as well as network converters. It supports parallel battery systems by connecting to the master BMS and exposing aggregate values plus individual pack devices.
+The Gobel Power integration supports JK BMS systems and can expose aggregate values plus individual master/slave battery packs.
 
-Recommended installation is through HACS as a custom integration. After downloading it, restart Home Assistant and add **Gobel Battery Monitor** under **Settings → Devices & services → Add integration**. For JK BMS, select the appropriate JK BMS type and Serial/USB or network connection.
+### 3. Verify and map entities
 
-For a parallel JK-BMS installation, connect Home Assistant to the master BMS. The integration can discover the associated slave packs.
+Open **Developer Tools → States** in Home Assistant and identify the actual entities for every configured inverter.
 
-### 2. Verify the entities
+The dashboard uses three logical inverter slots:
 
-Before installing the dashboard, open **Developer Tools → States** in Home Assistant and verify that both integrations are delivering data.
+- **Wechselrichter 1**
+- **Wechselrichter 2**
+- **Wechselrichter 3**
 
-The final dashboard mapping must use the entity IDs actually generated on your Home Assistant installation. See [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) for the verified mapping used by this project.
+Only slot 1 is required. Slots 2 and 3 are optional.
 
-### 3. Install the dashboard manually
+Use [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) as the mapping checklist. The dashboard must use entity IDs actually present in your Home Assistant instance.
 
-1. Open **Settings → Dashboards** in Home Assistant and create a new dashboard.
-2. Open the new dashboard and choose **Edit dashboard**.
+### 4. Install the dashboard manually
+
+1. Open **Settings → Dashboards** and create a new dashboard.
+2. Open the dashboard and choose **Edit dashboard**.
 3. Open the three-dot menu and select **Raw configuration editor**.
-4. Copy the contents of [`dashboard.yaml`](dashboard.yaml) into the raw editor.
-5. Save the configuration.
-6. If your generated entity IDs differ from the reference names, adjust them according to [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md).
+4. Copy [`dashboard.yaml`](dashboard.yaml) into the raw editor.
+5. Replace or extend the inverter entity references according to your mapping.
+6. Save.
 
-The dashboard contains five views: **Aktuelle Werte**, **Historische Werte**, **Summierte Werte**, **Einstellungen Deye** and **Einstellungen JK BMS**.
+The dashboard contains five views:
 
-> **Important:** Do not write inverter registers until the exact Deye model and register mapping have been verified. Incorrect Modbus writes can change inverter operating parameters. The project only intends to expose controls that have been verified as writable for the configured inverter.
+1. **Aktuelle Werte**
+2. **Historische Werte**
+3. **Summierte Werte**
+4. **Einstellungen Wechselrichter**
+5. **Einstellungen JK BMS**
+
+> **Important:** Writable inverter functions are manufacturer-, integration- and model-specific. Never reuse Deye Modbus register writes for Solis, Hoymiles or another inverter. Only expose controls after the exact writable entity/service/register has been verified for that inverter.
+
+## Multi-inverter concept
+
+The dashboard distinguishes between the visual function and the source integration.
+
+For every inverter slot, map as many of these logical functions as the device provides:
+
+- inverter AC power
+- operating status
+- PV/MPPT power
+- PV/MPPT voltage/current
+- daily PV yield
+- grid/load values if the inverter is the system source for them
+- battery values if the inverter is the system source for them
+- optional writable settings
+
+Not every inverter has to expose every function. A Hoymiles microinverter, for example, can be used primarily as an additional PV producer while a hybrid inverter provides battery and grid values.
 
 ## Dashboard mock-ups
 
-The following five mock-ups define the current visual target. Values shown in the images are illustrative; the production dashboard will only use verified Home Assistant entities and writable parameters.
+The mock-ups still show the original Deye-based design reference. The production labels are now manufacturer-neutral.
 
 ### 1. Aktuelle Werte
-
-Live energy flow, PV production, house consumption, grid import/export, battery status and today's power history.
 
 ![Aktuelle Werte](docs/images/mockups/01-aktuelle-werte.png)
 
 ### 2. Historische Werte
 
-Historical power, battery SOC, battery voltage/current and MPPT charts with selectable time periods.
-
 ![Historische Werte](docs/images/mockups/02-historische-werte.png)
 
 ### 3. Summierte Werte
 
-Daily and monthly PV production, consumption, grid import/export, battery energy, self-sufficiency and self-consumption.
-
 ![Summierte Werte](docs/images/mockups/03-summierte-werte.png)
 
-### 4. Einstellungen Deye
+### 4. Einstellungen Wechselrichter
 
-Deye operating parameters and System Timer / TOU. Controls will only be implemented for verified writable SolarModbus entities/registers and must match the inverter model.
+The original image file is still named `04-einstellungen-deye.png` for compatibility with existing repository history.
 
-![Einstellungen Deye](docs/images/mockups/04-einstellungen-deye.png)
+![Einstellungen Wechselrichter](docs/images/mockups/04-einstellungen-deye.png)
 
 ### 5. Einstellungen JK BMS
-
-Aggregate battery-bank data, master/slave packs, cell voltages, temperatures, SOH, balancing and BMS status. Writable controls will only be added where the Gobel Power integration actually exposes them.
 
 ![Einstellungen JK BMS](docs/images/mockups/05-einstellungen-jk-bms.png)
 
 ## Implementation principles
 
-- No guessed entity IDs in production YAML.
-- Deye controls only for verified SolarModbus registers/entities.
+- UI labels are manufacturer-neutral.
+- Up to three inverter slots are supported.
+- Different inverter manufacturers may be combined.
+- No guessed manufacturer entity IDs in production YAML.
+- Deye/SolarModbus V2 remains the verified reference profile.
+- Writable controls are only added for verified entities/services/registers of the exact inverter model.
 - Read-only values are never presented as writable controls.
-- JK-BMS controls only where Gobel Power exposes a corresponding writable Home Assistant entity/service.
-- Multi-pack installations show both aggregate battery-bank values and each discovered pack.
-- The layout should remain usable on desktop, tablet and mobile devices.
-- Target distribution is a HACS-installable dashboard package with an easy GitHub-to-Home-Assistant installation path.
+- JK-BMS controls are only added where Gobel Power exposes a corresponding writable Home Assistant entity/service.
+- Multi-pack battery installations show aggregate values plus discovered packs.
+- Layout should remain usable on desktop, tablet and mobile.
+- Target distribution remains a HACS-installable dashboard package.
 
 ## Project files
 
-- [`dashboard.yaml`](dashboard.yaml) – Lovelace dashboard implementation
-- [`docs/DASHBOARD_SPEC.md`](docs/DASHBOARD_SPEC.md) – functional specification of the five views
-- [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) – verified entity/register mapping
-- [`docs/images/mockups/`](docs/images/mockups/) – individual visual mock-ups
+- [`dashboard.yaml`](dashboard.yaml) – Lovelace dashboard
+- [`docs/DASHBOARD_SPEC.md`](docs/DASHBOARD_SPEC.md) – functional specification
+- [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) – inverter/BMS mapping model and verified reference entities
+- [`docs/images/mockups/`](docs/images/mockups/) – visual references
 
 ## Status
 
-Entity mapping and dashboard implementation are in progress. Current priorities are completing the first dashboard views to match the mock-ups, completing the Deye System Timer / TOU mapping and mapping the dynamically generated Gobel Power pack entities. HACS packaging and one-click installation are planned once the dashboard structure and required frontend dependencies have stabilized.
+The dashboard has been generalized from a Deye-specific design to a manufacturer-neutral multi-inverter structure. The next implementation step is to add installation-specific entity mappings for the desired Solis and Hoymiles integrations and then expose inverter 2/3 live cards using those verified entities.
