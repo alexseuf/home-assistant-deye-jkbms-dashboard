@@ -21,15 +21,16 @@ views:
                   left: 7%
                   top: 15%
                   color: "#ffb300"
-                  --mdc-icon-size: "clamp(24px, 3vw, 48px)"
-              - type: state-label
-                entity: sensor.solis_s5_eh1p_total_pv_power
-                prefix: "PV  "
+                  --mdc-icon-size: "clamp(22px, 2.5vw, 42px)"
+              - type: custom:hui-element
+                card_type: markdown
+                content: "**PV**"
                 style:
-                  left: 17%
+                  left: 16%
                   top: 18%
+                  width: 15%
                   color: "#1f2937"
-                  font-size: "clamp(10px, 1.2vw, 18px)"
+                  font-size: "clamp(10px, 1vw, 14px)"
                   font-weight: 600
               - type: state-label
                 entity: sensor.solis_s5_eh1p_total_pv_power
@@ -37,7 +38,7 @@ views:
                   left: 17%
                   top: 28%
                   color: "#111827"
-                  font-size: "clamp(16px, 2.2vw, 32px)"
+                  font-size: "clamp(16px, 1.75vw, 25px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.solis_s5_eh1p_pv_today_energy_generation
@@ -46,7 +47,7 @@ views:
                   left: 17%
                   top: 39%
                   color: "#374151"
-                  font-size: "clamp(9px, 0.95vw, 14px)"
+                  font-size: "clamp(9px, 0.78vw, 12px)"
 
               # Verbrauch
               - type: icon
@@ -55,15 +56,16 @@ views:
                   left: 72%
                   top: 15%
                   color: "#ff7a32"
-                  --mdc-icon-size: "clamp(24px, 3vw, 48px)"
-              - type: state-label
-                entity: sensor.solis_s5_eh1p_household_load_power
-                prefix: "Verbrauch  "
+                  --mdc-icon-size: "clamp(22px, 2.5vw, 42px)"
+              - type: custom:hui-element
+                card_type: markdown
+                content: "**Verbrauch**"
                 style:
                   left: 79%
                   top: 18%
+                  width: 18%
                   color: "#1f2937"
-                  font-size: "clamp(10px, 1.2vw, 18px)"
+                  font-size: "clamp(10px, 1vw, 14px)"
                   font-weight: 600
               - type: state-label
                 entity: sensor.solis_s5_eh1p_household_load_power
@@ -71,7 +73,7 @@ views:
                   left: 79%
                   top: 28%
                   color: "#111827"
-                  font-size: "clamp(16px, 2.2vw, 32px)"
+                  font-size: "clamp(16px, 1.75vw, 25px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.solis_s5_eh1p_today_energy_consumption
@@ -80,7 +82,7 @@ views:
                   left: 79%
                   top: 39%
                   color: "#374151"
-                  font-size: "clamp(9px, 0.95vw, 14px)"
+                  font-size: "clamp(9px, 0.78vw, 12px)"
 
               # Wechselrichter
               - type: state-label
@@ -88,9 +90,9 @@ views:
                 prefix: "Wechselrichter · "
                 style:
                   left: 50%
-                  top: 49%
+                  top: 51%
                   color: "#1f2937"
-                  font-size: "clamp(10px, 1vw, 15px)"
+                  font-size: "clamp(10px, 0.85vw, 13px)"
                   font-weight: 600
 
               # Batterie
@@ -100,15 +102,16 @@ views:
                   left: 7%
                   top: 63%
                   color: "#20ae55"
-                  --mdc-icon-size: "clamp(24px, 3vw, 48px)"
-              - type: state-label
-                entity: sensor.jk_bms_total_jk_bms_total_power
-                prefix: "Batterie  "
+                  --mdc-icon-size: "clamp(22px, 2.5vw, 42px)"
+              - type: custom:hui-element
+                card_type: markdown
+                content: "**Batterie**"
                 style:
-                  left: 17%
+                  left: 16%
                   top: 66%
+                  width: 18%
                   color: "#1f2937"
-                  font-size: "clamp(10px, 1.2vw, 18px)"
+                  font-size: "clamp(10px, 1vw, 14px)"
                   font-weight: 600
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_power
@@ -116,7 +119,7 @@ views:
                   left: 17%
                   top: 76%
                   color: "#111827"
-                  font-size: "clamp(16px, 2.2vw, 32px)"
+                  font-size: "clamp(16px, 1.75vw, 25px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_soc
@@ -125,7 +128,7 @@ views:
                   left: 17%
                   top: 87%
                   color: "#374151"
-                  font-size: "clamp(9px, 0.95vw, 14px)"
+                  font-size: "clamp(9px, 0.78vw, 12px)"
 
               # Netz
               - type: icon
@@ -134,15 +137,16 @@ views:
                   left: 69%
                   top: 63%
                   color: "#37475a"
-                  --mdc-icon-size: "clamp(24px, 3vw, 48px)"
-              - type: state-label
-                entity: sensor.solis_s5_eh1p_ac_grid_port_power
-                prefix: "Netz  "
+                  --mdc-icon-size: "clamp(22px, 2.5vw, 42px)"
+              - type: custom:hui-element
+                card_type: markdown
+                content: "**Netz**"
                 style:
                   left: 79%
                   top: 66%
+                  width: 15%
                   color: "#1f2937"
-                  font-size: "clamp(10px, 1.2vw, 18px)"
+                  font-size: "clamp(10px, 1vw, 14px)"
                   font-weight: 600
               - type: state-label
                 entity: sensor.solis_s5_eh1p_ac_grid_port_power
@@ -150,7 +154,7 @@ views:
                   left: 79%
                   top: 76%
                   color: "#111827"
-                  font-size: "clamp(16px, 2.2vw, 32px)"
+                  font-size: "clamp(16px, 1.75vw, 25px)"
                   font-weight: 700
               - type: state-label
                 entity: sensor.solis_s5_eh1p_today_energy_fed_into_grid
@@ -159,7 +163,7 @@ views:
                   left: 79%
                   top: 87%
                   color: "#374151"
-                  font-size: "clamp(9px, 0.95vw, 14px)"
+                  font-size: "clamp(9px, 0.78vw, 12px)"
 
           - type: picture-elements
             image: /pv-battery-dashboard-static/metric_strip_bg.svg
@@ -171,7 +175,7 @@ views:
                   left: 10%
                   top: 50%
                   color: "#111827"
-                  font-size: "clamp(10px, 1.2vw, 18px)"
+                  font-size: "clamp(10px, 1vw, 14px)"
                   font-weight: 600
               - type: state-label
                 entity: sensor.solis_s5_eh1p_pv_voltage_2
@@ -180,7 +184,7 @@ views:
                   left: 30%
                   top: 50%
                   color: "#111827"
-                  font-size: "clamp(10px, 1.2vw, 18px)"
+                  font-size: "clamp(10px, 1vw, 14px)"
                   font-weight: 600
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_voltage
@@ -189,7 +193,7 @@ views:
                   left: 50%
                   top: 50%
                   color: "#111827"
-                  font-size: "clamp(10px, 1.2vw, 18px)"
+                  font-size: "clamp(10px, 1vw, 14px)"
                   font-weight: 600
               - type: state-label
                 entity: sensor.jk_bms_total_jk_bms_total_current
@@ -198,7 +202,7 @@ views:
                   left: 70%
                   top: 50%
                   color: "#111827"
-                  font-size: "clamp(10px, 1.2vw, 18px)"
+                  font-size: "clamp(10px, 1vw, 14px)"
                   font-weight: 600
               - type: state-label
                 entity: sensor.jk_bms_pack_00_temperature_01
@@ -207,7 +211,7 @@ views:
                   left: 90%
                   top: 50%
                   color: "#111827"
-                  font-size: "clamp(10px, 1.2vw, 18px)"
+                  font-size: "clamp(10px, 1vw, 14px)"
                   font-weight: 600
 
           - type: custom:apexcharts-card
