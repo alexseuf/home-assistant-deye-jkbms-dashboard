@@ -22,24 +22,52 @@
     </marker>
   </defs>
 
-  <rect x="0" y="0" width="1000" height="360" rx="14" fill="url(#bg)"/>
+  <rect width="1000" height="360" rx="14" fill="url(#bg)"/>
 
-  <!-- Four outer cards: proportions taken from the mock-up -->
-  <rect x="24"  y="30"  width="270" height="118" rx="10" fill="#fff" stroke="#d7e0e5" filter="url(#shadow)"/>
-  <rect x="706" y="30"  width="270" height="118" rx="10" fill="#fff" stroke="#d7e0e5" filter="url(#shadow)"/>
-  <rect x="24"  y="202" width="270" height="118" rx="10" fill="#fff" stroke="#d7e0e5" filter="url(#shadow)"/>
-  <rect x="706" y="202" width="270" height="118" rx="10" fill="#fff" stroke="#d7e0e5" filter="url(#shadow)"/>
+  <!-- outer cards -->
+  <g fill="#fff" stroke="#d7e0e5" filter="url(#shadow)">
+    <rect x="24" y="30" width="270" height="118" rx="10"/>
+    <rect x="706" y="30" width="270" height="118" rx="10"/>
+    <rect x="24" y="202" width="270" height="118" rx="10"/>
+    <rect x="706" y="202" width="270" height="118" rx="10"/>
+  </g>
 
-  <!-- Flow arrows -->
+  <!-- flow -->
   <path d="M294 91 H421" fill="none" stroke="#22b455" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#greenArrow)"/>
   <path d="M579 91 H706" fill="none" stroke="#f3a400" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#orangeArrow)"/>
   <path d="M465 236 V261 H294" fill="none" stroke="#22b455" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#greenArrow)"/>
   <path d="M535 236 V261 H706" fill="none" stroke="#ef5545" stroke-width="3" stroke-dasharray="8 7" marker-end="url(#redArrow)"/>
 
-  <!-- Narrow inverter like the reference mock-up -->
+  <!-- inverter -->
   <rect x="421" y="38" width="158" height="200" rx="10" fill="url(#inv)" stroke="#7e8b93" stroke-width="2" filter="url(#shadow)"/>
   <rect x="460" y="78" width="80" height="53" rx="5" fill="#f7fafb" stroke="#98a3aa"/>
   <rect x="476" y="91" width="48" height="21" rx="2" fill="#5f6d75"/>
   <circle cx="500" cy="157" r="8" fill="#22b455"/>
   <path d="M449 52 H551" stroke="#fff" stroke-width="4" opacity=".45"/>
+
+  <!-- PV icon + title -->
+  <g transform="translate(66 61)" stroke="#ffb300" stroke-width="4" fill="none" stroke-linecap="round">
+    <circle cx="0" cy="0" r="13" fill="#ffb300" stroke="none"/>
+    <path d="M0-25V-19 M0 19V25 M-25 0H-19 M19 0H25 M-18-18L-14-14 M14 14L18 18 M18-18L14-14 M-14 14L-18 18"/>
+  </g>
+  <text x="108" y="66" font-family="Arial, sans-serif" font-size="17" font-weight="600" fill="#1f2937">PV</text>
+
+  <!-- consumption house + title -->
+  <g transform="translate(751 49)" fill="#ff7a32">
+    <path d="M0 18 L25 0 L50 18 V48 H31 V29 H19 V48 H0 Z"/>
+  </g>
+  <text x="815" y="66" font-family="Arial, sans-serif" font-size="17" font-weight="600" fill="#1f2937">Verbrauch</text>
+
+  <!-- battery icon + title -->
+  <g transform="translate(51 221)" stroke="#20ae55" stroke-width="4" fill="none">
+    <rect x="0" y="6" width="28" height="55" rx="4"/>
+    <path d="M8 0 H20"/>
+  </g>
+  <text x="108" y="239" font-family="Arial, sans-serif" font-size="17" font-weight="600" fill="#1f2937">Batterie</text>
+
+  <!-- grid tower + title -->
+  <g transform="translate(751 218)" stroke="#37475a" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M25 0 L8 58 M25 0 L42 58 M15 20 H35 M11 34 H39 M7 49 H43 M17 58 L25 34 L33 58"/>
+  </g>
+  <text x="815" y="239" font-family="Arial, sans-serif" font-size="17" font-weight="600" fill="#1f2937">Netz</text>
 </svg>
