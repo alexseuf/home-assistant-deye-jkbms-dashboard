@@ -4,7 +4,7 @@
   "after_dependencies": ["solis_modbus"],
   "codeowners": ["@alexseuf"],
   "config_flow": true,
-  "dependencies": ["lovelace"],
+  "dependencies": ["http", "lovelace"],
   "documentation": "https://github.com/alexseuf/home-assistant-deye-jkbms-dashboard",
   "integration_type": "helper",
   "iot_class": "calculated",
