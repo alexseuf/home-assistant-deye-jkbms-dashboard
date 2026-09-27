@@ -1,0 +1,14 @@
+{
+  "domain": "pv_battery_dashboard",
+  "name": "PV & Battery Dashboard",
+  "version": "0.1.0",
+  "documentation": "https://github.com/alexseuf/home-assistant-deye-jkbms-dashboard",
+  "issue_tracker": "https://github.com/alexseuf/home-assistant-deye-jkbms-dashboard/issues",
+  "codeowners": ["@alexseuf"],
+  "config_flow": true,
+  "single_config_entry": true,
+  "integration_type": "helper",
+  "iot_class": "calculated",
+  "dependencies": ["lovelace"],
+  "after_dependencies": ["solis_modbus"]
+}
