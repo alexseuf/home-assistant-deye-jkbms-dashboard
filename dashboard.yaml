@@ -1,553 +1,611 @@
-# Home Assistant PV & Battery Dashboard
-# Concrete verified profile: Solis S5-EH1P + Gobel Battery / JK BMS
-# Entity IDs in this file were verified from the target Home Assistant export
-# dated 2026-09-27. UI labels remain manufacturer-neutral where practical.
-
 title: PV & Batteries
 
 views:
   - title: Aktuelle Werte
     path: aktuelle-werte
     icon: mdi:solar-power
-    type: sections
-    max_columns: 4
-    dense_section_placement: true
-    sections:
-      - type: grid
-        column_span: 4
-        cards:
-          - type: heading
-            heading: Energiefluss (aktuell)
-            icon: mdi:transmission-tower
+    type: masonry
+    cards:
+      - type: custom:mushroom-title-card
+        title: Energiefluss (aktuell)
+        subtitle: Solis S5-EH1P · JK-BMS
 
-          - type: tile
+      - type: custom:power-flow-card-plus
+        title: Aktueller Energiefluss
+        clickable_entities: true
+        min_flow_rate: 0.75
+        max_flow_rate: 6
+        kilo_threshold: 1000
+        entities:
+          solar:
+            entity: sensor.solis_s5_eh1p_total_pv_power
+            name: PV
+            color_icon: true
+          grid:
+            entity: sensor.solis_s5_eh1p_ac_grid_port_power
+            name: Netz
+            display_state: one_way
+            color_circle: color_dynamically
+          battery:
+            entity: sensor.jk_bms_total_jk_bms_total_power
+            state_of_charge: sensor.jk_bms_total_jk_bms_total_soc
+            name: Batterie
+            display_state: one_way
+            color_circle: color_dynamically
+            invert_state: true
+          home:
+            entity: sensor.solis_s5_eh1p_household_load_power
+            name: Verbrauch
+            override_state: true
+            color_icon: true
+
+      - type: grid
+        columns: 4
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_total_pv_power
             name: PV
             icon: mdi:solar-power
-            vertical: true
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_household_load_power
             name: Verbrauch
             icon: mdi:home-lightning-bolt
-            vertical: true
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.jk_bms_total_jk_bms_total_power
             name: Batterie
             icon: mdi:battery-charging
-            vertical: true
-
-          - type: tile
-            entity: sensor.jk_bms_total_jk_bms_total_soc
-            name: Batterie SOC
-            icon: mdi:battery-high
-            vertical: true
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_ac_grid_port_power
             name: Netz
             icon: mdi:transmission-tower
-            vertical: true
-
-          - type: tile
+          - type: custom:mushroom-entity-card
+            entity: sensor.jk_bms_total_jk_bms_total_soc
+            name: Batterie SOC
+            icon: mdi:battery-high
+          - type: custom:mushroom-entity-card
+            entity: sensor.jk_bms_total_jk_bms_total_voltage
+            name: Batteriespannung
+            icon: mdi:flash
+          - type: custom:mushroom-entity-card
+            entity: sensor.jk_bms_total_jk_bms_total_current
+            name: Batteriestrom
+            icon: mdi:current-dc
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_status_string
             name: Wechselrichterstatus
             icon: mdi:check-circle-outline
-            vertical: true
 
-          - type: heading
-            heading: Energie heute
-            icon: mdi:calendar-today
+      - type: custom:mushroom-title-card
+        title: Energie heute
 
-          - type: tile
+      - type: grid
+        columns: 3
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_pv_today_energy_generation
             name: PV-Ertrag
             icon: mdi:white-balance-sunny
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_today_energy_consumption
             name: Verbrauch
             icon: mdi:home-lightning-bolt-outline
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_today_energy_imported_from_grid
             name: Netzbezug
             icon: mdi:transmission-tower-import
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_today_energy_fed_into_grid
             name: Einspeisung
             icon: mdi:transmission-tower-export
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_today_battery_charge_energy
             name: Batterie geladen
             icon: mdi:battery-plus
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_today_battery_discharge_energy
             name: Batterie entladen
             icon: mdi:battery-minus
 
-      - type: grid
-        column_span: 4
-        cards:
-          - type: heading
-            heading: Elektrische Werte
-            icon: mdi:meter-electric-outline
+      - type: custom:mushroom-title-card
+        title: Elektrische Werte
 
-          - type: tile
+      - type: grid
+        columns: 4
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_pv_voltage_1
             name: PV Spannung 1
             icon: mdi:sine-wave
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_pv_voltage_2
             name: PV Spannung 2
             icon: mdi:sine-wave
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_pv_current_1
             name: PV Strom 1
             icon: mdi:current-dc
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_pv_current_2
             name: PV Strom 2
             icon: mdi:current-dc
-
-          - type: tile
-            entity: sensor.jk_bms_total_jk_bms_total_voltage
-            name: Batteriespannung
-            icon: mdi:flash-outline
-
-          - type: tile
-            entity: sensor.jk_bms_total_jk_bms_total_current
-            name: Batteriestrom
-            icon: mdi:current-dc
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_a_phase_voltage
             name: AC Spannung
             icon: mdi:current-ac
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_grid_frequency
             name: Frequenz
             icon: mdi:sine-wave
+          - type: custom:mushroom-entity-card
+            entity: sensor.solis_s5_eh1p_pv_power_1
+            name: PV 1 Leistung
+            icon: mdi:solar-panel-large
+          - type: custom:mushroom-entity-card
+            entity: sensor.solis_s5_eh1p_pv_power_2
+            name: PV 2 Leistung
+            icon: mdi:solar-panel-large
 
-      - type: grid
-        column_span: 4
-        cards:
-          - type: heading
-            heading: Leistungsverlauf (heute)
-            icon: mdi:chart-areaspline
-
-          - type: history-graph
-            title: PV / Verbrauch / Batterie / Netz
-            hours_to_show: 24
-            entities:
-              - entity: sensor.solis_s5_eh1p_total_pv_power
-                name: PV
-              - entity: sensor.solis_s5_eh1p_household_load_power
-                name: Verbrauch
-              - entity: sensor.jk_bms_total_jk_bms_total_power
-                name: Batterie
-              - entity: sensor.solis_s5_eh1p_ac_grid_port_power
-                name: Netz
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: Leistungsverlauf heute
+          show_states: true
+        graph_span: 24h
+        span:
+          start: day
+        apex_config:
+          chart:
+            height: 300
+          stroke:
+            width: 2
+          legend:
+            show: true
+        series:
+          - entity: sensor.solis_s5_eh1p_total_pv_power
+            name: PV
+            type: area
+            group_by:
+              func: avg
+              duration: 5min
+          - entity: sensor.solis_s5_eh1p_household_load_power
+            name: Verbrauch
+            type: line
+            group_by:
+              func: avg
+              duration: 5min
+          - entity: sensor.jk_bms_total_jk_bms_total_power
+            name: Batterie
+            type: line
+            group_by:
+              func: avg
+              duration: 5min
+          - entity: sensor.solis_s5_eh1p_ac_grid_port_power
+            name: Netz
+            type: line
+            group_by:
+              func: avg
+              duration: 5min
 
   - title: Historische Werte
     path: historische-werte
     icon: mdi:chart-line
-    type: sections
-    max_columns: 4
-    sections:
-      - type: grid
-        column_span: 4
-        cards:
-          - type: heading
-            heading: Historische Werte
-            icon: mdi:chart-areaspline
+    type: masonry
+    cards:
+      - type: custom:mushroom-title-card
+        title: Historische Werte
+        subtitle: letzte 24 Stunden
 
-          - type: history-graph
-            title: Leistung – letzte 24 Stunden
-            hours_to_show: 24
-            entities:
+      - type: grid
+        columns: 2
+        square: false
+        cards:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: Leistung
+            graph_span: 24h
+            apex_config:
+              chart:
+                height: 280
+              stroke:
+                width: 2
+            series:
               - entity: sensor.solis_s5_eh1p_total_pv_power
                 name: PV
+                type: area
+                group_by:
+                  func: avg
+                  duration: 5min
               - entity: sensor.solis_s5_eh1p_household_load_power
                 name: Verbrauch
+                type: line
+                group_by:
+                  func: avg
+                  duration: 5min
               - entity: sensor.jk_bms_total_jk_bms_total_power
                 name: Batterie
+                type: line
+                group_by:
+                  func: avg
+                  duration: 5min
               - entity: sensor.solis_s5_eh1p_ac_grid_port_power
                 name: Netz
+                type: line
+                group_by:
+                  func: avg
+                  duration: 5min
 
-          - type: history-graph
-            title: Batterie SOC – letzte 24 Stunden
-            hours_to_show: 24
-            entities:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: Batterie SOC
+            graph_span: 24h
+            apex_config:
+              chart:
+                height: 280
+              yaxis:
+                min: 0
+                max: 100
+            series:
               - entity: sensor.jk_bms_total_jk_bms_total_soc
-                name: Gesamt-SOC
+                name: Gesamt
+                type: line
               - entity: sensor.jk_bms_pack_00_soc
                 name: Pack 00
+                type: line
               - entity: sensor.jk_bms_pack_01_soc
                 name: Pack 01
+                type: line
               - entity: sensor.jk_bms_pack_02_soc
                 name: Pack 02
+                type: line
 
-          - type: history-graph
-            title: Batteriespannung & Strom – letzte 24 Stunden
-            hours_to_show: 24
-            entities:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: Batteriespannung & Strom
+            graph_span: 24h
+            yaxis:
+              - id: voltage
+                apex_config:
+                  title:
+                    text: V
+              - id: current
+                opposite: true
+                apex_config:
+                  title:
+                    text: A
+            apex_config:
+              chart:
+                height: 280
+            series:
               - entity: sensor.jk_bms_total_jk_bms_total_voltage
                 name: Spannung
+                yaxis_id: voltage
+                type: line
               - entity: sensor.jk_bms_total_jk_bms_total_current
                 name: Strom
+                yaxis_id: current
+                type: line
 
-          - type: history-graph
-            title: PV Eingänge (MPPT) – letzte 24 Stunden
-            hours_to_show: 24
-            entities:
+          - type: custom:apexcharts-card
+            header:
+              show: true
+              title: PV Eingänge (MPPT)
+            graph_span: 24h
+            yaxis:
+              - id: power
+                apex_config:
+                  title:
+                    text: W
+              - id: voltage
+                opposite: true
+                apex_config:
+                  title:
+                    text: V
+            apex_config:
+              chart:
+                height: 280
+            series:
               - entity: sensor.solis_s5_eh1p_pv_power_1
-                name: PV 1 Leistung
+                name: PV1 Leistung
+                yaxis_id: power
+                type: area
               - entity: sensor.solis_s5_eh1p_pv_power_2
-                name: PV 2 Leistung
+                name: PV2 Leistung
+                yaxis_id: power
+                type: area
               - entity: sensor.solis_s5_eh1p_pv_voltage_1
-                name: PV 1 Spannung
+                name: PV1 Spannung
+                yaxis_id: voltage
+                type: line
               - entity: sensor.solis_s5_eh1p_pv_voltage_2
-                name: PV 2 Spannung
+                name: PV2 Spannung
+                yaxis_id: voltage
+                type: line
 
   - title: Summierte Werte
     path: summierte-werte
     icon: mdi:sigma
-    type: sections
-    max_columns: 4
-    sections:
+    type: masonry
+    cards:
+      - type: custom:mushroom-title-card
+        title: Summierte Werte
+        subtitle: Tag · 14 Tage · Monat · Jahr
+
       - type: grid
-        column_span: 4
+        columns: 3
+        square: false
         cards:
-          - type: heading
-            heading: Summierte Werte
-            icon: mdi:chart-box-outline
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_pv_today_energy_generation
-            name: PV Ertrag heute
+            name: PV heute
             icon: mdi:white-balance-sunny
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_today_energy_consumption
             name: Verbrauch heute
             icon: mdi:home-lightning-bolt
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_today_energy_imported_from_grid
             name: Netzbezug heute
             icon: mdi:transmission-tower-import
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_today_energy_fed_into_grid
             name: Einspeisung heute
             icon: mdi:transmission-tower-export
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_today_battery_charge_energy
-            name: Batterie Laden heute
+            name: Batterie geladen
             icon: mdi:battery-plus
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_today_battery_discharge_energy
-            name: Batterie Entladen heute
+            name: Batterie entladen
             icon: mdi:battery-minus
 
-          - type: heading
-            heading: Tageswerte · 14 Tage
-            icon: mdi:chart-bar
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: Tageswerte · 14 Tage
+        graph_span: 14d
+        span:
+          end: day
+        apex_config:
+          chart:
+            height: 320
+          plotOptions:
+            bar:
+              columnWidth: 60%
+        series:
+          - entity: sensor.solis_s5_eh1p_pv_total_energy_generation
+            name: PV
+            type: column
+            statistics:
+              type: change
+              period: day
+          - entity: sensor.solis_s5_eh1p_total_energy_consumption
+            name: Verbrauch
+            type: column
+            statistics:
+              type: change
+              period: day
+          - entity: sensor.solis_s5_eh1p_total_energy_imported_from_grid
+            name: Netzbezug
+            type: column
+            statistics:
+              type: change
+              period: day
+          - entity: sensor.solis_s5_eh1p_total_energy_fed_into_grid
+            name: Einspeisung
+            type: column
+            statistics:
+              type: change
+              period: day
 
-          - type: statistics-graph
-            title: PV / Verbrauch / Netz – 14 Tage
-            chart_type: bar
-            period: day
-            days_to_show: 14
-            stat_types:
-              - change
-            entities:
-              - entity: sensor.solis_s5_eh1p_pv_total_energy_generation
-                name: PV
-              - entity: sensor.solis_s5_eh1p_total_energy_consumption
-                name: Verbrauch
-              - entity: sensor.solis_s5_eh1p_total_energy_imported_from_grid
-                name: Netzbezug
-              - entity: sensor.solis_s5_eh1p_total_energy_fed_into_grid
-                name: Einspeisung
-
-          - type: statistics-graph
-            title: Batterie – 14 Tage
-            chart_type: bar
-            period: day
-            days_to_show: 14
-            stat_types:
-              - change
-            entities:
-              - entity: sensor.solis_s5_eh1p_total_battery_charge_energy
-                name: Laden
-              - entity: sensor.solis_s5_eh1p_total_battery_discharge_energy
-                name: Entladen
-
-          - type: heading
-            heading: Monat / Jahr
-            icon: mdi:calendar-month
-
-          - type: tile
+      - type: grid
+        columns: 2
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_pv_current_month_energy_generation
             name: PV aktueller Monat
             icon: mdi:calendar-month
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_pv_this_year_energy_generation
             name: PV aktuelles Jahr
             icon: mdi:calendar
 
-          - type: statistics-graph
-            title: Energie pro Monat
-            chart_type: bar
-            period: month
-            days_to_show: 365
-            stat_types:
-              - change
-            entities:
-              - entity: sensor.solis_s5_eh1p_pv_total_energy_generation
-                name: PV
-              - entity: sensor.solis_s5_eh1p_total_energy_consumption
-                name: Verbrauch
-              - entity: sensor.solis_s5_eh1p_total_energy_imported_from_grid
-                name: Netzbezug
-              - entity: sensor.solis_s5_eh1p_total_energy_fed_into_grid
-                name: Einspeisung
+      - type: custom:apexcharts-card
+        header:
+          show: true
+          title: Monatsübersicht · 12 Monate
+        graph_span: 365d
+        apex_config:
+          chart:
+            height: 320
+        series:
+          - entity: sensor.solis_s5_eh1p_pv_total_energy_generation
+            name: PV
+            type: column
+            statistics:
+              type: change
+              period: month
+          - entity: sensor.solis_s5_eh1p_total_energy_consumption
+            name: Verbrauch
+            type: column
+            statistics:
+              type: change
+              period: month
+          - entity: sensor.solis_s5_eh1p_total_energy_imported_from_grid
+            name: Netzbezug
+            type: column
+            statistics:
+              type: change
+              period: month
+          - entity: sensor.solis_s5_eh1p_total_energy_fed_into_grid
+            name: Einspeisung
+            type: column
+            statistics:
+              type: change
+              period: month
 
   - title: Einstellungen Wechselrichter
     path: einstellungen-wechselrichter
     icon: mdi:tune-variant
-    type: sections
-    max_columns: 4
-    sections:
-      - type: grid
-        column_span: 4
-        cards:
-          - type: heading
-            heading: Einstellungen Wechselrichter
-            icon: mdi:inverter
+    type: masonry
+    cards:
+      - type: custom:mushroom-title-card
+        title: Einstellungen Wechselrichter
+        subtitle: Solis S5-EH1P
 
-          - type: tile
+      - type: grid
+        columns: 3
+        square: false
+        cards:
+          - type: custom:mushroom-entity-card
             entity: sensor.solis_s5_eh1p_status_string
             name: Status
             icon: mdi:check-circle-outline
-
-          - type: tile
+          - type: custom:mushroom-entity-card
+            entity: sensor.solis_s5_eh1p_temperature
+            name: Temperatur
+            icon: mdi:thermometer
+          - type: custom:mushroom-entity-card
             entity: switch.solis_s5_eh1p_solis_modbus_enabled
             name: Solis Modbus
             icon: mdi:connection
 
-          - type: entities
-            title: Batterie / BMS
-            entities:
-              - entity: sensor.solis_s5_eh1p_battery_charge_current_limitation_bms
-                name: Max. Ladestrom BMS
-              - entity: sensor.solis_s5_eh1p_battery_discharge_current_limitation_bms
-                name: Max. Entladestrom BMS
-              - entity: sensor.solis_s5_eh1p_battery_voltage_bms
-                name: Batteriespannung BMS
-              - entity: sensor.solis_s5_eh1p_battery_current_bms
-                name: Batteriestrom BMS
-              - entity: sensor.solis_s5_eh1p_battery_soh
-                name: Batterie SOH
+      - type: entities
+        title: Batterie / BMS
+        entities:
+          - entity: sensor.solis_s5_eh1p_battery_charge_current_limitation_bms
+            name: Max. Ladestrom BMS
+          - entity: sensor.solis_s5_eh1p_battery_discharge_current_limitation_bms
+            name: Max. Entladestrom BMS
+          - entity: sensor.solis_s5_eh1p_battery_voltage_bms
+            name: Batteriespannung BMS
+          - entity: sensor.solis_s5_eh1p_battery_current_bms
+            name: Batteriestrom BMS
+          - entity: sensor.solis_s5_eh1p_battery_soh
+            name: Batterie SOH
 
-          - type: entities
-            title: Wechselrichter Diagnose
-            entities:
-              - entity: sensor.solis_s5_eh1p_model_no
-                name: Modell
-              - entity: sensor.solis_s5_eh1p_serial_number
-                name: Seriennummer
-              - entity: sensor.solis_s5_eh1p_protocol_version
-                name: Protokollversion
-              - entity: sensor.solis_s5_eh1p_dsp_version
-                name: DSP Version
-              - entity: sensor.solis_s5_eh1p_hmi_version
-                name: HMI Version
-              - entity: sensor.solis_s5_eh1p_last_modbus_success
-                name: Letzte Modbus-Antwort
-              - entity: sensor.solis_s5_eh1p_temperature
-                name: Temperatur
-              - entity: sensor.solis_s5_eh1p_alarm_code_data
-                name: Alarmcode
-
-          - type: markdown
-            content: >-
-              In der exportierten Entity-Liste sind für diesen Solis S5-EH1P
-              keine TOU-`number`- oder `time`-Entities vorhanden. Deshalb
-              zeigt diese Ansicht nur die tatsächlich vorhandenen Diagnosewerte
-              sowie den vorhandenen Modbus-Schalter. Nicht vorhandene
-              Bedienelemente werden bewusst nicht erfunden.
+      - type: entities
+        title: Diagnose
+        entities:
+          - entity: sensor.solis_s5_eh1p_model_no
+            name: Modell
+          - entity: sensor.solis_s5_eh1p_serial_number
+            name: Seriennummer
+          - entity: sensor.solis_s5_eh1p_protocol_version
+            name: Protokollversion
+          - entity: sensor.solis_s5_eh1p_dsp_version
+            name: DSP Version
+          - entity: sensor.solis_s5_eh1p_hmi_version
+            name: HMI Version
+          - entity: sensor.solis_s5_eh1p_last_modbus_success
+            name: Letzte Modbus-Antwort
+          - entity: sensor.solis_s5_eh1p_alarm_code_data
+            name: Alarmcode
 
   - title: Einstellungen JK BMS
     path: einstellungen-jk-bms
     icon: mdi:battery-cog
-    type: sections
-    max_columns: 4
-    sections:
+    type: masonry
+    cards:
+      - type: custom:mushroom-title-card
+        title: JK BMS
+        subtitle: Gesamtwerte und drei Batterie-Packs
+
       - type: grid
-        column_span: 4
+        columns: 4
+        square: false
         cards:
-          - type: heading
-            heading: JK BMS Gesamt
-            icon: mdi:battery-heart-variant
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.jk_bms_total_jk_bms_packs_count
-            name: Anzahl Packs
+            name: Packs
             icon: mdi:battery-multiple
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.jk_bms_total_jk_bms_total_soc
             name: Gesamt SOC
             icon: mdi:battery-high
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.jk_bms_total_jk_bms_total_voltage
-            name: Gesamtspannung
-            icon: mdi:flash-outline
-
-          - type: tile
+            name: Spannung
+            icon: mdi:flash
+          - type: custom:mushroom-entity-card
             entity: sensor.jk_bms_total_jk_bms_total_current
-            name: Gesamtstrom
+            name: Strom
             icon: mdi:current-dc
-
-          - type: tile
+          - type: custom:mushroom-entity-card
             entity: sensor.jk_bms_total_jk_bms_total_power
-            name: Gesamtleistung
+            name: Leistung
             icon: mdi:lightning-bolt
-
-          - type: tile
+          - type: custom:mushroom-entity-card
+            entity: sensor.jk_bms_total_jk_bms_max_cell_voltage
+            name: Höchste Zelle
+            icon: mdi:arrow-up-bold
+          - type: custom:mushroom-entity-card
+            entity: sensor.jk_bms_total_jk_bms_min_cell_voltage
+            name: Niedrigste Zelle
+            icon: mdi:arrow-down-bold
+          - type: custom:mushroom-entity-card
             entity: sensor.jk_bms_total_jk_bms_cell_voltage_delta
-            name: Zellspannungsdifferenz
+            name: Zell-Delta
             icon: mdi:delta
 
-          - type: tile
-            entity: sensor.jk_bms_total_jk_bms_max_cell_voltage
-            name: Höchste Zellspannung
-            icon: mdi:arrow-up-bold
-
-          - type: tile
-            entity: sensor.jk_bms_total_jk_bms_min_cell_voltage
-            name: Niedrigste Zellspannung
-            icon: mdi:arrow-down-bold
-
       - type: grid
-        column_span: 4
+        columns: 3
+        square: false
         cards:
-          - type: heading
-            heading: Pack 00
-            icon: mdi:battery
+          - type: entities
+            title: Pack 00
+            entities:
+              - sensor.jk_bms_pack_00_soc
+              - sensor.jk_bms_pack_00_soh
+              - sensor.jk_bms_pack_00_voltage
+              - sensor.jk_bms_pack_00_current
+              - sensor.jk_bms_pack_00_power
+              - sensor.jk_bms_pack_00_cycle_count
+              - sensor.jk_bms_pack_00_temperature_01
+              - sensor.jk_bms_pack_00_balance_current
+              - binary_sensor.jk_bms_pack_00_charge_enabled_status
+              - binary_sensor.jk_bms_pack_00_discharge_enabled_status
+              - binary_sensor.jk_bms_pack_00_cell_over_voltage_protection
+              - binary_sensor.jk_bms_pack_00_cell_under_voltage_protection
+              - binary_sensor.jk_bms_pack_00_short_circuit_protection
 
           - type: entities
+            title: Pack 01
             entities:
-              - entity: sensor.jk_bms_pack_00_soc
-                name: SOC
-              - entity: sensor.jk_bms_pack_00_soh
-                name: SOH
-              - entity: sensor.jk_bms_pack_00_voltage
-                name: Spannung
-              - entity: sensor.jk_bms_pack_00_current
-                name: Strom
-              - entity: sensor.jk_bms_pack_00_power
-                name: Leistung
-              - entity: sensor.jk_bms_pack_00_cycle_count
-                name: Zyklen
-              - entity: sensor.jk_bms_pack_00_temperature_01
-                name: Temperatur 1
-              - entity: sensor.jk_bms_pack_00_balance_current
-                name: Balancerstrom
-              - entity: binary_sensor.jk_bms_pack_00_charge_enabled_status
-                name: Laden freigegeben
-              - entity: binary_sensor.jk_bms_pack_00_discharge_enabled_status
-                name: Entladen freigegeben
-              - entity: binary_sensor.jk_bms_pack_00_cell_over_voltage_protection
-                name: Zellüberspannung
-              - entity: binary_sensor.jk_bms_pack_00_cell_under_voltage_protection
-                name: Zellunterspannung
-              - entity: binary_sensor.jk_bms_pack_00_short_circuit_protection
-                name: Kurzschlussschutz
-
-      - type: grid
-        column_span: 4
-        cards:
-          - type: heading
-            heading: Pack 01
-            icon: mdi:battery
+              - sensor.jk_bms_pack_01_soc
+              - sensor.jk_bms_pack_01_soh
+              - sensor.jk_bms_pack_01_voltage
+              - sensor.jk_bms_pack_01_current
+              - sensor.jk_bms_pack_01_power
+              - sensor.jk_bms_pack_01_cycle_count
+              - sensor.jk_bms_pack_01_temperature_01
+              - sensor.jk_bms_pack_01_balance_current
+              - binary_sensor.jk_bms_pack_01_charge_enabled_status
+              - binary_sensor.jk_bms_pack_01_discharge_enabled_status
+              - binary_sensor.jk_bms_pack_01_cell_over_voltage_protection
+              - binary_sensor.jk_bms_pack_01_cell_under_voltage_protection
+              - binary_sensor.jk_bms_pack_01_short_circuit_protection
 
           - type: entities
+            title: Pack 02
             entities:
-              - entity: sensor.jk_bms_pack_01_soc
-                name: SOC
-              - entity: sensor.jk_bms_pack_01_soh
-                name: SOH
-              - entity: sensor.jk_bms_pack_01_voltage
-                name: Spannung
-              - entity: sensor.jk_bms_pack_01_current
-                name: Strom
-              - entity: sensor.jk_bms_pack_01_power
-                name: Leistung
-              - entity: sensor.jk_bms_pack_01_cycle_count
-                name: Zyklen
-              - entity: sensor.jk_bms_pack_01_temperature_01
-                name: Temperatur 1
-              - entity: sensor.jk_bms_pack_01_balance_current
-                name: Balancerstrom
-              - entity: binary_sensor.jk_bms_pack_01_charge_enabled_status
-                name: Laden freigegeben
-              - entity: binary_sensor.jk_bms_pack_01_discharge_enabled_status
-                name: Entladen freigegeben
-              - entity: binary_sensor.jk_bms_pack_01_cell_over_voltage_protection
-                name: Zellüberspannung
-              - entity: binary_sensor.jk_bms_pack_01_cell_under_voltage_protection
-                name: Zellunterspannung
-              - entity: binary_sensor.jk_bms_pack_01_short_circuit_protection
-                name: Kurzschlussschutz
-
-      - type: grid
-        column_span: 4
-        cards:
-          - type: heading
-            heading: Pack 02
-            icon: mdi:battery
-
-          - type: entities
-            entities:
-              - entity: sensor.jk_bms_pack_02_soc
-                name: SOC
-              - entity: sensor.jk_bms_pack_02_soh
-                name: SOH
-              - entity: sensor.jk_bms_pack_02_voltage
-                name: Spannung
-              - entity: sensor.jk_bms_pack_02_current
-                name: Strom
-              - entity: sensor.jk_bms_pack_02_power
-                name: Leistung
-              - entity: sensor.jk_bms_pack_02_cycle_count
-                name: Zyklen
-              - entity: sensor.jk_bms_pack_02_temperature_01
-                name: Temperatur 1
-              - entity: sensor.jk_bms_pack_02_balance_current
-                name: Balancerstrom
-              - entity: binary_sensor.jk_bms_pack_02_charge_enabled_status
-                name: Laden freigegeben
-              - entity: binary_sensor.jk_bms_pack_02_discharge_enabled_status
-                name: Entladen freigegeben
-              - entity: binary_sensor.jk_bms_pack_02_cell_over_voltage_protection
-                name: Zellüberspannung
-              - entity: binary_sensor.jk_bms_pack_02_cell_under_voltage_protection
-                name: Zellunterspannung
-              - entity: binary_sensor.jk_bms_pack_02_short_circuit_protection
-                name: Kurzschlussschutz
+              - sensor.jk_bms_pack_02_soc
+              - sensor.jk_bms_pack_02_soh
+              - sensor.jk_bms_pack_02_voltage
+              - sensor.jk_bms_pack_02_current
+              - sensor.jk_bms_pack_02_power
+              - sensor.jk_bms_pack_02_cycle_count
+              - sensor.jk_bms_pack_02_temperature_01
+              - sensor.jk_bms_pack_02_balance_current
+              - binary_sensor.jk_bms_pack_02_charge_enabled_status
+              - binary_sensor.jk_bms_pack_02_discharge_enabled_status
+              - binary_sensor.jk_bms_pack_02_cell_over_voltage_protection
+              - binary_sensor.jk_bms_pack_02_cell_under_voltage_protection
+              - binary_sensor.jk_bms_pack_02_short_circuit_protection

@@ -173,3 +173,24 @@ The release workflow mirrors the protection used in `alexseuf/tigo-tap-local`:
 - repeats the literal-newline guard
 - builds `pv_battery_dashboard.zip`
 - creates a GitHub prerelease with generated release notes
+
+
+## Frontend dependencies for dashboard 0.1.3
+
+Version **0.1.3** redesigns the dashboard closer to the visual mock-ups and requires three HACS frontend cards:
+
+1. **Power Flow Card Plus** — central live PV/grid/battery/home energy flow
+   - HACS search name: `Power Flow Card Plus`
+   - Repository: `flixlix/power-flow-card-plus`
+2. **ApexCharts Card** — compact historic, daily and monthly graphs
+   - HACS search name: `ApexCharts Card`
+   - Repository: `RomRider/apexcharts-card`
+3. **Mushroom** — compact metric/status cards and headings
+   - HACS search name: `Mushroom`
+   - Repository: `piitaya/lovelace-mushroom`
+
+Install all three in HACS **before updating PV & Battery Dashboard to 0.1.3**, then restart Home Assistant once. HACS normally registers their Lovelace resources automatically.
+
+If one of the cards was installed but Home Assistant still shows `Custom element doesn't exist`, hard-refresh the browser with `Ctrl+F5` and verify the resource under **Settings → Dashboards → Resources**.
+
+The actual Solis S5-EH1P and JK-BMS entity mapping from version 0.1.1/0.1.2 remains unchanged.
