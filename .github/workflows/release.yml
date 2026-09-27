@@ -1,15 +1,12 @@
-name: Build HACS beta release
+name: Publish HACS release
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Release version, e.g. 0.1.0-beta.1"
-        required: true
-        default: "0.1.0"
   push:
-    tags:
-      - "v*"
+    branches:
+      - main
+    paths:
+      - "custom_components/pv_battery_dashboard/manifest.json"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -19,37 +16,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Resolve tag
+      - name: Read manifest version
         id: version
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            echo "tag=v${{ inputs.version }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Verify manifest version
-        shell: bash
-        run: |
-          TAG="${{ steps.version.outputs.tag }}"
-          VERSION="${TAG#v}"
-          python - <<'PY'
+          VERSION="$(python - <<'PY'
           import json
-          import os
-
-          version = json.load(
-              open("custom_components/pv_battery_dashboard/manifest.json", encoding="utf-8")
-          )["version"]
-          expected = os.environ["EXPECTED"].removeprefix("v")
-          if version != expected:
-              raise SystemExit(
-                  f"manifest version {version} != release version {expected}"
-              )
+          with open("custom_components/pv_battery_dashboard/manifest.json", encoding="utf-8") as f:
+              print(json.load(f)["version"])
           PY
-        env:
-          EXPECTED: ${{ steps.version.outputs.tag }}
+          )"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Validate Python syntax
         shell: bash
@@ -97,26 +78,31 @@ jobs:
               raise SystemExit("\n".join(problems))
           PY
 
-      - name: Create tag for manual release
-        if: github.event_name == 'workflow_dispatch'
+      - name: Create version tag if missing
         shell: bash
         run: |
           TAG="${{ steps.version.outputs.tag }}"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git tag "$TAG"
-          git push origin "$TAG"
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null 2>&1; then
+            echo "Tag $TAG already exists"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git tag "$TAG"
+            git push origin "$TAG"
+          fi
 
       - name: Build HACS zip
+        shell: bash
         run: |
           cd custom_components/pv_battery_dashboard
           zip -r ../../pv_battery_dashboard.zip .
           cd ../..
 
-      - name: Create GitHub prerelease
+      - name: Create or update GitHub release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.version.outputs.tag }}
-          prerelease: true
+          name: PV & Battery Dashboard ${{ steps.version.outputs.version }}
+          prerelease: false
           files: pv_battery_dashboard.zip
           generate_release_notes: true
