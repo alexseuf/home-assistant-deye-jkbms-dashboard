@@ -222,3 +222,21 @@ Version **0.1.5** makes the first dashboard page responsive and uses the availab
 - desktop uses almost the full Lovelace content width
 - mobile remains single-column and the key labels shrink instead of overflowing
 - the other four dashboard pages remain unchanged
+
+
+## Dashboard 0.1.9
+
+Version **0.1.9** refines the first page against the reference mock-up:
+
+- new versioned energy-flow SVG to avoid stale browser/Home Assistant caching
+- PV, Verbrauch, Batterie and Netz icons/headings placed inside the four cards
+- only the large live power value remains dynamic in each outer card
+- inverter title is static; live status is shown separately below it
+- five metric cards use the exact mock-up labels:
+  - PV Spannung 1
+  - PV Spannung 2
+  - Batteriespannung
+  - Batteriestrom
+  - Batterie Temperatur
+- metric values are shown as a second, larger line
+- rolling 24-hour power chart remains unchanged
