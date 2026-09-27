@@ -29,6 +29,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         )
         domain_data["static_registered"] = True
 
+    # Set up entities first. The managed dashboard can then resolve helper
+    # entity IDs from the entity registry instead of assuming a fixed object ID.
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+
     if entry.data.get(CONF_AUTO_UPDATE, True):
         try:
             result = await async_install_or_update_dashboard(hass)
@@ -36,7 +40,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         except Exception:
             _LOGGER.exception("Could not install/update the managed dashboard")
 
-    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
     return True
 
 
