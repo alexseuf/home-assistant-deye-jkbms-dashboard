@@ -120,64 +120,35 @@ views:
                   font-size: "clamp(10px, 0.95vw, 14px)"
                   font-weight: 600
 
-          - type: picture-elements
-            image: /pv-battery-dashboard-static/metric_strip_v0113.svg
-            elements:
-              - type: state-label
+          - type: grid
+            columns: 5
+            square: false
+            cards:
+              - type: custom:mushroom-entity-card
                 entity: sensor.solis_s5_eh1p_pv_voltage_1
-                style:
-                  left: 2.8%
-                  top: 68%
-                  width: 15%
-                  transform: translate(0, -50%)
-                  text-align: left
-                  color: "#111827"
-                  font-size: "clamp(14px, 1.55vw, 23px)"
-                  font-weight: 700
-              - type: state-label
+                name: PV1 Spannung
+                icon: mdi:solar-panel-large
+                icon_color: amber
+              - type: custom:mushroom-entity-card
                 entity: sensor.solis_s5_eh1p_pv_voltage_2
-                style:
-                  left: 22.8%
-                  top: 68%
-                  width: 15%
-                  transform: translate(0, -50%)
-                  text-align: left
-                  color: "#111827"
-                  font-size: "clamp(14px, 1.55vw, 23px)"
-                  font-weight: 700
-              - type: state-label
+                name: PV2 Spannung
+                icon: mdi:solar-panel-large
+                icon_color: amber
+              - type: custom:mushroom-entity-card
                 entity: sensor.batteriespannung_1_dezimal
-                style:
-                  left: 42.8%
-                  top: 68%
-                  width: 15%
-                  transform: translate(0, -50%)
-                  text-align: left
-                  color: "#111827"
-                  font-size: "clamp(14px, 1.55vw, 23px)"
-                  font-weight: 700
-              - type: state-label
+                name: Batterie
+                icon: mdi:battery
+                icon_color: green
+              - type: custom:mushroom-entity-card
                 entity: sensor.jk_bms_total_jk_bms_total_current
-                style:
-                  left: 62.8%
-                  top: 68%
-                  width: 15%
-                  transform: translate(0, -50%)
-                  text-align: left
-                  color: "#111827"
-                  font-size: "clamp(14px, 1.55vw, 23px)"
-                  font-weight: 700
-              - type: state-label
+                name: Batteriestrom
+                icon: mdi:current-dc
+                icon_color: green
+              - type: custom:mushroom-entity-card
                 entity: sensor.jk_bms_pack_00_temperature_01
-                style:
-                  left: 82.8%
-                  top: 68%
-                  width: 15%
-                  transform: translate(0, -50%)
-                  text-align: left
-                  color: "#111827"
-                  font-size: "clamp(14px, 1.55vw, 23px)"
-                  font-weight: 700
+                name: BMS Temperatur
+                icon: mdi:thermometer
+                icon_color: orange
 
           - type: custom:apexcharts-card
             header:
@@ -241,16 +212,31 @@ views:
   - title: Historische Werte
     path: historische-werte
     icon: mdi:chart-line
-    type: masonry
+    type: panel
     cards:
-      - type: custom:mushroom-title-card
-        title: Historische Werte
-        subtitle: letzte 24 Stunden
-
-      - type: grid
-        columns: 2
-        square: false
+      - type: vertical-stack
         cards:
+          - type: custom:mushroom-title-card
+            title: 2. Historische Werte
+            subtitle: 24 Stunden · Leistung · Batterie · PV-Eingänge
+
+          - type: custom:mushroom-chips-card
+            alignment: start
+            chips:
+              - type: template
+                icon: mdi:clock-outline
+                content: 24 Stunden
+                icon_color: blue
+              - type: template
+                icon: mdi:calendar-week
+                content: 7 Tage
+              - type: template
+                icon: mdi:calendar-month
+                content: 30 Tage
+              - type: template
+                icon: mdi:calendar-range
+                content: 12 Monate
+
           - type: custom:apexcharts-card
             header:
               show: true
@@ -258,34 +244,41 @@ views:
             graph_span: 24h
             apex_config:
               chart:
-                height: 280
+                height: 330
               stroke:
                 width: 2
+              legend:
+                position: bottom
+              grid:
+                borderColor: "#dce5ea"
             series:
               - entity: sensor.solis_s5_eh1p_total_pv_power
                 name: PV
+                color: "#ffb000"
                 type: area
-                group_by:
-                  func: avg
-                  duration: 5min
+                transform: "return x / 1000;"
+                unit: kW
+                group_by: {func: avg, duration: 5min}
               - entity: sensor.solis_s5_eh1p_household_load_power
                 name: Verbrauch
+                color: "#168cf0"
                 type: line
-                group_by:
-                  func: avg
-                  duration: 5min
+                transform: "return x / 1000;"
+                unit: kW
+                group_by: {func: avg, duration: 5min}
               - entity: sensor.jk_bms_total_jk_bms_total_power
                 name: Batterie
-                type: line
-                group_by:
-                  func: avg
-                  duration: 5min
+                color: "#20ae55"
+                type: area
+                unit: kW
+                group_by: {func: avg, duration: 5min}
               - entity: sensor.solis_s5_eh1p_ac_grid_port_power
                 name: Netz
+                color: "#ef5545"
                 type: line
-                group_by:
-                  func: avg
-                  duration: 5min
+                transform: "return x / 1000;"
+                unit: kW
+                group_by: {func: avg, duration: 5min}
 
           - type: custom:apexcharts-card
             header:
@@ -293,368 +286,390 @@ views:
               title: Batterie SOC
             graph_span: 24h
             apex_config:
-              chart:
-                height: 280
-              yaxis:
-                min: 0
-                max: 100
+              chart: {height: 250}
+              yaxis: {min: 0, max: 100}
+              fill:
+                type: gradient
+              legend:
+                position: bottom
             series:
               - entity: sensor.jk_bms_total_jk_bms_total_soc
                 name: Gesamt
-                type: line
-              - entity: sensor.jk_bms_pack_00_soc
-                name: Pack 00
-                type: line
-              - entity: sensor.jk_bms_pack_01_soc
-                name: Pack 01
-                type: line
-              - entity: sensor.jk_bms_pack_02_soc
-                name: Pack 02
-                type: line
-
-          - type: custom:apexcharts-card
-            header:
-              show: true
-              title: Batteriespannung & Strom
-            graph_span: 24h
-            yaxis:
-              - id: voltage
-                apex_config:
-                  title:
-                    text: V
-              - id: current
-                opposite: true
-                apex_config:
-                  title:
-                    text: A
-            apex_config:
-              chart:
-                height: 280
-            series:
-              - entity: sensor.jk_bms_total_jk_bms_total_voltage
-                name: Spannung
-                yaxis_id: voltage
-                type: line
-              - entity: sensor.jk_bms_total_jk_bms_total_current
-                name: Strom
-                yaxis_id: current
-                type: line
-
-          - type: custom:apexcharts-card
-            header:
-              show: true
-              title: PV Eingänge (MPPT)
-            graph_span: 24h
-            yaxis:
-              - id: power
-                apex_config:
-                  title:
-                    text: W
-              - id: voltage
-                opposite: true
-                apex_config:
-                  title:
-                    text: V
-            apex_config:
-              chart:
-                height: 280
-            series:
-              - entity: sensor.solis_s5_eh1p_pv_power_1
-                name: PV1 Leistung
-                yaxis_id: power
+                color: "#20ae55"
                 type: area
-              - entity: sensor.solis_s5_eh1p_pv_power_2
-                name: PV2 Leistung
-                yaxis_id: power
-                type: area
-              - entity: sensor.solis_s5_eh1p_pv_voltage_1
-                name: PV1 Spannung
-                yaxis_id: voltage
-                type: line
-              - entity: sensor.solis_s5_eh1p_pv_voltage_2
-                name: PV2 Spannung
-                yaxis_id: voltage
-                type: line
+                group_by: {func: avg, duration: 5min}
+
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: custom:apexcharts-card
+                header: {show: true, title: Batteriespannung & Strom}
+                graph_span: 24h
+                yaxis:
+                  - id: voltage
+                  - id: current
+                    opposite: true
+                apex_config:
+                  chart: {height: 270}
+                  legend: {position: bottom}
+                series:
+                  - entity: sensor.jk_bms_total_jk_bms_total_voltage
+                    name: Spannung
+                    color: "#168cf0"
+                    yaxis_id: voltage
+                    type: line
+                  - entity: sensor.jk_bms_total_jk_bms_total_current
+                    name: Strom
+                    color: "#ef5545"
+                    yaxis_id: current
+                    type: line
+              - type: custom:apexcharts-card
+                header: {show: true, title: PV Eingänge (MPPT)}
+                graph_span: 24h
+                apex_config:
+                  chart: {height: 270}
+                  legend: {position: bottom}
+                series:
+                  - entity: sensor.solis_s5_eh1p_pv_voltage_1
+                    name: MPPT 1
+                    color: "#ffb000"
+                    type: line
+                  - entity: sensor.solis_s5_eh1p_pv_voltage_2
+                    name: MPPT 2
+                    color: "#20ae55"
+                    type: line
 
   - title: Summierte Werte
     path: summierte-werte
     icon: mdi:sigma
-    type: masonry
+    type: panel
     cards:
-      - type: custom:mushroom-title-card
-        title: Summierte Werte
-        subtitle: Tag · 14 Tage · Monat · Jahr
-
-      - type: grid
-        columns: 3
-        square: false
+      - type: vertical-stack
         cards:
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_pv_today_energy_generation
-            name: PV heute
-            icon: mdi:white-balance-sunny
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_today_energy_consumption
-            name: Verbrauch heute
-            icon: mdi:home-lightning-bolt
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_today_energy_imported_from_grid
-            name: Netzbezug heute
-            icon: mdi:transmission-tower-import
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_today_energy_fed_into_grid
-            name: Einspeisung heute
-            icon: mdi:transmission-tower-export
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_today_battery_charge_energy
-            name: Batterie geladen
-            icon: mdi:battery-plus
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_today_battery_discharge_energy
-            name: Batterie entladen
-            icon: mdi:battery-minus
+          - type: custom:mushroom-title-card
+            title: 3. Summierte Werte
+            subtitle: Tages-, Monats- und Jahresenergie
 
-      - type: custom:apexcharts-card
-        header:
-          show: true
-          title: Tageswerte · 14 Tage
-        graph_span: 14d
-        span:
-          end: day
-        apex_config:
-          chart:
-            height: 320
-          plotOptions:
-            bar:
-              columnWidth: 60%
-        series:
-          - entity: sensor.solis_s5_eh1p_pv_total_energy_generation
-            name: PV
-            type: column
-            statistics:
-              type: change
-              period: day
-          - entity: sensor.solis_s5_eh1p_total_energy_consumption
-            name: Verbrauch
-            type: column
-            statistics:
-              type: change
-              period: day
-          - entity: sensor.solis_s5_eh1p_total_energy_imported_from_grid
-            name: Netzbezug
-            type: column
-            statistics:
-              type: change
-              period: day
-          - entity: sensor.solis_s5_eh1p_total_energy_fed_into_grid
-            name: Einspeisung
-            type: column
-            statistics:
-              type: change
-              period: day
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.solis_s5_eh1p_pv_today_energy_generation
+                name: PV Ertrag
+                icon: mdi:white-balance-sunny
+                icon_color: amber
+                layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.solis_s5_eh1p_today_energy_consumption
+                name: Verbrauch
+                icon: mdi:home
+                icon_color: deep-orange
+                layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.solis_s5_eh1p_today_energy_imported_from_grid
+                name: Netzbezug
+                icon: mdi:transmission-tower-import
+                icon_color: blue-grey
+                layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.solis_s5_eh1p_today_energy_fed_into_grid
+                name: Einspeisung
+                icon: mdi:swap-horizontal-bold
+                icon_color: green
+                layout: horizontal
 
-      - type: grid
-        columns: 2
-        square: false
-        cards:
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_pv_current_month_energy_generation
-            name: PV aktueller Monat
-            icon: mdi:calendar-month
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_pv_this_year_energy_generation
-            name: PV aktuelles Jahr
-            icon: mdi:calendar
+          - type: custom:apexcharts-card
+            header: {show: true, title: Tageswerte · 14 Tage}
+            graph_span: 14d
+            span: {end: day}
+            apex_config:
+              chart: {height: 330}
+              legend: {position: bottom}
+              plotOptions:
+                bar: {columnWidth: 56%}
+            series:
+              - entity: sensor.solis_s5_eh1p_pv_total_energy_generation
+                name: PV
+                color: "#ffb000"
+                type: column
+                statistics: {type: change, period: day}
+              - entity: sensor.solis_s5_eh1p_total_energy_consumption
+                name: Verbrauch
+                color: "#ff6d2d"
+                type: column
+                statistics: {type: change, period: day}
+              - entity: sensor.solis_s5_eh1p_total_energy_imported_from_grid
+                name: Netzbezug
+                color: "#607d8b"
+                type: column
+                statistics: {type: change, period: day}
+              - entity: sensor.solis_s5_eh1p_total_energy_fed_into_grid
+                name: Einspeisung
+                color: "#20ae55"
+                type: column
+                statistics: {type: change, period: day}
 
-      - type: custom:apexcharts-card
-        header:
-          show: true
-          title: Monatsübersicht · 12 Monate
-        graph_span: 365d
-        apex_config:
-          chart:
-            height: 320
-        series:
-          - entity: sensor.solis_s5_eh1p_pv_total_energy_generation
-            name: PV
-            type: column
-            statistics:
-              type: change
-              period: month
-          - entity: sensor.solis_s5_eh1p_total_energy_consumption
-            name: Verbrauch
-            type: column
-            statistics:
-              type: change
-              period: month
-          - entity: sensor.solis_s5_eh1p_total_energy_imported_from_grid
-            name: Netzbezug
-            type: column
-            statistics:
-              type: change
-              period: month
-          - entity: sensor.solis_s5_eh1p_total_energy_fed_into_grid
-            name: Einspeisung
-            type: column
-            statistics:
-              type: change
-              period: month
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: custom:apexcharts-card
+                header: {show: true, title: Monatsübersicht · 12 Monate}
+                graph_span: 365d
+                apex_config:
+                  chart: {height: 290}
+                  legend: {position: bottom}
+                series:
+                  - entity: sensor.solis_s5_eh1p_pv_total_energy_generation
+                    name: PV
+                    color: "#ffb000"
+                    type: column
+                    statistics: {type: change, period: month}
+                  - entity: sensor.solis_s5_eh1p_total_energy_consumption
+                    name: Verbrauch
+                    color: "#168cf0"
+                    type: column
+                    statistics: {type: change, period: month}
+              - type: vertical-stack
+                cards:
+                  - type: custom:mushroom-title-card
+                    title: Batterie & Langzeitwerte
+                  - type: grid
+                    columns: 2
+                    square: false
+                    cards:
+                      - type: custom:mushroom-entity-card
+                        entity: sensor.solis_s5_eh1p_today_battery_charge_energy
+                        name: Heute geladen
+                        icon: mdi:battery-plus
+                        icon_color: green
+                      - type: custom:mushroom-entity-card
+                        entity: sensor.solis_s5_eh1p_today_battery_discharge_energy
+                        name: Heute entladen
+                        icon: mdi:battery-minus
+                        icon_color: orange
+                      - type: custom:mushroom-entity-card
+                        entity: sensor.solis_s5_eh1p_pv_current_month_energy_generation
+                        name: PV Monat
+                        icon: mdi:calendar-month
+                      - type: custom:mushroom-entity-card
+                        entity: sensor.solis_s5_eh1p_pv_this_year_energy_generation
+                        name: PV Jahr
+                        icon: mdi:calendar
 
   - title: Einstellungen Wechselrichter
     path: einstellungen-wechselrichter
     icon: mdi:tune-variant
-    type: masonry
+    type: panel
     cards:
-      - type: custom:mushroom-title-card
-        title: Einstellungen Wechselrichter
-        subtitle: Solis S5-EH1P
-
-      - type: grid
-        columns: 3
-        square: false
+      - type: vertical-stack
         cards:
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_status_string
-            name: Status
-            icon: mdi:check-circle-outline
-          - type: custom:mushroom-entity-card
-            entity: sensor.solis_s5_eh1p_temperature
-            name: Temperatur
-            icon: mdi:thermometer
-          - type: custom:mushroom-entity-card
-            entity: switch.solis_s5_eh1p_solis_modbus_enabled
-            name: Solis Modbus
-            icon: mdi:connection
+          - type: custom:mushroom-title-card
+            title: 4. Einstellungen Wechselrichter
+            subtitle: Solis S5-EH1P · nur verifizierte Funktionen
 
-      - type: entities
-        title: Batterie / BMS
-        entities:
-          - entity: sensor.solis_s5_eh1p_battery_charge_current_limitation_bms
-            name: Max. Ladestrom BMS
-          - entity: sensor.solis_s5_eh1p_battery_discharge_current_limitation_bms
-            name: Max. Entladestrom BMS
-          - entity: sensor.solis_s5_eh1p_battery_voltage_bms
-            name: Batteriespannung BMS
-          - entity: sensor.solis_s5_eh1p_battery_current_bms
-            name: Batteriestrom BMS
-          - entity: sensor.solis_s5_eh1p_battery_soh
-            name: Batterie SOH
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.solis_s5_eh1p_status_string
+                name: Betriebsstatus
+                icon: mdi:check-circle
+                icon_color: green
+              - type: custom:mushroom-entity-card
+                entity: sensor.solis_s5_eh1p_temperature
+                name: Wechselrichtertemperatur
+                icon: mdi:thermometer
+                icon_color: orange
+              - type: custom:mushroom-entity-card
+                entity: switch.solis_s5_eh1p_solis_modbus_enabled
+                name: Solis Modbus
+                icon: mdi:connection
+                icon_color: blue
 
-      - type: entities
-        title: Diagnose
-        entities:
-          - entity: sensor.solis_s5_eh1p_model_no
-            name: Modell
-          - entity: sensor.solis_s5_eh1p_serial_number
-            name: Seriennummer
-          - entity: sensor.solis_s5_eh1p_protocol_version
-            name: Protokollversion
-          - entity: sensor.solis_s5_eh1p_dsp_version
-            name: DSP Version
-          - entity: sensor.solis_s5_eh1p_hmi_version
-            name: HMI Version
-          - entity: sensor.solis_s5_eh1p_last_modbus_success
-            name: Letzte Modbus-Antwort
-          - entity: sensor.solis_s5_eh1p_alarm_code_data
-            name: Alarmcode
+          - type: entities
+            title: Batterie / BMS
+            show_header_toggle: false
+            entities:
+              - entity: sensor.solis_s5_eh1p_battery_charge_current_limitation_bms
+                name: Max. Ladestrom BMS
+              - entity: sensor.solis_s5_eh1p_battery_discharge_current_limitation_bms
+                name: Max. Entladestrom BMS
+              - entity: sensor.solis_s5_eh1p_battery_voltage_bms
+                name: Batteriespannung BMS
+              - entity: sensor.solis_s5_eh1p_battery_current_bms
+                name: Batteriestrom BMS
+              - entity: sensor.solis_s5_eh1p_battery_soc
+                name: Batterie SOC Wechselrichter
+              - entity: sensor.solis_s5_eh1p_battery_soh
+                name: Batterie SOH
+
+          - type: custom:mushroom-title-card
+            title: Diagnose & Geräteinformationen
+            subtitle: Schreibzugriffe bleiben deaktiviert, solange keine Solis-Register verifiziert sind.
+
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: entities
+                title: Wechselrichter
+                entities:
+                  - {entity: sensor.solis_s5_eh1p_model_no, name: Modell}
+                  - {entity: sensor.solis_s5_eh1p_serial_number, name: Seriennummer}
+                  - {entity: sensor.solis_s5_eh1p_protocol_version, name: Protokollversion}
+                  - {entity: sensor.solis_s5_eh1p_dsp_version, name: DSP-Version}
+                  - {entity: sensor.solis_s5_eh1p_hmi_version, name: HMI-Version}
+              - type: entities
+                title: Kommunikation
+                entities:
+                  - {entity: sensor.solis_s5_eh1p_last_modbus_success, name: Letzte Modbus-Antwort}
+                  - {entity: sensor.solis_s5_eh1p_alarm_code_data, name: Alarmcode}
+                  - {entity: sensor.solis_s5_eh1p_grid_frequency, name: Netzfrequenz}
+                  - {entity: sensor.solis_s5_eh1p_temperature, name: Temperatur}
+                  - {entity: sensor.solis_s5_eh1p_status_string, name: Status}
 
   - title: Einstellungen JK BMS
     path: einstellungen-jk-bms
     icon: mdi:battery-cog
-    type: masonry
+    type: panel
     cards:
-      - type: custom:mushroom-title-card
-        title: JK BMS
-        subtitle: Gesamtwerte und drei Batterie-Packs
-
-      - type: grid
-        columns: 4
-        square: false
+      - type: vertical-stack
         cards:
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_packs_count
-            name: Packs
-            icon: mdi:battery-multiple
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_total_soc
-            name: Gesamt SOC
-            icon: mdi:battery-high
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_total_voltage
-            name: Spannung
-            icon: mdi:flash
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_total_current
-            name: Strom
-            icon: mdi:current-dc
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_total_power
-            name: Leistung
-            icon: mdi:lightning-bolt
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_max_cell_voltage
-            name: Höchste Zelle
-            icon: mdi:arrow-up-bold
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_min_cell_voltage
-            name: Niedrigste Zelle
-            icon: mdi:arrow-down-bold
-          - type: custom:mushroom-entity-card
-            entity: sensor.jk_bms_total_jk_bms_cell_voltage_delta
-            name: Zell-Delta
-            icon: mdi:delta
+          - type: custom:mushroom-title-card
+            title: 5. Einstellungen JK BMS
+            subtitle: Gesamtbatterie · drei Packs · Zellspannungen
 
-      - type: grid
-        columns: 3
-        square: false
-        cards:
-          - type: entities
-            title: Pack 00
-            entities:
-              - sensor.jk_bms_pack_00_soc
-              - sensor.jk_bms_pack_00_soh
-              - sensor.jk_bms_pack_00_voltage
-              - sensor.jk_bms_pack_00_current
-              - sensor.jk_bms_pack_00_power
-              - sensor.jk_bms_pack_00_cycle_count
-              - sensor.jk_bms_pack_00_temperature_01
-              - sensor.jk_bms_pack_00_balance_current
-              - binary_sensor.jk_bms_pack_00_charge_enabled_status
-              - binary_sensor.jk_bms_pack_00_discharge_enabled_status
-              - binary_sensor.jk_bms_pack_00_cell_over_voltage_protection
-              - binary_sensor.jk_bms_pack_00_cell_under_voltage_protection
-              - binary_sensor.jk_bms_pack_00_short_circuit_protection
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_total_jk_bms_total_soc
+                name: SOC
+                icon: mdi:battery-high
+                icon_color: green
+                layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_total_jk_bms_total_voltage
+                name: Spannung
+                icon: mdi:flash
+                icon_color: blue-grey
+                layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_total_jk_bms_total_current
+                name: Strom
+                icon: mdi:swap-horizontal-bold
+                icon_color: deep-orange
+                layout: horizontal
 
-          - type: entities
-            title: Pack 01
-            entities:
-              - sensor.jk_bms_pack_01_soc
-              - sensor.jk_bms_pack_01_soh
-              - sensor.jk_bms_pack_01_voltage
-              - sensor.jk_bms_pack_01_current
-              - sensor.jk_bms_pack_01_power
-              - sensor.jk_bms_pack_01_cycle_count
-              - sensor.jk_bms_pack_01_temperature_01
-              - sensor.jk_bms_pack_01_balance_current
-              - binary_sensor.jk_bms_pack_01_charge_enabled_status
-              - binary_sensor.jk_bms_pack_01_discharge_enabled_status
-              - binary_sensor.jk_bms_pack_01_cell_over_voltage_protection
-              - binary_sensor.jk_bms_pack_01_cell_under_voltage_protection
-              - binary_sensor.jk_bms_pack_01_short_circuit_protection
+          - type: custom:mushroom-title-card
+            title: Einzelne Packs
+            subtitle: Master · Slave 1 · Slave 2
 
-          - type: entities
-            title: Pack 02
-            entities:
-              - sensor.jk_bms_pack_02_soc
-              - sensor.jk_bms_pack_02_soh
-              - sensor.jk_bms_pack_02_voltage
-              - sensor.jk_bms_pack_02_current
-              - sensor.jk_bms_pack_02_power
-              - sensor.jk_bms_pack_02_cycle_count
-              - sensor.jk_bms_pack_02_temperature_01
-              - sensor.jk_bms_pack_02_balance_current
-              - binary_sensor.jk_bms_pack_02_charge_enabled_status
-              - binary_sensor.jk_bms_pack_02_discharge_enabled_status
-              - binary_sensor.jk_bms_pack_02_cell_over_voltage_protection
-              - binary_sensor.jk_bms_pack_02_cell_under_voltage_protection
-              - binary_sensor.jk_bms_pack_02_short_circuit_protection
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+              - type: custom:mushroom-template-card
+                primary: Pack 1 (Master)
+                secondary: >-
+                  {{ states('sensor.jk_bms_pack_00_soc') }} % ·
+                  {{ states('sensor.jk_bms_pack_00_voltage') }} V ·
+                  {{ states('sensor.jk_bms_pack_00_current') }} A
+                icon: mdi:battery-check
+                icon_color: green
+              - type: custom:mushroom-template-card
+                primary: Pack 2 (Slave 1)
+                secondary: >-
+                  {{ states('sensor.jk_bms_pack_01_soc') }} % ·
+                  {{ states('sensor.jk_bms_pack_01_voltage') }} V ·
+                  {{ states('sensor.jk_bms_pack_01_current') }} A
+                icon: mdi:battery-check
+                icon_color: green
+              - type: custom:mushroom-template-card
+                primary: Pack 3 (Slave 2)
+                secondary: >-
+                  {{ states('sensor.jk_bms_pack_02_soc') }} % ·
+                  {{ states('sensor.jk_bms_pack_02_voltage') }} V ·
+                  {{ states('sensor.jk_bms_pack_02_current') }} A
+                icon: mdi:battery-check
+                icon_color: green
+
+          - type: custom:mushroom-title-card
+            title: Zellspannungen · Pack 1
+            subtitle: Alle 16 Zellen im direkten Vergleich
+
+          - type: grid
+            columns: 8
+            square: false
+            cards:
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_01_voltage, name: Zelle 1, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_02_voltage, name: Zelle 2, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_03_voltage, name: Zelle 3, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_04_voltage, name: Zelle 4, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_05_voltage, name: Zelle 5, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_06_voltage, name: Zelle 6, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_07_voltage, name: Zelle 7, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_08_voltage, name: Zelle 8, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_09_voltage, name: Zelle 9, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_10_voltage, name: Zelle 10, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_11_voltage, name: Zelle 11, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_12_voltage, name: Zelle 12, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_13_voltage, name: Zelle 13, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_14_voltage, name: Zelle 14, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_15_voltage, name: Zelle 15, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_16_voltage, name: Zelle 16, icon: mdi:battery-medium, icon_color: green}
+
+          - type: grid
+            columns: 4
+            square: false
+            cards:
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_total_jk_bms_max_cell_voltage
+                name: Max. Zelle
+                icon: mdi:arrow-up-bold
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_total_jk_bms_min_cell_voltage
+                name: Min. Zelle
+                icon: mdi:arrow-down-bold
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_total_jk_bms_cell_voltage_delta
+                name: Zell-Delta
+                icon: mdi:delta
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_pack_00_temperature_01
+                name: Temperatur
+                icon: mdi:thermometer
+
+          - type: grid
+            columns: 3
+            square: false
+            cards:
+              - type: entities
+                title: Pack 00 · Details
+                entities:
+                  - sensor.jk_bms_pack_00_soh
+                  - sensor.jk_bms_pack_00_cycle_count
+                  - sensor.jk_bms_pack_00_balance_current
+                  - binary_sensor.jk_bms_pack_00_charge_enabled_status
+                  - binary_sensor.jk_bms_pack_00_discharge_enabled_status
+              - type: entities
+                title: Pack 01 · Details
+                entities:
+                  - sensor.jk_bms_pack_01_soh
+                  - sensor.jk_bms_pack_01_cycle_count
+                  - sensor.jk_bms_pack_01_balance_current
+                  - binary_sensor.jk_bms_pack_01_charge_enabled_status
+                  - binary_sensor.jk_bms_pack_01_discharge_enabled_status
+              - type: entities
+                title: Pack 02 · Details
+                entities:
+                  - sensor.jk_bms_pack_02_soh
+                  - sensor.jk_bms_pack_02_cycle_count
+                  - sensor.jk_bms_pack_02_balance_current
+                  - binary_sensor.jk_bms_pack_02_charge_enabled_status
+                  - binary_sensor.jk_bms_pack_02_discharge_enabled_status

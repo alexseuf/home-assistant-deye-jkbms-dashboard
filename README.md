@@ -302,3 +302,18 @@ Version **0.1.13** fixes the first visual issues found after testing the four-li
 - the one-decimal battery-voltage helper is now set up before the managed dashboard is generated
 - the dashboard resolves the helper entity by suffix from Home Assistant's entity registry instead of assuming a fixed entity ID
 - this removes the unavailable/warning icon caused by the previous startup order
+
+
+## Dashboard 0.1.14
+
+Version **0.1.14** completes the five-view redesign and validates it against the
+live Home Assistant installation:
+
+- all five views now follow the supplied mock-ups with a consistent panel layout
+- historical values provide power, battery SOC, battery voltage/current and MPPT charts
+- summed values provide daily, 14-day, monthly and long-term energy summaries
+- inverter settings show verified Solis S5-EH1P status, BMS and diagnostic data without unsafe write controls
+- JK-BMS provides aggregate values, three pack summaries, all 16 Pack 1 cell voltages and pack diagnostics
+- the five current-value metrics use robust Mushroom entity cards so their values remain visible
+- the previous empty dynamic cell-voltage chart is replaced by a responsive 16-cell comparison grid
+- both dashboard YAML copies are kept identical and were checked for YAML/card errors in the live system
