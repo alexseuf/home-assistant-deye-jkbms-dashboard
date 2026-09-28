@@ -227,15 +227,27 @@ views:
                 icon: mdi:clock-outline
                 content: 24 Stunden
                 icon_color: blue
+                tap_action:
+                  action: navigate
+                  navigation_path: /pv-battery-dashboard/historische-werte
               - type: template
                 icon: mdi:calendar-week
                 content: 7 Tage
+                tap_action:
+                  action: navigate
+                  navigation_path: /pv-battery-dashboard/historische-werte-7-tage
               - type: template
                 icon: mdi:calendar-month
                 content: 30 Tage
+                tap_action:
+                  action: navigate
+                  navigation_path: /pv-battery-dashboard/historische-werte-30-tage
               - type: template
                 icon: mdi:calendar-range
                 content: 12 Monate
+                tap_action:
+                  action: navigate
+                  navigation_path: /pv-battery-dashboard/historische-werte-12-monate
 
           - type: custom:apexcharts-card
             header:
@@ -339,6 +351,123 @@ views:
                     name: MPPT 2
                     color: "#20ae55"
                     type: line
+
+  - title: Historische Werte · 7 Tage
+    path: historische-werte-7-tage
+    subview: true
+    type: panel
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: 2. Historische Werte
+            subtitle: 7 Tage · Leistung und Batterie-SOC
+          - type: custom:mushroom-chips-card
+            alignment: start
+            chips:
+              - {type: template, icon: mdi:clock-outline, content: 24 Stunden, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte}}
+              - {type: template, icon: mdi:calendar-week, content: 7 Tage, icon_color: blue, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-7-tage}}
+              - {type: template, icon: mdi:calendar-month, content: 30 Tage, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-30-tage}}
+              - {type: template, icon: mdi:calendar-range, content: 12 Monate, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-12-monate}}
+          - type: custom:apexcharts-card
+            header: {show: true, title: Leistung · 7 Tage}
+            graph_span: 7d
+            apex_config:
+              chart: {height: 360}
+              stroke: {width: 2}
+              legend: {position: bottom}
+              grid: {borderColor: "#dce5ea"}
+            series:
+              - {entity: sensor.solis_s5_eh1p_total_pv_power, name: PV, color: "#ffb000", type: area, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 30min}}
+              - {entity: sensor.solis_s5_eh1p_household_load_power, name: Verbrauch, color: "#168cf0", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 30min}}
+              - {entity: sensor.jk_bms_total_jk_bms_total_power, name: Batterie, color: "#20ae55", type: area, unit: kW, group_by: {func: avg, duration: 30min}}
+              - {entity: sensor.solis_s5_eh1p_ac_grid_port_power, name: Netz, color: "#ef5545", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 30min}}
+          - type: custom:apexcharts-card
+            header: {show: true, title: Batterie SOC · 7 Tage}
+            graph_span: 7d
+            apex_config:
+              chart: {height: 270}
+              yaxis: {min: 0, max: 100}
+            series:
+              - {entity: sensor.jk_bms_total_jk_bms_total_soc, name: Gesamt, color: "#20ae55", type: area, group_by: {func: avg, duration: 30min}}
+
+  - title: Historische Werte · 30 Tage
+    path: historische-werte-30-tage
+    subview: true
+    type: panel
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: 2. Historische Werte
+            subtitle: 30 Tage · Leistung und Batterie-SOC
+          - type: custom:mushroom-chips-card
+            alignment: start
+            chips:
+              - {type: template, icon: mdi:clock-outline, content: 24 Stunden, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte}}
+              - {type: template, icon: mdi:calendar-week, content: 7 Tage, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-7-tage}}
+              - {type: template, icon: mdi:calendar-month, content: 30 Tage, icon_color: blue, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-30-tage}}
+              - {type: template, icon: mdi:calendar-range, content: 12 Monate, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-12-monate}}
+          - type: custom:apexcharts-card
+            header: {show: true, title: Leistung · 30 Tage}
+            graph_span: 30d
+            apex_config:
+              chart: {height: 360}
+              stroke: {width: 2}
+              legend: {position: bottom}
+              grid: {borderColor: "#dce5ea"}
+            series:
+              - {entity: sensor.solis_s5_eh1p_total_pv_power, name: PV, color: "#ffb000", type: area, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 2h}}
+              - {entity: sensor.solis_s5_eh1p_household_load_power, name: Verbrauch, color: "#168cf0", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 2h}}
+              - {entity: sensor.jk_bms_total_jk_bms_total_power, name: Batterie, color: "#20ae55", type: area, unit: kW, group_by: {func: avg, duration: 2h}}
+              - {entity: sensor.solis_s5_eh1p_ac_grid_port_power, name: Netz, color: "#ef5545", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 2h}}
+          - type: custom:apexcharts-card
+            header: {show: true, title: Batterie SOC · 30 Tage}
+            graph_span: 30d
+            apex_config:
+              chart: {height: 270}
+              yaxis: {min: 0, max: 100}
+            series:
+              - {entity: sensor.jk_bms_total_jk_bms_total_soc, name: Gesamt, color: "#20ae55", type: area, group_by: {func: avg, duration: 2h}}
+
+  - title: Historische Werte · 12 Monate
+    path: historische-werte-12-monate
+    subview: true
+    type: panel
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: 2. Historische Werte
+            subtitle: 12 Monate · Leistung und Batterie-SOC
+          - type: custom:mushroom-chips-card
+            alignment: start
+            chips:
+              - {type: template, icon: mdi:clock-outline, content: 24 Stunden, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte}}
+              - {type: template, icon: mdi:calendar-week, content: 7 Tage, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-7-tage}}
+              - {type: template, icon: mdi:calendar-month, content: 30 Tage, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-30-tage}}
+              - {type: template, icon: mdi:calendar-range, content: 12 Monate, icon_color: blue, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-12-monate}}
+          - type: custom:apexcharts-card
+            header: {show: true, title: Leistung · 12 Monate}
+            graph_span: 365d
+            apex_config:
+              chart: {height: 360}
+              stroke: {width: 2}
+              legend: {position: bottom}
+              grid: {borderColor: "#dce5ea"}
+            series:
+              - {entity: sensor.solis_s5_eh1p_total_pv_power, name: PV, color: "#ffb000", type: area, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 1d}}
+              - {entity: sensor.solis_s5_eh1p_household_load_power, name: Verbrauch, color: "#168cf0", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 1d}}
+              - {entity: sensor.jk_bms_total_jk_bms_total_power, name: Batterie, color: "#20ae55", type: area, unit: kW, group_by: {func: avg, duration: 1d}}
+              - {entity: sensor.solis_s5_eh1p_ac_grid_port_power, name: Netz, color: "#ef5545", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 1d}}
+          - type: custom:apexcharts-card
+            header: {show: true, title: Batterie SOC · 12 Monate}
+            graph_span: 365d
+            apex_config:
+              chart: {height: 270}
+              yaxis: {min: 0, max: 100}
+            series:
+              - {entity: sensor.jk_bms_total_jk_bms_total_soc, name: Gesamt, color: "#20ae55", type: area, group_by: {func: avg, duration: 1d}}
 
   - title: Summierte Werte
     path: summierte-werte
@@ -534,7 +663,7 @@ views:
 
   - title: Einstellungen JK BMS
     path: einstellungen-jk-bms
-    icon: mdi:battery-cog
+    icon: mdi:battery
     type: panel
     cards:
       - type: vertical-stack

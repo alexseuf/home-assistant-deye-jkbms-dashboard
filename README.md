@@ -317,3 +317,16 @@ live Home Assistant installation:
 - the five current-value metrics use robust Mushroom entity cards so their values remain visible
 - the previous empty dynamic cell-voltage chart is replaced by a responsive 16-cell comparison grid
 - both dashboard YAML copies are kept identical and were checked for YAML/card errors in the live system
+
+
+## Dashboard 0.1.15
+
+Version **0.1.15** fixes dashboard navigation and makes the historical range
+selector functional:
+
+- the JK-BMS view uses a broadly supported battery icon, so all five main tabs are visibly distinct
+- the dashboard still exposes exactly five main tabs
+- 7-day, 30-day and 12-month history ranges are implemented as hidden subviews
+- the four history chips navigate between 24 hours, 7 days, 30 days and 12 months
+- longer ranges use progressively coarser aggregation to keep charts responsive
+- all four chip transitions and chart titles were verified in a real Home Assistant browser session
