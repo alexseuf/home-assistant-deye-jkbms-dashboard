@@ -356,3 +356,17 @@ three JK-BMS pack detail cards:
 - each pack now shows SOC, voltage, current, remaining capacity, temperature and cycle count
 - all five main views were browser-tested at 412 × 915 px with no Lovelace card errors
 - the JK-BMS view was also browser-tested at desktop width after the responsive changes
+
+
+## Dashboard 0.1.17
+
+Version **0.1.17** extends the JK-BMS view with pack-level diagnostics and a
+persistent pack selector:
+
+- the overall battery section also shows power, maximum cell voltage and cell-voltage delta
+- every pack summary also shows measured power plus its calculated maximum cell voltage and delta
+- Pack 1, Pack 2 and Pack 3 can be selected above the individual-value section
+- the selection is represented by a Home Assistant select entity and survives restarts
+- the selected pack shows all 16 cell voltages and all six temperature sensors
+- desktop uses compact 8/6-column grids; portrait phones use readable two-column grids
+- repository validation requires all three pack options, 48 cell entities, 18 temperature entities and the new aggregate values

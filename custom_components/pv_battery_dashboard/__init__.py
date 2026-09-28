@@ -15,7 +15,7 @@ from .dashboard_manager import async_install_or_update_dashboard
 
 _LOGGER = logging.getLogger(__name__)
 
-PLATFORMS: list[Platform] = [Platform.BUTTON, Platform.SENSOR]
+PLATFORMS: list[Platform] = [Platform.BUTTON, Platform.SELECT, Platform.SENSOR]
 STATIC_URL = "/pv-battery-dashboard-static"
 
 

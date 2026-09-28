@@ -758,6 +758,24 @@ views:
                 icon: mdi:swap-horizontal-bold
                 icon_color: deep-orange
                 layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_total_jk_bms_total_power
+                name: Leistung
+                icon: mdi:flash
+                icon_color: amber
+                layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_total_jk_bms_max_cell_voltage
+                name: Max. Zellspannung
+                icon: mdi:arrow-up-bold
+                icon_color: blue
+                layout: horizontal
+              - type: custom:mushroom-entity-card
+                entity: sensor.jk_bms_total_jk_bms_cell_voltage_delta
+                name: Zell-Delta
+                icon: mdi:delta
+                icon_color: blue
+                layout: horizontal
 
           - <<: *bms_totals_grid
             columns: 1
@@ -779,26 +797,29 @@ views:
             cards:
               - type: custom:mushroom-template-card
                 primary: Pack 1 (Master)
-                secondary: >-
-                  {{ states('sensor.jk_bms_pack_00_soc') }} % ·
-                  {{ states('sensor.jk_bms_pack_00_voltage') }} V ·
-                  {{ states('sensor.jk_bms_pack_00_current') }} A
+                secondary: |-
+                  {% set cells = [states('sensor.jk_bms_pack_00_cell_01_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_02_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_03_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_04_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_05_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_06_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_07_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_08_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_09_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_10_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_11_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_12_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_13_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_14_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_15_voltage')|float(0), states('sensor.jk_bms_pack_00_cell_16_voltage')|float(0)] %}
+                  {{ states('sensor.jk_bms_pack_00_soc') }} % · {{ states('sensor.jk_bms_pack_00_voltage') }} V · {{ states('sensor.jk_bms_pack_00_current') }} A
+                  {{ states('sensor.jk_bms_pack_00_power') }} {{ state_attr('sensor.jk_bms_pack_00_power', 'unit_of_measurement') or '' }} · Max {{ cells|max|round(0) }} mV · Δ {{ ((cells|max) - (cells|min))|round(0) }} mV
+                multiline_secondary: true
                 icon: mdi:battery-check
                 icon_color: green
               - type: custom:mushroom-template-card
                 primary: Pack 2 (Slave 1)
-                secondary: >-
-                  {{ states('sensor.jk_bms_pack_01_soc') }} % ·
-                  {{ states('sensor.jk_bms_pack_01_voltage') }} V ·
-                  {{ states('sensor.jk_bms_pack_01_current') }} A
+                secondary: |-
+                  {% set cells = [states('sensor.jk_bms_pack_01_cell_01_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_02_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_03_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_04_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_05_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_06_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_07_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_08_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_09_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_10_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_11_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_12_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_13_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_14_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_15_voltage')|float(0), states('sensor.jk_bms_pack_01_cell_16_voltage')|float(0)] %}
+                  {{ states('sensor.jk_bms_pack_01_soc') }} % · {{ states('sensor.jk_bms_pack_01_voltage') }} V · {{ states('sensor.jk_bms_pack_01_current') }} A
+                  {{ states('sensor.jk_bms_pack_01_power') }} {{ state_attr('sensor.jk_bms_pack_01_power', 'unit_of_measurement') or '' }} · Max {{ cells|max|round(0) }} mV · Δ {{ ((cells|max) - (cells|min))|round(0) }} mV
+                multiline_secondary: true
                 icon: mdi:battery-check
                 icon_color: green
               - type: custom:mushroom-template-card
                 primary: Pack 3 (Slave 2)
-                secondary: >-
-                  {{ states('sensor.jk_bms_pack_02_soc') }} % ·
-                  {{ states('sensor.jk_bms_pack_02_voltage') }} V ·
-                  {{ states('sensor.jk_bms_pack_02_current') }} A
+                secondary: |-
+                  {% set cells = [states('sensor.jk_bms_pack_02_cell_01_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_02_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_03_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_04_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_05_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_06_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_07_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_08_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_09_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_10_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_11_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_12_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_13_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_14_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_15_voltage')|float(0), states('sensor.jk_bms_pack_02_cell_16_voltage')|float(0)] %}
+                  {{ states('sensor.jk_bms_pack_02_soc') }} % · {{ states('sensor.jk_bms_pack_02_voltage') }} V · {{ states('sensor.jk_bms_pack_02_current') }} A
+                  {{ states('sensor.jk_bms_pack_02_power') }} {{ state_attr('sensor.jk_bms_pack_02_power', 'unit_of_measurement') or '' }} · Max {{ cells|max|round(0) }} mV · Δ {{ ((cells|max) - (cells|min))|round(0) }} mV
+                multiline_secondary: true
                 icon: mdi:battery-check
                 icon_color: green
 
@@ -809,8 +830,47 @@ views:
                 media_query: "(max-width: 699px)"
 
           - type: custom:mushroom-title-card
-            title: Zellspannungen · Pack 1
-            subtitle: Alle 16 Zellen im direkten Vergleich
+            title: Zellspannungen & Temperaturen
+            subtitle: Pack auswählen und alle Einzelwerte vergleichen
+
+          - type: custom:mushroom-chips-card
+            alignment: start
+            chips:
+              - type: template
+                icon: mdi:numeric-1-circle
+                content: Pack 1
+                icon_color: "{{ 'blue' if is_state('select.solar_pv_battery_dashboard_jk_bms_pack_auswahl', 'Pack 1') else 'grey' }}"
+                tap_action:
+                  action: call-service
+                  service: select.select_option
+                  target: {entity_id: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl}
+                  data: {option: Pack 1}
+              - type: template
+                icon: mdi:numeric-2-circle
+                content: Pack 2
+                icon_color: "{{ 'blue' if is_state('select.solar_pv_battery_dashboard_jk_bms_pack_auswahl', 'Pack 2') else 'grey' }}"
+                tap_action:
+                  action: call-service
+                  service: select.select_option
+                  target: {entity_id: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl}
+                  data: {option: Pack 2}
+              - type: template
+                icon: mdi:numeric-3-circle
+                content: Pack 3
+                icon_color: "{{ 'blue' if is_state('select.solar_pv_battery_dashboard_jk_bms_pack_auswahl', 'Pack 3') else 'grey' }}"
+                tap_action:
+                  action: call-service
+                  service: select.select_option
+                  target: {entity_id: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl}
+                  data: {option: Pack 3}
+
+          - type: custom:mushroom-title-card
+            title: Pack 1 · Einzelwerte
+            subtitle: 16 Zellspannungen und 6 Temperaturen
+            visibility:
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 1
 
           - &bms_cells_grid
             type: grid
@@ -819,6 +879,9 @@ views:
             visibility:
               - condition: screen
                 media_query: "(min-width: 700px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 1
             cards:
               - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_01_voltage, name: Zelle 1, icon: mdi:battery-medium, icon_color: green}
               - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_02_voltage, name: Zelle 2, icon: mdi:battery-medium, icon_color: green}
@@ -842,37 +905,180 @@ views:
             visibility:
               - condition: screen
                 media_query: "(max-width: 699px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 1
 
-          - &bms_extremes_grid
+          - &bms_temperatures_pack1
             type: grid
-            columns: 4
+            columns: 6
             square: false
             visibility:
               - condition: screen
                 media_query: "(min-width: 700px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 1
             cards:
-              - type: custom:mushroom-entity-card
-                entity: sensor.jk_bms_total_jk_bms_max_cell_voltage
-                name: Max. Zelle
-                icon: mdi:arrow-up-bold
-              - type: custom:mushroom-entity-card
-                entity: sensor.jk_bms_total_jk_bms_min_cell_voltage
-                name: Min. Zelle
-                icon: mdi:arrow-down-bold
-              - type: custom:mushroom-entity-card
-                entity: sensor.jk_bms_total_jk_bms_cell_voltage_delta
-                name: Zell-Delta
-                icon: mdi:delta
-              - type: custom:mushroom-entity-card
-                entity: sensor.jk_bms_pack_00_temperature_01
-                name: Temperatur
-                icon: mdi:thermometer
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_temperature_01, name: Temperatur 1, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_temperature_02, name: Temperatur 2, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_temperature_03, name: Temperatur 3, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_temperature_04, name: Temperatur 4, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_temperature_05, name: Temperatur 5, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_temperature_06, name: Temperatur 6, icon: mdi:thermometer, icon_color: orange}
 
-          - <<: *bms_extremes_grid
+          - <<: *bms_temperatures_pack1
             columns: 2
             visibility:
               - condition: screen
                 media_query: "(max-width: 699px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 1
+
+          - type: custom:mushroom-title-card
+            title: Pack 2 · Einzelwerte
+            subtitle: 16 Zellspannungen und 6 Temperaturen
+            visibility:
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 2
+
+          - &bms_cells_pack2
+            type: grid
+            columns: 8
+            square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 2
+            cards:
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_01_voltage, name: Zelle 1, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_02_voltage, name: Zelle 2, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_03_voltage, name: Zelle 3, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_04_voltage, name: Zelle 4, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_05_voltage, name: Zelle 5, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_06_voltage, name: Zelle 6, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_07_voltage, name: Zelle 7, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_08_voltage, name: Zelle 8, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_09_voltage, name: Zelle 9, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_10_voltage, name: Zelle 10, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_11_voltage, name: Zelle 11, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_12_voltage, name: Zelle 12, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_13_voltage, name: Zelle 13, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_14_voltage, name: Zelle 14, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_15_voltage, name: Zelle 15, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_cell_16_voltage, name: Zelle 16, icon: mdi:battery-medium, icon_color: green}
+
+          - <<: *bms_cells_pack2
+            columns: 2
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 2
+
+          - &bms_temperatures_pack2
+            type: grid
+            columns: 6
+            square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 2
+            cards:
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_temperature_01, name: Temperatur 1, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_temperature_02, name: Temperatur 2, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_temperature_03, name: Temperatur 3, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_temperature_04, name: Temperatur 4, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_temperature_05, name: Temperatur 5, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_01_temperature_06, name: Temperatur 6, icon: mdi:thermometer, icon_color: orange}
+
+          - <<: *bms_temperatures_pack2
+            columns: 2
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 2
+
+          - type: custom:mushroom-title-card
+            title: Pack 3 · Einzelwerte
+            subtitle: 16 Zellspannungen und 6 Temperaturen
+            visibility:
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 3
+
+          - &bms_cells_pack3
+            type: grid
+            columns: 8
+            square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 3
+            cards:
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_01_voltage, name: Zelle 1, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_02_voltage, name: Zelle 2, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_03_voltage, name: Zelle 3, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_04_voltage, name: Zelle 4, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_05_voltage, name: Zelle 5, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_06_voltage, name: Zelle 6, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_07_voltage, name: Zelle 7, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_08_voltage, name: Zelle 8, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_09_voltage, name: Zelle 9, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_10_voltage, name: Zelle 10, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_11_voltage, name: Zelle 11, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_12_voltage, name: Zelle 12, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_13_voltage, name: Zelle 13, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_14_voltage, name: Zelle 14, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_15_voltage, name: Zelle 15, icon: mdi:battery-medium, icon_color: green}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_cell_16_voltage, name: Zelle 16, icon: mdi:battery-medium, icon_color: green}
+
+          - <<: *bms_cells_pack3
+            columns: 2
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 3
+
+          - &bms_temperatures_pack3
+            type: grid
+            columns: 6
+            square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 3
+            cards:
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_temperature_01, name: Temperatur 1, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_temperature_02, name: Temperatur 2, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_temperature_03, name: Temperatur 3, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_temperature_04, name: Temperatur 4, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_temperature_05, name: Temperatur 5, icon: mdi:thermometer, icon_color: orange}
+              - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_02_temperature_06, name: Temperatur 6, icon: mdi:thermometer, icon_color: orange}
+
+          - <<: *bms_temperatures_pack3
+            columns: 2
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
+              - condition: state
+                entity: select.solar_pv_battery_dashboard_jk_bms_pack_auswahl
+                state: Pack 3
 
           - &bms_details_grid
             type: grid
