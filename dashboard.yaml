@@ -329,9 +329,11 @@ views:
               - condition: screen
                 media_query: "(min-width: 700px)"
             cards:
-              - type: custom:apexcharts-card
+              - &history_battery_electrical
+                type: custom:apexcharts-card
                 header: {show: true, title: Batteriespannung & Strom}
                 graph_span: 24h
+                all_series_config: {group_by: {func: avg, duration: 5min}}
                 yaxis:
                   - id: voltage
                   - id: current
@@ -350,9 +352,11 @@ views:
                     color: "#ef5545"
                     yaxis_id: current
                     type: line
-              - type: custom:apexcharts-card
+              - &history_mppt_voltage
+                type: custom:apexcharts-card
                 header: {show: true, title: PV Eingänge (MPPT)}
                 graph_span: 24h
+                all_series_config: {group_by: {func: avg, duration: 5min}}
                 apex_config:
                   chart: {height: 270}
                   legend: {position: bottom}
@@ -367,6 +371,110 @@ views:
                     type: line
 
           - <<: *history_detail_grid
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
+
+          - &history_extended_grid
+            type: grid
+            columns: 2
+            square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
+            cards:
+              - &history_inverter_temperature
+                type: custom:apexcharts-card
+                header: {show: true, title: Wechselrichtertemperatur}
+                graph_span: 24h
+                all_series_config: {group_by: {func: avg, duration: 5min}}
+                apex_config:
+                  chart: {height: 270}
+                  legend: {position: bottom}
+                series:
+                  - {entity: sensor.solis_s5_eh1p_temperature, name: Wechselrichter, color: "#ef5545", type: area}
+                  - {entity: sensor.solis_s5_eh1p_lead_acid_battery_temperature, name: Batterie (Solis), color: "#20ae55", type: line}
+              - &history_grid_quality
+                type: custom:apexcharts-card
+                header: {show: true, title: Netzspannung & Frequenz}
+                graph_span: 24h
+                all_series_config: {group_by: {func: avg, duration: 5min}}
+                yaxis:
+                  - id: voltage
+                  - id: frequency
+                    opposite: true
+                apex_config:
+                  chart: {height: 270}
+                  legend: {position: bottom}
+                series:
+                  - {entity: sensor.solis_s5_eh1p_a_phase_voltage, name: Netzspannung, color: "#168cf0", yaxis_id: voltage, type: line}
+                  - {entity: sensor.solis_s5_eh1p_grid_frequency, name: Netzfrequenz, color: "#ef5545", yaxis_id: frequency, type: line}
+              - &history_ac_load
+                type: custom:apexcharts-card
+                header: {show: true, title: Backup-AC & Last}
+                graph_span: 24h
+                all_series_config: {group_by: {func: avg, duration: 5min}}
+                yaxis:
+                  - id: voltage
+                  - id: power
+                    opposite: true
+                apex_config:
+                  chart: {height: 270}
+                  legend: {position: bottom}
+                series:
+                  - {entity: sensor.solis_s5_eh1p_backup_ac_voltage_phase_a, name: AC-Spannung, color: "#168cf0", yaxis_id: voltage, type: line}
+                  - {entity: sensor.solis_s5_eh1p_household_load_power, name: Hauslast, color: "#7e57c2", yaxis_id: power, type: area, transform: "return x / 1000;", unit: kW}
+                  - {entity: sensor.solis_s5_eh1p_backup_load_power, name: Backup-Last, color: "#ef5545", yaxis_id: power, type: line, transform: "return x / 1000;", unit: kW}
+              - &history_mppt_current
+                type: custom:apexcharts-card
+                header: {show: true, title: MPPT-Ströme}
+                graph_span: 24h
+                all_series_config: {group_by: {func: avg, duration: 5min}}
+                apex_config:
+                  chart: {height: 270}
+                  legend: {position: bottom}
+                series:
+                  - {entity: sensor.solis_s5_eh1p_pv_current_1, name: MPPT 1, color: "#ffb000", type: line}
+                  - {entity: sensor.solis_s5_eh1p_pv_current_2, name: MPPT 2, color: "#20ae55", type: line}
+              - &history_mppt_power
+                type: custom:apexcharts-card
+                header: {show: true, title: PV- & MPPT-Leistung}
+                graph_span: 24h
+                all_series_config: {group_by: {func: avg, duration: 5min}}
+                apex_config:
+                  chart: {height: 270}
+                  legend: {position: bottom}
+                series:
+                  - {entity: sensor.solis_s5_eh1p_pv_power_1, name: MPPT 1, color: "#ffb000", type: line, transform: "return x / 1000;", unit: kW}
+                  - {entity: sensor.solis_s5_eh1p_pv_power_2, name: MPPT 2, color: "#ffd54f", type: line, transform: "return x / 1000;", unit: kW}
+                  - {entity: sensor.solis_s5_eh1p_total_pv_power, name: PV gesamt, color: "#f57f17", type: area, transform: "return x / 1000;", unit: kW}
+              - &history_pack_delta
+                type: custom:apexcharts-card
+                header: {show: true, title: Zellspannungsdifferenz je Batteriepack}
+                graph_span: 24h
+                all_series_config: {group_by: {func: avg, duration: 5min}}
+                apex_config:
+                  chart: {height: 270}
+                  legend: {position: bottom}
+                series:
+                  - {entity: sensor.solar_pv_battery_dashboard_pack_1_zell_delta, name: Pack 1, color: "#168cf0", type: line}
+                  - {entity: sensor.solar_pv_battery_dashboard_pack_2_zell_delta, name: Pack 2, color: "#20ae55", type: line}
+                  - {entity: sensor.solar_pv_battery_dashboard_pack_3_zell_delta, name: Pack 3, color: "#ef5545", type: line}
+              - &history_pack_temperature
+                type: custom:apexcharts-card
+                header: {show: true, title: Maximale Zelltemperatur je Batteriepack}
+                graph_span: 24h
+                all_series_config: {group_by: {func: max, duration: 5min}}
+                apex_config:
+                  chart: {height: 270}
+                  legend: {position: bottom}
+                series:
+                  - {entity: sensor.solar_pv_battery_dashboard_pack_1_max_zelltemperatur, name: Pack 1, color: "#168cf0", type: line}
+                  - {entity: sensor.solar_pv_battery_dashboard_pack_2_max_zelltemperatur, name: Pack 2, color: "#20ae55", type: line}
+                  - {entity: sensor.solar_pv_battery_dashboard_pack_3_max_zelltemperatur, name: Pack 3, color: "#ef5545", type: line}
+
+          - <<: *history_extended_grid
             columns: 1
             visibility:
               - condition: screen
@@ -410,6 +518,23 @@ views:
               yaxis: {min: 0, max: 100}
             series:
               - {entity: sensor.jk_bms_total_jk_bms_total_soc, name: Gesamt, color: "#20ae55", type: area, group_by: {func: avg, duration: 30min}}
+          - &history_extended_grid_7d
+            <<: *history_extended_grid
+            cards:
+              - {<<: *history_battery_electrical, graph_span: 7d, all_series_config: {group_by: {func: avg, duration: 30min}}}
+              - {<<: *history_mppt_voltage, graph_span: 7d, all_series_config: {group_by: {func: avg, duration: 30min}}}
+              - {<<: *history_inverter_temperature, graph_span: 7d, all_series_config: {group_by: {func: avg, duration: 30min}}}
+              - {<<: *history_grid_quality, graph_span: 7d, all_series_config: {group_by: {func: avg, duration: 30min}}}
+              - {<<: *history_ac_load, graph_span: 7d, all_series_config: {group_by: {func: avg, duration: 30min}}}
+              - {<<: *history_mppt_current, graph_span: 7d, all_series_config: {group_by: {func: avg, duration: 30min}}}
+              - {<<: *history_mppt_power, graph_span: 7d, all_series_config: {group_by: {func: avg, duration: 30min}}}
+              - {<<: *history_pack_delta, graph_span: 7d, all_series_config: {group_by: {func: avg, duration: 30min}}}
+              - {<<: *history_pack_temperature, graph_span: 7d, all_series_config: {group_by: {func: max, duration: 30min}}}
+          - <<: *history_extended_grid_7d
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
 
   - title: Historische Werte · 30 Tage
     path: historische-werte-30-tage
@@ -449,6 +574,23 @@ views:
               yaxis: {min: 0, max: 100}
             series:
               - {entity: sensor.jk_bms_total_jk_bms_total_soc, name: Gesamt, color: "#20ae55", type: area, group_by: {func: avg, duration: 2h}}
+          - &history_extended_grid_30d
+            <<: *history_extended_grid
+            cards:
+              - {<<: *history_battery_electrical, graph_span: 30d, all_series_config: {group_by: {func: avg, duration: 2h}}}
+              - {<<: *history_mppt_voltage, graph_span: 30d, all_series_config: {group_by: {func: avg, duration: 2h}}}
+              - {<<: *history_inverter_temperature, graph_span: 30d, all_series_config: {group_by: {func: avg, duration: 2h}}}
+              - {<<: *history_grid_quality, graph_span: 30d, all_series_config: {group_by: {func: avg, duration: 2h}}}
+              - {<<: *history_ac_load, graph_span: 30d, all_series_config: {group_by: {func: avg, duration: 2h}}}
+              - {<<: *history_mppt_current, graph_span: 30d, all_series_config: {group_by: {func: avg, duration: 2h}}}
+              - {<<: *history_mppt_power, graph_span: 30d, all_series_config: {group_by: {func: avg, duration: 2h}}}
+              - {<<: *history_pack_delta, graph_span: 30d, all_series_config: {group_by: {func: avg, duration: 2h}}}
+              - {<<: *history_pack_temperature, graph_span: 30d, all_series_config: {group_by: {func: max, duration: 2h}}}
+          - <<: *history_extended_grid_30d
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
 
   - title: Historische Werte · 12 Monate
     path: historische-werte-12-monate
@@ -488,6 +630,23 @@ views:
               yaxis: {min: 0, max: 100}
             series:
               - {entity: sensor.jk_bms_total_jk_bms_total_soc, name: Gesamt, color: "#20ae55", type: area, group_by: {func: avg, duration: 1d}}
+          - &history_extended_grid_365d
+            <<: *history_extended_grid
+            cards:
+              - {<<: *history_battery_electrical, graph_span: 365d, all_series_config: {group_by: {func: avg, duration: 1d}}}
+              - {<<: *history_mppt_voltage, graph_span: 365d, all_series_config: {group_by: {func: avg, duration: 1d}}}
+              - {<<: *history_inverter_temperature, graph_span: 365d, all_series_config: {group_by: {func: avg, duration: 1d}}}
+              - {<<: *history_grid_quality, graph_span: 365d, all_series_config: {group_by: {func: avg, duration: 1d}}}
+              - {<<: *history_ac_load, graph_span: 365d, all_series_config: {group_by: {func: avg, duration: 1d}}}
+              - {<<: *history_mppt_current, graph_span: 365d, all_series_config: {group_by: {func: avg, duration: 1d}}}
+              - {<<: *history_mppt_power, graph_span: 365d, all_series_config: {group_by: {func: avg, duration: 1d}}}
+              - {<<: *history_pack_delta, graph_span: 365d, all_series_config: {group_by: {func: avg, duration: 1d}}}
+              - {<<: *history_pack_temperature, graph_span: 365d, all_series_config: {group_by: {func: max, duration: 1d}}}
+          - <<: *history_extended_grid_365d
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
 
   - title: Summierte Werte
     path: summierte-werte

@@ -39,6 +39,23 @@ HISTORY_TARGETS = {
     "/pv-battery-dashboard/historische-werte-30-tage",
     "/pv-battery-dashboard/historische-werte-12-monate",
 }
+HISTORY_CHART_TITLES = {
+    "Batteriespannung & Strom",
+    "PV Eingänge (MPPT)",
+    "Wechselrichtertemperatur",
+    "Netzspannung & Frequenz",
+    "Backup-AC & Last",
+    "MPPT-Ströme",
+    "PV- & MPPT-Leistung",
+    "Zellspannungsdifferenz je Batteriepack",
+    "Maximale Zelltemperatur je Batteriepack",
+}
+HISTORY_RANGES = {
+    "historische-werte": ("24h", "5min"),
+    "historische-werte-7-tage": ("7d", "30min"),
+    "historische-werte-30-tage": ("30d", "2h"),
+    "historische-werte-12-monate": ("365d", "1d"),
+}
 
 
 def fail(message: str) -> None:
@@ -118,6 +135,39 @@ def validate() -> None:
         }
         if graph_span not in spans:
             fail(f"{path} is missing graph_span {graph_span}")
+
+    for path, (graph_span, duration) in HISTORY_RANGES.items():
+        view = next(view for view in views if view["path"] == path)
+        charts = [
+            card
+            for card in walk(view)
+            if card.get("type") == "custom:apexcharts-card"
+            and card.get("header", {}).get("title") in HISTORY_CHART_TITLES
+        ]
+        titles = {card["header"]["title"] for card in charts}
+        if titles != HISTORY_CHART_TITLES:
+            fail(f"{path} does not contain the complete switchable chart set")
+        for card in charts:
+            if card.get("graph_span") != graph_span:
+                fail(f"{path} chart {card['header']['title']} has the wrong range")
+            configured_duration = (
+                card.get("all_series_config", {})
+                .get("group_by", {})
+                .get("duration")
+            )
+            if configured_duration != duration:
+                fail(
+                    f"{path} chart {card['header']['title']} needs grouping {duration}"
+                )
+
+    helper_text = (ROOT / "custom_components" / "pv_battery_dashboard" / "sensor.py").read_text(
+        encoding="utf-8"
+    )
+    for helper in ("PackCellDeltaSensor", "PackMaximumCellTemperatureSensor"):
+        if helper not in helper_text:
+            fail(f"historical helper sensor {helper} is missing")
+    if "range(1, 5)" not in helper_text:
+        fail("maximum pack temperature must use the four requested cell sensors")
 
     responsive_requirements = {
         "aktuelle-werte": {(5, 5, "(min-width: 700px)"), (2, 5, "(max-width: 699px)")},

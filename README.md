@@ -370,3 +370,20 @@ persistent pack selector:
 - the selected pack shows all 16 cell voltages and all six temperature sensors
 - desktop uses compact 8/6-column grids; portrait phones use readable two-column grids
 - repository validation requires all three pack options, 48 cell entities, 18 temperature entities and the new aggregate values
+
+
+## Dashboard 0.1.18
+
+Version **0.1.18** expands all four historical ranges with verified Solis and
+JK-BMS diagnostics:
+
+- inverter and Solis battery temperature
+- grid voltage and frequency
+- backup AC voltage, household load and backup load
+- MPPT voltages, currents and individual/total PV power
+- battery voltage and current
+- one cell-voltage-delta curve for each connected battery pack
+- one maximum-cell-temperature curve for each pack, calculated from temperature sensors 1–4
+- the complete chart set is available for 24 hours, 7 days, 30 days and 12 months
+- aggregation changes from 5 minutes to 30 minutes, 2 hours and 1 day for the longer ranges
+- CI now rejects releases if a range is missing one of these charts or uses the wrong span/aggregation
