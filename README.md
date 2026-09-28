@@ -145,6 +145,7 @@ The following five mock-ups are the original visual reference used before today'
 - [`dashboard.yaml`](dashboard.yaml) – Lovelace dashboard
 - [`docs/DASHBOARD_SPEC.md`](docs/DASHBOARD_SPEC.md) – functional specification
 - [`docs/ENTITY_MAPPING.md`](docs/ENTITY_MAPPING.md) – inverter/BMS mapping model and verified reference entities
+- [`docs/VALIDATION.md`](docs/VALIDATION.md) – automated CI checks and the live desktop/mobile release checklist
 - [`docs/images/mockups/`](docs/images/mockups/) – visual references
 - [`docs/INSTALLATION_HOME_ASSISTANT.md`](docs/INSTALLATION_HOME_ASSISTANT.md) – installation in Home Assistant
 - [`custom_components/pv_battery_dashboard/`](custom_components/pv_battery_dashboard/) – HACS custom integration
@@ -164,7 +165,14 @@ GitHub Actions automatically validates the project:
 - **hassfest** for Home Assistant manifests, config flow and translations
 - **Python compile check** with `compileall`
 - **literal \\n guard** to catch accidental escaped newlines outside strings/comments
+- **dashboard contract validation** for five visible views, history navigation, responsive layouts, verified JK-BMS detail entities and synchronized YAML copies
 - **daily scheduled validation** in addition to push/pull-request checks
+
+The exact automated checks and the required live Home Assistant browser test are
+documented in [`docs/VALIDATION.md`](docs/VALIDATION.md). GitHub-hosted runners
+cannot access the private Home Assistant LAN, so the repository workflow enforces
+all static dashboard contracts while the documented live release gate covers
+desktop/mobile rendering and real entity values.
 
 The release workflow mirrors the protection used in `alexseuf/tigo-tap-local`:
 
@@ -172,7 +180,7 @@ The release workflow mirrors the protection used in `alexseuf/tigo-tap-local`:
 - recompiles all integration Python files
 - repeats the literal-newline guard
 - builds `pv_battery_dashboard.zip`
-- creates a GitHub prerelease with generated release notes
+- creates a GitHub release with generated release notes
 
 
 ## Frontend dependencies for dashboard 0.1.3

@@ -37,6 +37,14 @@ jobs:
         run: |
           python -m compileall -q -f custom_components/pv_battery_dashboard
 
+      - name: Install dashboard validation dependency
+        shell: bash
+        run: python -m pip install --disable-pip-version-check PyYAML==6.0.2
+
+      - name: Validate dashboard structure and responsive layouts
+        shell: bash
+        run: python scripts/validate_dashboard.py
+
       - name: Reject accidental literal newline escapes
         shell: bash
         run: |
