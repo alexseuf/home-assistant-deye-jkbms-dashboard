@@ -120,9 +120,13 @@ views:
                   font-size: "clamp(10px, 0.95vw, 14px)"
                   font-weight: 600
 
-          - type: grid
+          - &current_metrics
+            type: grid
             columns: 5
             square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
             cards:
               - type: custom:mushroom-entity-card
                 entity: sensor.solis_s5_eh1p_pv_voltage_1
@@ -149,6 +153,12 @@ views:
                 name: BMS Temperatur
                 icon: mdi:thermometer
                 icon_color: orange
+
+          - <<: *current_metrics
+            columns: 2
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
 
           - type: custom:apexcharts-card
             header:
@@ -311,9 +321,13 @@ views:
                 type: area
                 group_by: {func: avg, duration: 5min}
 
-          - type: grid
+          - &history_detail_grid
+            type: grid
             columns: 2
             square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
             cards:
               - type: custom:apexcharts-card
                 header: {show: true, title: Batteriespannung & Strom}
@@ -351,6 +365,12 @@ views:
                     name: MPPT 2
                     color: "#20ae55"
                     type: line
+
+          - <<: *history_detail_grid
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
 
   - title: Historische Werte · 7 Tage
     path: historische-werte-7-tage
@@ -480,9 +500,13 @@ views:
             title: 3. Summierte Werte
             subtitle: Tages-, Monats- und Jahresenergie
 
-          - type: grid
+          - &summary_totals_grid
+            type: grid
             columns: 2
             square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
             cards:
               - type: custom:mushroom-entity-card
                 entity: sensor.solis_s5_eh1p_pv_today_energy_generation
@@ -508,6 +532,12 @@ views:
                 icon: mdi:swap-horizontal-bold
                 icon_color: green
                 layout: horizontal
+
+          - <<: *summary_totals_grid
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
 
           - type: custom:apexcharts-card
             header: {show: true, title: Tageswerte · 14 Tage}
@@ -540,9 +570,13 @@ views:
                 type: column
                 statistics: {type: change, period: day}
 
-          - type: grid
+          - &summary_month_grid
+            type: grid
             columns: 2
             square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
             cards:
               - type: custom:apexcharts-card
                 header: {show: true, title: Monatsübersicht · 12 Monate}
@@ -588,6 +622,12 @@ views:
                         name: PV Jahr
                         icon: mdi:calendar
 
+          - <<: *summary_month_grid
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
+
   - title: Einstellungen Wechselrichter
     path: einstellungen-wechselrichter
     icon: mdi:tune-variant
@@ -599,9 +639,13 @@ views:
             title: 4. Einstellungen Wechselrichter
             subtitle: Solis S5-EH1P · nur verifizierte Funktionen
 
-          - type: grid
+          - &inverter_status_grid
+            type: grid
             columns: 3
             square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
             cards:
               - type: custom:mushroom-entity-card
                 entity: sensor.solis_s5_eh1p_status_string
@@ -618,6 +662,12 @@ views:
                 name: Solis Modbus
                 icon: mdi:connection
                 icon_color: blue
+
+          - <<: *inverter_status_grid
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
 
           - type: entities
             title: Batterie / BMS
@@ -640,9 +690,13 @@ views:
             title: Diagnose & Geräteinformationen
             subtitle: Schreibzugriffe bleiben deaktiviert, solange keine Solis-Register verifiziert sind.
 
-          - type: grid
+          - &inverter_diagnostics_grid
+            type: grid
             columns: 2
             square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
             cards:
               - type: entities
                 title: Wechselrichter
@@ -661,6 +715,12 @@ views:
                   - {entity: sensor.solis_s5_eh1p_temperature, name: Temperatur}
                   - {entity: sensor.solis_s5_eh1p_status_string, name: Status}
 
+          - <<: *inverter_diagnostics_grid
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
+
   - title: Einstellungen JK BMS
     path: einstellungen-jk-bms
     icon: mdi:battery
@@ -672,9 +732,13 @@ views:
             title: 5. Einstellungen JK BMS
             subtitle: Gesamtbatterie · drei Packs · Zellspannungen
 
-          - type: grid
+          - &bms_totals_grid
+            type: grid
             columns: 3
             square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
             cards:
               - type: custom:mushroom-entity-card
                 entity: sensor.jk_bms_total_jk_bms_total_soc
@@ -695,13 +759,23 @@ views:
                 icon_color: deep-orange
                 layout: horizontal
 
+          - <<: *bms_totals_grid
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
+
           - type: custom:mushroom-title-card
             title: Einzelne Packs
             subtitle: Master · Slave 1 · Slave 2
 
-          - type: grid
+          - &bms_pack_summary_grid
+            type: grid
             columns: 3
             square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
             cards:
               - type: custom:mushroom-template-card
                 primary: Pack 1 (Master)
@@ -728,13 +802,23 @@ views:
                 icon: mdi:battery-check
                 icon_color: green
 
+          - <<: *bms_pack_summary_grid
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
+
           - type: custom:mushroom-title-card
             title: Zellspannungen · Pack 1
             subtitle: Alle 16 Zellen im direkten Vergleich
 
-          - type: grid
+          - &bms_cells_grid
+            type: grid
             columns: 8
             square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
             cards:
               - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_01_voltage, name: Zelle 1, icon: mdi:battery-medium, icon_color: green}
               - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_02_voltage, name: Zelle 2, icon: mdi:battery-medium, icon_color: green}
@@ -753,9 +837,19 @@ views:
               - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_15_voltage, name: Zelle 15, icon: mdi:battery-medium, icon_color: green}
               - {type: custom:mushroom-entity-card, entity: sensor.jk_bms_pack_00_cell_16_voltage, name: Zelle 16, icon: mdi:battery-medium, icon_color: green}
 
-          - type: grid
+          - <<: *bms_cells_grid
+            columns: 2
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
+
+          - &bms_extremes_grid
+            type: grid
             columns: 4
             square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
             cards:
               - type: custom:mushroom-entity-card
                 entity: sensor.jk_bms_total_jk_bms_max_cell_voltage
@@ -774,31 +868,50 @@ views:
                 name: Temperatur
                 icon: mdi:thermometer
 
-          - type: grid
+          - <<: *bms_extremes_grid
+            columns: 2
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"
+
+          - &bms_details_grid
+            type: grid
             columns: 3
             square: false
+            visibility:
+              - condition: screen
+                media_query: "(min-width: 700px)"
             cards:
               - type: entities
                 title: Pack 00 · Details
                 entities:
-                  - sensor.jk_bms_pack_00_soh
-                  - sensor.jk_bms_pack_00_cycle_count
-                  - sensor.jk_bms_pack_00_balance_current
-                  - binary_sensor.jk_bms_pack_00_charge_enabled_status
-                  - binary_sensor.jk_bms_pack_00_discharge_enabled_status
+                  - {entity: sensor.jk_bms_pack_00_soc, name: Ladezustand}
+                  - {entity: sensor.jk_bms_pack_00_voltage, name: Spannung}
+                  - {entity: sensor.jk_bms_pack_00_current, name: Strom}
+                  - {entity: sensor.jk_bms_pack_00_remaining_capacity, name: Restkapazität}
+                  - {entity: sensor.jk_bms_pack_00_temperature_01, name: Temperatur}
+                  - {entity: sensor.jk_bms_pack_00_cycle_count, name: Zyklen}
               - type: entities
                 title: Pack 01 · Details
                 entities:
-                  - sensor.jk_bms_pack_01_soh
-                  - sensor.jk_bms_pack_01_cycle_count
-                  - sensor.jk_bms_pack_01_balance_current
-                  - binary_sensor.jk_bms_pack_01_charge_enabled_status
-                  - binary_sensor.jk_bms_pack_01_discharge_enabled_status
+                  - {entity: sensor.jk_bms_pack_01_soc, name: Ladezustand}
+                  - {entity: sensor.jk_bms_pack_01_voltage, name: Spannung}
+                  - {entity: sensor.jk_bms_pack_01_current, name: Strom}
+                  - {entity: sensor.jk_bms_pack_01_remaining_capacity, name: Restkapazität}
+                  - {entity: sensor.jk_bms_pack_01_temperature_01, name: Temperatur}
+                  - {entity: sensor.jk_bms_pack_01_cycle_count, name: Zyklen}
               - type: entities
                 title: Pack 02 · Details
                 entities:
-                  - sensor.jk_bms_pack_02_soh
-                  - sensor.jk_bms_pack_02_cycle_count
-                  - sensor.jk_bms_pack_02_balance_current
-                  - binary_sensor.jk_bms_pack_02_charge_enabled_status
-                  - binary_sensor.jk_bms_pack_02_discharge_enabled_status
+                  - {entity: sensor.jk_bms_pack_02_soc, name: Ladezustand}
+                  - {entity: sensor.jk_bms_pack_02_voltage, name: Spannung}
+                  - {entity: sensor.jk_bms_pack_02_current, name: Strom}
+                  - {entity: sensor.jk_bms_pack_02_remaining_capacity, name: Restkapazität}
+                  - {entity: sensor.jk_bms_pack_02_temperature_01, name: Temperatur}
+                  - {entity: sensor.jk_bms_pack_02_cycle_count, name: Zyklen}
+
+          - <<: *bms_details_grid
+            columns: 1
+            visibility:
+              - condition: screen
+                media_query: "(max-width: 699px)"

@@ -330,3 +330,21 @@ selector functional:
 - the four history chips navigate between 24 hours, 7 days, 30 days and 12 months
 - longer ranges use progressively coarser aggregation to keep charts responsive
 - all four chip transitions and chart titles were verified in a real Home Assistant browser session
+
+
+## Dashboard 0.1.16
+
+Version **0.1.16** adds a responsive portrait-phone layout and corrects the
+three JK-BMS pack detail cards:
+
+- native screen visibility conditions select desktop or mobile grid variants at 700 px
+- current-value metrics wrap from five desktop columns to two mobile columns
+- historical detail charts and summary/inverter sections stack on narrow screens
+- JK-BMS totals and pack summaries stack vertically on phones
+- all 16 cell voltages change from eight to two columns on phones
+- cell extrema change from four to two columns
+- the three pack detail cards change from three columns to a vertical stack
+- unreliable charge/discharge-enabled bits are replaced by verified live pack values
+- each pack now shows SOC, voltage, current, remaining capacity, temperature and cycle count
+- all five main views were browser-tested at 412 × 915 px with no Lovelace card errors
+- the JK-BMS view was also browser-tested at desktop width after the responsive changes
