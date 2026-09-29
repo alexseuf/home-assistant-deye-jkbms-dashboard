@@ -6,6 +6,8 @@ import logging
 from pathlib import Path
 
 from homeassistant.components.http import StaticPathConfig
+from homeassistant.components.lovelace.const import LOVELACE_DATA
+from homeassistant.components.lovelace.resources import ResourceStorageCollection
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
@@ -17,6 +19,39 @@ _LOGGER = logging.getLogger(__name__)
 
 PLATFORMS: list[Platform] = [Platform.BUTTON, Platform.SELECT, Platform.SENSOR]
 STATIC_URL = "/pv-battery-dashboard-static"
+HISTORY_RANGE_RESOURCE_PATH = f"{STATIC_URL}/pv-history-range-card.js"
+HISTORY_RANGE_RESOURCE_URL = f"{HISTORY_RANGE_RESOURCE_PATH}?v=0.1.20"
+
+
+async def _async_ensure_history_range_resource(hass: HomeAssistant) -> None:
+    """Register the bundled custom history-range card in Lovelace storage mode."""
+    lovelace_data = hass.data.get(LOVELACE_DATA)
+    if lovelace_data is None:
+        return
+
+    resource_collection = lovelace_data.resources
+    if not isinstance(resource_collection, ResourceStorageCollection):
+        _LOGGER.warning(
+            "Cannot auto-register PV history range card because Lovelace resources "
+            "are not in storage mode"
+        )
+        return
+
+    await resource_collection.async_get_info()
+    for item in resource_collection.async_items():
+        url = item.get("url", "")
+        if url.split("?", 1)[0] != HISTORY_RANGE_RESOURCE_PATH:
+            continue
+        if url != HISTORY_RANGE_RESOURCE_URL:
+            await resource_collection.async_update_item(
+                item["id"],
+                {"url": HISTORY_RANGE_RESOURCE_URL, "res_type": "module"},
+            )
+        return
+
+    await resource_collection.async_create_item(
+        {"url": HISTORY_RANGE_RESOURCE_URL, "res_type": "module"}
+    )
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
