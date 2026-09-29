@@ -389,14 +389,27 @@ JK-BMS diagnostics:
 - CI now rejects releases if a range is missing one of these charts or uses the wrong span/aggregation
 
 
-## Dashboard 0.1.19
+## Dashboard 0.1.20
 
-Version **0.1.19** prevents a false constant-zero consumption value on Solis
-S5-EH1P installations whose native household-load register intermittently
-reports zero:
+Version **0.1.20** intentionally discards the household-load fallback introduced in
+0.1.19 and restores the verified 0.1.18 Solis entity mapping.
 
-- a calculated Home Assistant sensor prefers the positive native household-load value
-- when the native value is zero, it falls back to `|inverter power - grid-port power|`
-- current values and all historical load charts use the calculated sensor
-- the sensor updates whenever any of the three source entities changes
-- repository validation rejects dashboard copies that revert to the unreliable native load entity
+The **Historische Werte** range selector now contains a fifth button:
+**Benutzerdefiniert**.
+
+Selecting it opens a dedicated historical subview with:
+
+- freely selectable **Von** and **Bis** date/time fields
+- an **Anzeigen** button that applies the selected interval
+- a **Letzte 24 h** reset button
+- the same historical chart set used by the fixed 24 h / 7 d / 30 d / 12 month views
+- automatic aggregation based on the selected interval:
+  - up to 2 days: 5 minutes
+  - up to 14 days: 30 minutes
+  - up to 60 days: 2 hours
+  - longer ranges: 1 day
+- responsive two-column layout on desktop and one column on mobile
+
+The custom range control is bundled with this integration and registered automatically
+as a Lovelace module in storage mode. No additional HACS frontend card is required
+beyond the existing ApexCharts Card and Mushroom dependencies.
