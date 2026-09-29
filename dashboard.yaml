@@ -258,6 +258,12 @@ views:
                 tap_action:
                   action: navigate
                   navigation_path: /pv-battery-dashboard/historische-werte-12-monate
+              - type: template
+                icon: mdi:calendar-edit
+                content: Benutzerdefiniert
+                tap_action:
+                  action: navigate
+                  navigation_path: /pv-battery-dashboard/historische-werte-benutzerdefiniert
 
           - type: custom:apexcharts-card
             header:
@@ -497,6 +503,7 @@ views:
               - {type: template, icon: mdi:calendar-week, content: 7 Tage, icon_color: blue, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-7-tage}}
               - {type: template, icon: mdi:calendar-month, content: 30 Tage, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-30-tage}}
               - {type: template, icon: mdi:calendar-range, content: 12 Monate, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-12-monate}}
+              - {type: template, icon: mdi:calendar-edit, content: Benutzerdefiniert, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-benutzerdefiniert}}
           - type: custom:apexcharts-card
             header: {show: true, title: Leistung · 7 Tage}
             graph_span: 7d
@@ -553,6 +560,7 @@ views:
               - {type: template, icon: mdi:calendar-week, content: 7 Tage, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-7-tage}}
               - {type: template, icon: mdi:calendar-month, content: 30 Tage, icon_color: blue, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-30-tage}}
               - {type: template, icon: mdi:calendar-range, content: 12 Monate, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-12-monate}}
+              - {type: template, icon: mdi:calendar-edit, content: Benutzerdefiniert, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-benutzerdefiniert}}
           - type: custom:apexcharts-card
             header: {show: true, title: Leistung · 30 Tage}
             graph_span: 30d
@@ -609,6 +617,7 @@ views:
               - {type: template, icon: mdi:calendar-week, content: 7 Tage, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-7-tage}}
               - {type: template, icon: mdi:calendar-month, content: 30 Tage, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-30-tage}}
               - {type: template, icon: mdi:calendar-range, content: 12 Monate, icon_color: blue, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-12-monate}}
+              - {type: template, icon: mdi:calendar-edit, content: Benutzerdefiniert, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-benutzerdefiniert}}
           - type: custom:apexcharts-card
             header: {show: true, title: Leistung · 12 Monate}
             graph_span: 365d
@@ -647,6 +656,151 @@ views:
             visibility:
               - condition: screen
                 media_query: "(max-width: 699px)"
+
+  - title: Historische Werte · Benutzerdefiniert
+    path: historische-werte-benutzerdefiniert
+    subview: true
+    type: panel
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: custom:mushroom-title-card
+            title: 2. Historische Werte
+            subtitle: Benutzerdefinierter Zeitraum · Start und Ende frei wählen
+          - type: custom:mushroom-chips-card
+            alignment: start
+            chips:
+              - {type: template, icon: mdi:clock-outline, content: 24 Stunden, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte}}
+              - {type: template, icon: mdi:calendar-week, content: 7 Tage, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-7-tage}}
+              - {type: template, icon: mdi:calendar-month, content: 30 Tage, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-30-tage}}
+              - {type: template, icon: mdi:calendar-range, content: 12 Monate, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-12-monate}}
+              - {type: template, icon: mdi:calendar-edit, content: Benutzerdefiniert, icon_color: blue, tap_action: {action: navigate, navigation_path: /pv-battery-dashboard/historische-werte-benutzerdefiniert}}
+
+          - type: custom:statistics-graph-chart-controller
+            sync_group: pv_history_custom
+            card_header: Zeitraum
+            date_picker_modes: [day, week, month, year, last_24h, last_7d, last_30d, last_12m]
+            date_picker_default_mode: last_24h
+
+          - type: custom:statistics-graph-chart-card
+            sync_group: pv_history_custom
+            card_header: Leistung
+            axis_style: native
+            auto_scale_points: true
+            brush_zoom: true
+            entities:
+              - {entity: sensor.solis_s5_eh1p_total_pv_power, name: PV, color: "#ffb000", unit: kW, value_factor: -3, aggregate_func: avg}
+              - {entity: sensor.calculated_household_load_power, name: Verbrauch, color: "#168cf0", unit: kW, value_factor: -3, aggregate_func: avg}
+              - {entity: sensor.jk_bms_total_jk_bms_total_power, name: Batterie, color: "#20ae55", unit: kW, aggregate_func: avg}
+              - {entity: sensor.solis_s5_eh1p_ac_grid_port_power, name: Netz, color: "#ef5545", unit: kW, value_factor: -3, aggregate_func: avg}
+
+          - type: custom:statistics-graph-chart-card
+            sync_group: pv_history_custom
+            card_header: Batterie SOC
+            axis_style: native
+            auto_scale_points: true
+            brush_zoom: true
+            lower_bound: 0
+            upper_bound: 100
+            entities:
+              - {entity: sensor.jk_bms_total_jk_bms_total_soc, name: Gesamt, color: "#20ae55", aggregate_func: avg}
+
+          - type: custom:statistics-graph-chart-card
+            sync_group: pv_history_custom
+            card_header: Batteriespannung & Strom
+            axis_style: native
+            auto_scale_points: true
+            brush_zoom: true
+            show_y2_axis: true
+            entities:
+              - {entity: sensor.jk_bms_total_jk_bms_total_voltage, name: Spannung, color: "#168cf0", aggregate_func: avg}
+              - {entity: sensor.jk_bms_total_jk_bms_total_current, name: Strom, color: "#ef5545", aggregate_func: avg, y_axis: secondary}
+
+          - type: custom:statistics-graph-chart-card
+            sync_group: pv_history_custom
+            card_header: PV Eingänge (MPPT)
+            axis_style: native
+            auto_scale_points: true
+            brush_zoom: true
+            entities:
+              - {entity: sensor.solis_s5_eh1p_pv_voltage_1, name: MPPT 1, color: "#ffb000", aggregate_func: avg}
+              - {entity: sensor.solis_s5_eh1p_pv_voltage_2, name: MPPT 2, color: "#20ae55", aggregate_func: avg}
+
+          - type: custom:statistics-graph-chart-card
+            sync_group: pv_history_custom
+            card_header: Wechselrichtertemperatur
+            axis_style: native
+            auto_scale_points: true
+            brush_zoom: true
+            entities:
+              - {entity: sensor.solis_s5_eh1p_temperature, name: Wechselrichter, color: "#ef5545", aggregate_func: avg}
+              - {entity: sensor.solis_s5_eh1p_lead_acid_battery_temperature, name: Batterie (Solis), color: "#20ae55", aggregate_func: avg}
+
+          - type: custom:statistics-graph-chart-card
+            sync_group: pv_history_custom
+            card_header: Netzspannung & Frequenz
+            axis_style: native
+            auto_scale_points: true
+            brush_zoom: true
+            show_y2_axis: true
+            entities:
+              - {entity: sensor.solis_s5_eh1p_a_phase_voltage, name: Netzspannung, color: "#168cf0", aggregate_func: avg}
+              - {entity: sensor.solis_s5_eh1p_grid_frequency, name: Netzfrequenz, color: "#ef5545", aggregate_func: avg, y_axis: secondary}
+
+          - type: custom:statistics-graph-chart-card
+            sync_group: pv_history_custom
+            card_header: Backup-AC & Last
+            axis_style: native
+            auto_scale_points: true
+            brush_zoom: true
+            show_y2_axis: true
+            entities:
+              - {entity: sensor.solis_s5_eh1p_backup_ac_voltage_phase_a, name: AC-Spannung, color: "#168cf0", aggregate_func: avg}
+              - {entity: sensor.calculated_household_load_power, name: Hauslast, color: "#7e57c2", unit: kW, value_factor: -3, aggregate_func: avg, y_axis: secondary}
+              - {entity: sensor.solis_s5_eh1p_backup_load_power, name: Backup-Last, color: "#ef5545", unit: kW, value_factor: -3, aggregate_func: avg, y_axis: secondary}
+
+          - type: custom:statistics-graph-chart-card
+            sync_group: pv_history_custom
+            card_header: MPPT-Ströme
+            axis_style: native
+            auto_scale_points: true
+            brush_zoom: true
+            entities:
+              - {entity: sensor.solis_s5_eh1p_pv_current_1, name: MPPT 1, color: "#ffb000", aggregate_func: avg}
+              - {entity: sensor.solis_s5_eh1p_pv_current_2, name: MPPT 2, color: "#20ae55", aggregate_func: avg}
+
+          - type: custom:statistics-graph-chart-card
+            sync_group: pv_history_custom
+            card_header: PV- & MPPT-Leistung
+            axis_style: native
+            auto_scale_points: true
+            brush_zoom: true
+            entities:
+              - {entity: sensor.solis_s5_eh1p_pv_power_1, name: MPPT 1, color: "#ffb000", unit: kW, value_factor: -3, aggregate_func: avg}
+              - {entity: sensor.solis_s5_eh1p_pv_power_2, name: MPPT 2, color: "#ffd54f", unit: kW, value_factor: -3, aggregate_func: avg}
+              - {entity: sensor.solis_s5_eh1p_total_pv_power, name: PV gesamt, color: "#f57f17", unit: kW, value_factor: -3, aggregate_func: avg}
+
+          - type: custom:statistics-graph-chart-card
+            sync_group: pv_history_custom
+            card_header: Zellspannungsdifferenz je Batteriepack
+            axis_style: native
+            auto_scale_points: true
+            brush_zoom: true
+            entities:
+              - {entity: sensor.solar_pv_battery_dashboard_pack_1_zell_delta, name: Pack 1, color: "#168cf0", aggregate_func: avg}
+              - {entity: sensor.solar_pv_battery_dashboard_pack_2_zell_delta, name: Pack 2, color: "#20ae55", aggregate_func: avg}
+              - {entity: sensor.solar_pv_battery_dashboard_pack_3_zell_delta, name: Pack 3, color: "#ef5545", aggregate_func: avg}
+
+          - type: custom:statistics-graph-chart-card
+            sync_group: pv_history_custom
+            card_header: Maximale Zelltemperatur je Batteriepack
+            axis_style: native
+            auto_scale_points: true
+            brush_zoom: true
+            entities:
+              - {entity: sensor.solar_pv_battery_dashboard_pack_1_max_zelltemperatur, name: Pack 1, color: "#168cf0", aggregate_func: max}
+              - {entity: sensor.solar_pv_battery_dashboard_pack_2_max_zelltemperatur, name: Pack 2, color: "#20ae55", aggregate_func: max}
+              - {entity: sensor.solar_pv_battery_dashboard_pack_3_max_zelltemperatur, name: Pack 3, color: "#ef5545", aggregate_func: max}
 
   - title: Summierte Werte
     path: summierte-werte

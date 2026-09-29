@@ -33,11 +33,13 @@ HISTORY_SUBVIEWS = {
     "historische-werte-30-tage": "30d",
     "historische-werte-12-monate": "365d",
 }
+CUSTOM_HISTORY_PATH = "historische-werte-benutzerdefiniert"
 HISTORY_TARGETS = {
     "/pv-battery-dashboard/historische-werte",
     "/pv-battery-dashboard/historische-werte-7-tage",
     "/pv-battery-dashboard/historische-werte-30-tage",
     "/pv-battery-dashboard/historische-werte-12-monate",
+    "/pv-battery-dashboard/historische-werte-benutzerdefiniert",
 }
 HISTORY_CHART_TITLES = {
     "Batteriespannung & Strom",
@@ -102,8 +104,9 @@ def validate() -> None:
     icons = [view.get("icon") for view in main_views]
     if any(not icon for icon in icons) or len(set(icons)) != 5:
         fail("all five visible views need distinct non-empty icons")
-    if {view.get("path") for view in subviews} != set(HISTORY_SUBVIEWS):
-        fail("history subviews must be exactly 7 days, 30 days and 12 months")
+    expected_subviews = {*HISTORY_SUBVIEWS, CUSTOM_HISTORY_PATH}
+    if {view.get("path") for view in subviews} != expected_subviews:
+        fail("history subviews must include all fixed ranges and the custom range")
 
     history_views = [
         view for view in views if str(view.get("path", "")).startswith("historische-werte")
@@ -160,6 +163,40 @@ def validate() -> None:
                     f"{path} chart {card['header']['title']} needs grouping {duration}"
                 )
 
+    custom_view = next(view for view in subviews if view["path"] == CUSTOM_HISTORY_PATH)
+    custom_cards = list(walk(custom_view))
+    if any(card.get("type") == "custom:pv-history-range-card" for card in custom_cards):
+        fail("custom history must not use the retired pv-history-range-card wrapper")
+    controllers = [
+        card
+        for card in custom_cards
+        if card.get("type") == "custom:statistics-graph-chart-controller"
+    ]
+    if len(controllers) != 1:
+        fail("custom history needs exactly one Statistics Graph Chart controller")
+    controller = controllers[0]
+    if controller.get("sync_group") != "pv_history_custom":
+        fail("custom history controller uses the wrong sync group")
+    required_modes = {
+        "day", "week", "month", "year", "last_24h", "last_7d", "last_30d", "last_12m"
+    }
+    if set(controller.get("date_picker_modes", [])) != required_modes:
+        fail("custom history controller is missing calendar or rolling ranges")
+    charts = [
+        card
+        for card in custom_cards
+        if card.get("type") == "custom:statistics-graph-chart-card"
+    ]
+    if len(charts) != 11:
+        fail("custom history needs exactly eleven synchronized charts")
+    expected_titles = {"Leistung", "Batterie SOC", *HISTORY_CHART_TITLES}
+    if {card.get("card_header") for card in charts} != expected_titles:
+        fail("custom history chart set is incomplete")
+    if any(card.get("sync_group") != "pv_history_custom" for card in charts):
+        fail("not all custom history charts follow the shared date controller")
+    if any(not card.get("auto_scale_points") for card in charts):
+        fail("custom history charts must auto-scale long ranges")
+
     helper_text = (ROOT / "custom_components" / "pv_battery_dashboard" / "sensor.py").read_text(
         encoding="utf-8"
     )
@@ -177,6 +214,16 @@ def validate() -> None:
         fail("dashboard must use the calculated household-load sensor")
     if "sensor.calculated_household_load_power" not in dashboard_text:
         fail("dashboard does not reference the calculated household-load sensor")
+
+    init_text = INIT.read_text(encoding="utf-8")
+    for required in (
+        "download/v4.03/statistics-graph-chart-card.js",
+        "31ecbec9c22ba756eabf33c9ff375640b967b6b917b5416a6f117d7f99452851",
+        "08af0ab366cb555c08b5014e46c3ac0f3d2c0769105f3fbf3df04b6ae8f186ed",
+        "async_create_item",
+    ):
+        if required not in init_text:
+            fail(f"Statistics Graph Chart Card installer is missing {required}")
 
     responsive_requirements = {
         "aktuelle-werte": {(5, 5, "(min-width: 700px)"), (2, 5, "(max-width: 699px)")},
@@ -286,7 +333,7 @@ def validate() -> None:
 
     print(
         "dashboard validation passed: "
-        "5 visible views, 3 history subviews, responsive grids, verified BMS details, "
+        "5 visible views, 4 history subviews, responsive grids, verified BMS details, "
         f"version {manifest_version}"
     )
 

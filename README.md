@@ -400,3 +400,27 @@ reports zero:
 - current values and all historical load charts use the calculated sensor
 - the sensor updates whenever any of the three source entities changes
 - repository validation rejects dashboard copies that revert to the unreliable native load entity
+
+
+## Dashboard 0.1.23
+
+Version **0.1.23** replaces the failed custom-range wrapper with the maintained
+Statistics Graph Chart Card 4.03 approach that was tested on HA-Rauschmann:
+
+- a dedicated controller provides day, week, month and year navigation plus the
+  rolling 24-hour, 7-day, 30-day and 12-month ranges
+- the calendar popup selects an arbitrary start and end date by clicking two days
+- all eleven historical charts share `sync_group: pv_history_custom` and therefore
+  change range together
+- long ranges automatically reduce their data density
+- the calculated household-load sensor remains in use, including in the custom range
+- the integration downloads both frontend assets directly from the card's official
+  GitHub v4.03 release, validates their published SHA-256 checksums, and registers
+  the Lovelace module automatically in storage mode
+- CI rejects a missing controller, incomplete chart set, unsynchronized cards,
+  missing range modes, changed release hashes, or a return of the retired wrapper
+
+Statistics Graph Chart Card 4.03 is free for personal/internal Home Assistant use
+under its own proprietary license. Its license permits tools to install directly
+from the official project release but forbids redistribution, so this repository
+does not bundle or mirror its JavaScript files.
