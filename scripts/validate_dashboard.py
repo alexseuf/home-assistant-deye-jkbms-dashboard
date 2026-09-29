@@ -193,6 +193,12 @@ def validate() -> None:
     if not custom_card.exists():
         fail("bundled pv-history-range-card.js is missing")
 
+    init_text = INIT.read_text(encoding="utf-8")
+    if "frontend.add_extra_js_url" not in init_text:
+        fail("custom history card must be registered through frontend.add_extra_js_url")
+    if "ResourceStorageCollection" in init_text:
+        fail("custom history card must not depend on Lovelace resource storage")
+
     responsive_requirements = {
         "aktuelle-werte": {(5, 5, "(min-width: 700px)"), (2, 5, "(max-width: 699px)")},
         "historische-werte": {(2, 2, "(min-width: 700px)"), (1, 2, "(max-width: 699px)")},
