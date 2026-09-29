@@ -40,7 +40,7 @@ views:
 
               # Verbrauch
               - type: state-label
-                entity: sensor.solis_s5_eh1p_household_load_power
+                entity: sensor.calculated_household_load_power
                 style:
                   left: 81%
                   top: 25.5%
@@ -192,7 +192,7 @@ views:
                 group_by:
                   func: avg
                   duration: 5min
-              - entity: sensor.solis_s5_eh1p_household_load_power
+              - entity: sensor.calculated_household_load_power
                 name: Verbrauch
                 color: "#2196f3"
                 type: line
@@ -281,7 +281,7 @@ views:
                 transform: "return x / 1000;"
                 unit: kW
                 group_by: {func: avg, duration: 5min}
-              - entity: sensor.solis_s5_eh1p_household_load_power
+              - entity: sensor.calculated_household_load_power
                 name: Verbrauch
                 color: "#168cf0"
                 type: line
@@ -424,7 +424,7 @@ views:
                   legend: {position: bottom}
                 series:
                   - {entity: sensor.solis_s5_eh1p_backup_ac_voltage_phase_a, name: AC-Spannung, color: "#168cf0", yaxis_id: voltage, type: line}
-                  - {entity: sensor.solis_s5_eh1p_household_load_power, name: Hauslast, color: "#7e57c2", yaxis_id: power, type: area, transform: "return x / 1000;", unit: kW}
+                  - {entity: sensor.calculated_household_load_power, name: Hauslast, color: "#7e57c2", yaxis_id: power, type: area, transform: "return x / 1000;", unit: kW}
                   - {entity: sensor.solis_s5_eh1p_backup_load_power, name: Backup-Last, color: "#ef5545", yaxis_id: power, type: line, transform: "return x / 1000;", unit: kW}
               - &history_mppt_current
                 type: custom:apexcharts-card
@@ -507,7 +507,7 @@ views:
               grid: {borderColor: "#dce5ea"}
             series:
               - {entity: sensor.solis_s5_eh1p_total_pv_power, name: PV, color: "#ffb000", type: area, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 30min}}
-              - {entity: sensor.solis_s5_eh1p_household_load_power, name: Verbrauch, color: "#168cf0", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 30min}}
+              - {entity: sensor.calculated_household_load_power, name: Verbrauch, color: "#168cf0", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 30min}}
               - {entity: sensor.jk_bms_total_jk_bms_total_power, name: Batterie, color: "#20ae55", type: area, unit: kW, group_by: {func: avg, duration: 30min}}
               - {entity: sensor.solis_s5_eh1p_ac_grid_port_power, name: Netz, color: "#ef5545", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 30min}}
           - type: custom:apexcharts-card
@@ -563,7 +563,7 @@ views:
               grid: {borderColor: "#dce5ea"}
             series:
               - {entity: sensor.solis_s5_eh1p_total_pv_power, name: PV, color: "#ffb000", type: area, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 2h}}
-              - {entity: sensor.solis_s5_eh1p_household_load_power, name: Verbrauch, color: "#168cf0", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 2h}}
+              - {entity: sensor.calculated_household_load_power, name: Verbrauch, color: "#168cf0", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 2h}}
               - {entity: sensor.jk_bms_total_jk_bms_total_power, name: Batterie, color: "#20ae55", type: area, unit: kW, group_by: {func: avg, duration: 2h}}
               - {entity: sensor.solis_s5_eh1p_ac_grid_port_power, name: Netz, color: "#ef5545", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 2h}}
           - type: custom:apexcharts-card
@@ -619,7 +619,7 @@ views:
               grid: {borderColor: "#dce5ea"}
             series:
               - {entity: sensor.solis_s5_eh1p_total_pv_power, name: PV, color: "#ffb000", type: area, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 1d}}
-              - {entity: sensor.solis_s5_eh1p_household_load_power, name: Verbrauch, color: "#168cf0", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 1d}}
+              - {entity: sensor.calculated_household_load_power, name: Verbrauch, color: "#168cf0", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 1d}}
               - {entity: sensor.jk_bms_total_jk_bms_total_power, name: Batterie, color: "#20ae55", type: area, unit: kW, group_by: {func: avg, duration: 1d}}
               - {entity: sensor.solis_s5_eh1p_ac_grid_port_power, name: Netz, color: "#ef5545", type: line, unit: kW, transform: "return x / 1000;", group_by: {func: avg, duration: 1d}}
           - type: custom:apexcharts-card

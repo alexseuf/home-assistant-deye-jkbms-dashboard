@@ -168,6 +168,15 @@ def validate() -> None:
             fail(f"historical helper sensor {helper} is missing")
     if "range(1, 5)" not in helper_text:
         fail("maximum pack temperature must use the four requested cell sensors")
+    if "CalculatedHouseholdLoadSensor" not in helper_text:
+        fail("calculated household-load helper sensor is missing")
+    if "abs(inverter_power - grid_power)" not in helper_text:
+        fail("household-load helper must provide the Solis power-balance fallback")
+    dashboard_text = ROOT_DASHBOARD.read_text(encoding="utf-8")
+    if "sensor.solis_s5_eh1p_household_load_power" in dashboard_text:
+        fail("dashboard must use the calculated household-load sensor")
+    if "sensor.calculated_household_load_power" not in dashboard_text:
+        fail("dashboard does not reference the calculated household-load sensor")
 
     responsive_requirements = {
         "aktuelle-werte": {(5, 5, "(min-width: 700px)"), (2, 5, "(max-width: 699px)")},

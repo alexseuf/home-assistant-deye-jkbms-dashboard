@@ -8,6 +8,7 @@ from homeassistant.const import (
     STATE_UNAVAILABLE,
     STATE_UNKNOWN,
     UnitOfElectricPotential,
+    UnitOfPower,
     UnitOfTemperature,
 )
 from homeassistant.core import Event, EventStateChangedData, HomeAssistant, State, callback
@@ -18,6 +19,9 @@ from homeassistant.helpers.event import async_track_state_change_event
 from .const import DOMAIN, NAME, VERSION
 
 SOURCE_BATTERY_VOLTAGE = "sensor.jk_bms_total_jk_bms_total_voltage"
+SOURCE_HOUSEHOLD_LOAD = "sensor.solis_s5_eh1p_household_load_power"
+SOURCE_INVERTER_POWER = "sensor.solis_s5_eh1p_active_power"
+SOURCE_GRID_POWER = "sensor.solis_s5_eh1p_ac_grid_port_power"
 
 
 async def async_setup_entry(
@@ -26,7 +30,10 @@ async def async_setup_entry(
     async_add_entities: AddConfigEntryEntitiesCallback,
 ) -> None:
     """Set up dashboard helper sensors."""
-    entities: list[SensorEntity] = [RoundedBatteryVoltageSensor(entry)]
+    entities: list[SensorEntity] = [
+        RoundedBatteryVoltageSensor(entry),
+        CalculatedHouseholdLoadSensor(entry),
+    ]
     for pack in range(3):
         entities.extend(
             [
@@ -35,6 +42,93 @@ async def async_setup_entry(
             ]
         )
     async_add_entities(entities)
+
+
+class CalculatedHouseholdLoadSensor(SensorEntity):
+    """Expose household load with a power-balance fallback.
+
+    Some Solis S5-EH1P meter/CT configurations intermittently report zero for
+    the native household-load register even while inverter and grid power are
+    changing. Prefer a positive native reading, but fall back to the absolute
+    difference between inverter and grid-port power when the native register
+    is zero.
+    """
+
+    _attr_has_entity_name = False
+    _attr_name = "Berechneter Hausverbrauch"
+    _attr_icon = "mdi:home-lightning-bolt"
+    _attr_device_class = SensorDeviceClass.POWER
+    _attr_state_class = SensorStateClass.MEASUREMENT
+    _attr_native_unit_of_measurement = UnitOfPower.WATT
+    _attr_suggested_display_precision = 0
+    _attr_should_poll = False
+
+    def __init__(self, entry: ConfigEntry) -> None:
+        """Initialize the calculated household-load sensor."""
+        self._entry = entry
+        self._attr_unique_id = f"{entry.entry_id}_calculated_household_load_power"
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, entry.entry_id)},
+            name=NAME,
+            manufacturer="alexseuf",
+            model="Managed Lovelace Dashboard",
+            sw_version=VERSION,
+        )
+
+    async def async_added_to_hass(self) -> None:
+        """Start tracking the three power sources."""
+        self._update_value()
+        self.async_on_remove(
+            async_track_state_change_event(
+                self.hass,
+                [SOURCE_HOUSEHOLD_LOAD, SOURCE_INVERTER_POWER, SOURCE_GRID_POWER],
+                self._handle_source_change,
+            )
+        )
+
+    @callback
+    def _handle_source_change(self, _event: Event[EventStateChangedData]) -> None:
+        """Recalculate after a source value changes."""
+        self._update_value()
+        self.async_write_ha_state()
+
+    @callback
+    def _update_value(self) -> None:
+        """Use the native load when valid, otherwise calculate the balance."""
+        values: dict[str, float] = {}
+        for entity_id in (
+            SOURCE_HOUSEHOLD_LOAD,
+            SOURCE_INVERTER_POWER,
+            SOURCE_GRID_POWER,
+        ):
+            state = self.hass.states.get(entity_id)
+            if state is None or state.state in (STATE_UNKNOWN, STATE_UNAVAILABLE):
+                continue
+            try:
+                values[entity_id] = float(state.state)
+            except (TypeError, ValueError):
+                continue
+
+        native_load = values.get(SOURCE_HOUSEHOLD_LOAD)
+        if native_load is not None and native_load > 0:
+            self._attr_native_value = round(native_load)
+            self._attr_available = True
+            return
+
+        inverter_power = values.get(SOURCE_INVERTER_POWER)
+        grid_power = values.get(SOURCE_GRID_POWER)
+        if inverter_power is not None and grid_power is not None:
+            self._attr_native_value = round(abs(inverter_power - grid_power))
+            self._attr_available = True
+            return
+
+        if native_load is not None:
+            self._attr_native_value = round(max(native_load, 0))
+            self._attr_available = True
+            return
+
+        self._attr_native_value = None
+        self._attr_available = False
 
 
 class PackAggregateSensor(SensorEntity):

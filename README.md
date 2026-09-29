@@ -387,3 +387,16 @@ JK-BMS diagnostics:
 - the complete chart set is available for 24 hours, 7 days, 30 days and 12 months
 - aggregation changes from 5 minutes to 30 minutes, 2 hours and 1 day for the longer ranges
 - CI now rejects releases if a range is missing one of these charts or uses the wrong span/aggregation
+
+
+## Dashboard 0.1.19
+
+Version **0.1.19** prevents a false constant-zero consumption value on Solis
+S5-EH1P installations whose native household-load register intermittently
+reports zero:
+
+- a calculated Home Assistant sensor prefers the positive native household-load value
+- when the native value is zero, it falls back to `|inverter power - grid-port power|`
+- current values and all historical load charts use the calculated sensor
+- the sensor updates whenever any of the three source entities changes
+- repository validation rejects dashboard copies that revert to the unreliable native load entity
