@@ -413,3 +413,25 @@ Selecting it opens a dedicated historical subview with:
 The custom range control is bundled with this integration and registered automatically
 as a Lovelace module in storage mode. No additional HACS frontend card is required
 beyond the existing ApexCharts Card and Mushroom dependencies.
+
+
+## Dashboard 0.1.21
+
+Version **0.1.21** fixes the **Benutzerdefiniert** historical-range page introduced
+in 0.1.20.
+
+The bundled `pv-history-range-card.js` is now loaded through Home Assistant's
+supported frontend module registration API (`frontend.add_extra_js_url`) instead of
+being inserted into the Lovelace resources collection.
+
+This makes the custom card available reliably after an integration restart / Home
+Assistant restart and avoids the red **Konfigurationsfehler** shown when the card
+module was not loaded.
+
+The 0.1.20 behavior remains otherwise unchanged:
+
+- 0.1.19 household-load fallback stays reverted
+- **Benutzerdefiniert** remains the fifth history-range button
+- freely selectable **Von** and **Bis** date/time fields
+- automatic aggregation based on the selected interval
+- no additional HACS frontend dependency is required
