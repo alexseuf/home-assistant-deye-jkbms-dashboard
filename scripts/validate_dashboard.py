@@ -33,11 +33,13 @@ HISTORY_SUBVIEWS = {
     "historische-werte-30-tage": "30d",
     "historische-werte-12-monate": "365d",
 }
+CUSTOM_HISTORY_SUBVIEW = "historische-werte-benutzerdefiniert"
 HISTORY_TARGETS = {
     "/pv-battery-dashboard/historische-werte",
     "/pv-battery-dashboard/historische-werte-7-tage",
     "/pv-battery-dashboard/historische-werte-30-tage",
     "/pv-battery-dashboard/historische-werte-12-monate",
+    "/pv-battery-dashboard/historische-werte-benutzerdefiniert",
 }
 HISTORY_CHART_TITLES = {
     "Batteriespannung & Strom",
@@ -102,8 +104,9 @@ def validate() -> None:
     icons = [view.get("icon") for view in main_views]
     if any(not icon for icon in icons) or len(set(icons)) != 5:
         fail("all five visible views need distinct non-empty icons")
-    if {view.get("path") for view in subviews} != set(HISTORY_SUBVIEWS):
-        fail("history subviews must be exactly 7 days, 30 days and 12 months")
+    expected_subviews = set(HISTORY_SUBVIEWS) | {CUSTOM_HISTORY_SUBVIEW}
+    if {view.get("path") for view in subviews} != expected_subviews:
+        fail("history subviews must contain 7 days, 30 days, 12 months and custom")
 
     history_views = [
         view for view in views if str(view.get("path", "")).startswith("historische-werte")
@@ -124,7 +127,7 @@ def validate() -> None:
             for chip in chips.get("chips", [])
         }
         if targets != HISTORY_TARGETS:
-            fail(f"{view['path']} does not link all four history ranges")
+            fail(f"{view['path']} does not link all five history ranges")
 
     for path, graph_span in HISTORY_SUBVIEWS.items():
         view = next(view for view in subviews if view["path"] == path)
