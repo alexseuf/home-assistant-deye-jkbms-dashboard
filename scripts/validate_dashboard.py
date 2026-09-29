@@ -168,15 +168,27 @@ def validate() -> None:
             fail(f"historical helper sensor {helper} is missing")
     if "range(1, 5)" not in helper_text:
         fail("maximum pack temperature must use the four requested cell sensors")
-    if "CalculatedHouseholdLoadSensor" not in helper_text:
-        fail("calculated household-load helper sensor is missing")
-    if "abs(inverter_power - grid_power)" not in helper_text:
-        fail("household-load helper must provide the Solis power-balance fallback")
+
     dashboard_text = ROOT_DASHBOARD.read_text(encoding="utf-8")
-    if "sensor.solis_s5_eh1p_household_load_power" in dashboard_text:
-        fail("dashboard must use the calculated household-load sensor")
-    if "sensor.calculated_household_load_power" not in dashboard_text:
-        fail("dashboard does not reference the calculated household-load sensor")
+    component_dashboard_text = COMPONENT_DASHBOARD.read_text(encoding="utf-8")
+    helper_text = (ROOT / "custom_components/pv_battery_dashboard/sensor.py").read_text(encoding="utf-8")
+    custom_card = ROOT / "custom_components/pv_battery_dashboard/static/pv-history-range-card.js"
+
+    if "CalculatedHouseholdLoadSensor" in helper_text:
+        fail("0.1.19 calculated household-load helper must not be present")
+    if "sensor.calculated_household_load_power" in dashboard_text:
+        fail("0.1.19 calculated household-load entity must not be present")
+    if "sensor.solis_s5_eh1p_household_load_power" not in dashboard_text:
+        fail("native Solis household-load entity is missing after 0.1.19 revert")
+    for required in (
+        "Benutzerdefiniert",
+        "historische-werte-benutzerdefiniert",
+        "custom:pv-history-range-card",
+    ):
+        if required not in dashboard_text or required not in component_dashboard_text:
+            fail(f"custom historical range feature is missing: {required}")
+    if not custom_card.exists():
+        fail("bundled pv-history-range-card.js is missing")
 
     responsive_requirements = {
         "aktuelle-werte": {(5, 5, "(min-width: 700px)"), (2, 5, "(max-width: 699px)")},
