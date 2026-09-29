@@ -12,7 +12,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
 
-from .const import CONF_AUTO_UPDATE, DOMAIN
+from .const import CONF_AUTO_UPDATE, DOMAIN, VERSION
 from .dashboard_manager import async_install_or_update_dashboard
 
 _LOGGER = logging.getLogger(__name__)
@@ -20,7 +20,7 @@ _LOGGER = logging.getLogger(__name__)
 PLATFORMS: list[Platform] = [Platform.BUTTON, Platform.SELECT, Platform.SENSOR]
 STATIC_URL = "/pv-battery-dashboard-static"
 HISTORY_RANGE_RESOURCE_PATH = f"{STATIC_URL}/pv-history-range-card.js"
-HISTORY_RANGE_RESOURCE_URL = f"{HISTORY_RANGE_RESOURCE_PATH}?v=0.1.20"
+HISTORY_RANGE_RESOURCE_URL = f"{HISTORY_RANGE_RESOURCE_PATH}?v={VERSION}"
 
 
 async def _async_ensure_history_range_resource(hass: HomeAssistant) -> None:
