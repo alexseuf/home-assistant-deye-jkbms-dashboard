@@ -173,7 +173,7 @@ def validate() -> None:
         fail("maximum pack temperature must use the four requested cell sensors")
 
     dashboard_text = ROOT_DASHBOARD.read_text(encoding="utf-8")
-    component_dashboard_text = COMPONENT_DASHBOARD.read_text(encoding="utf-8")
+    component_dashboard_text = BUNDLED_DASHBOARD.read_text(encoding="utf-8")
     helper_text = (ROOT / "custom_components/pv_battery_dashboard/sensor.py").read_text(encoding="utf-8")
     custom_card = ROOT / "custom_components/pv_battery_dashboard/static/pv-history-range-card.js"
 
