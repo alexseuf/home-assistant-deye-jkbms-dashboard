@@ -67,6 +67,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Set up entities first. The managed dashboard can then resolve helper
     # entity IDs from the entity registry instead of assuming a fixed object ID.
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    await _async_ensure_history_range_resource(hass)
 
     if entry.data.get(CONF_AUTO_UPDATE, True):
         try:
